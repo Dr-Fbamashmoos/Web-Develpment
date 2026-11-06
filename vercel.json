@@ -1,0 +1,40 @@
+{
+  "cleanUrls": false,
+  "redirects": [
+    {
+      "source": "/part1.html",
+      "destination": "/javascript/part1.html",
+      "permanent": true
+    },
+    {
+      "source": "/part2.html",
+      "destination": "/javascript/part2.html",
+      "permanent": true
+    },
+    {
+      "source": "/part3.html",
+      "destination": "/javascript/part3.html",
+      "permanent": true
+    },
+    {
+      "source": "/part4.html",
+      "destination": "/javascript/part4.html",
+      "permanent": true
+    },
+    {
+      "source": "/part5.html",
+      "destination": "/javascript/part5.html",
+      "permanent": true
+    },
+    {
+      "source": "/part6.html",
+      "destination": "/javascript/part6.html",
+      "permanent": true
+    },
+    {
+      "source": "/practice.html",
+      "destination": "/javascript/practice.html",
+      "permanent": true
+    }
+  ]
+}

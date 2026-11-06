@@ -1,0 +1,351 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPIT-405 · Part 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/motion.css">
+</head>
+<body>
+<div class="wrap" dir="ltr">
+  <div class="frame" id="frame">
+    <div class="stage" id="stage">
+      <svg class="bgfx" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M1600 96 H1440 L1400 56 H1210"/><path class="pulse" d="M1600 96 H1440 L1400 56 H1210"/>
+        <path d="M1600 150 H1520 L1490 120"/>
+        <path d="M0 878 H260 L290 848 H520"/><path class="pulse" style="animation-delay:-3s" d="M0 878 H260 L290 848 H520"/>
+        <path d="M1080 900 V884 L1110 854 H1380"/>
+        <circle cx="1210" cy="56" r="6" class="t"/><circle cx="1490" cy="120" r="5"/><circle cx="520" cy="848" r="6" class="t"/><circle cx="1380" cy="854" r="5"/>
+      </svg>
+
+      <!-- 1 Title -->
+      <section class="scene" data-dur="7" data-title="Intro" data-audio="audio/p1/scene01.mp3" data-adur="19.64" data-anchors="[0, 2.5, 5]" data-tst="[0.0, 7.53, 15.46]">
+        <div class="kick">CPIT-405 · WEB APPLICATIONS</div>
+        <div class="row" style="align-items:center;gap:48px;margin-top:30px">
+          <div class="logo">JS</div>
+          <div class="title-big">JavaScript</div>
+        </div>
+        <div class="h" style="font-size:56px">Part 1: The Fundamentals</div>
+        <div class="topics">
+          <span>Running JS</span><span>Variables</span><span>Data types</span><span>Equality</span><span>Arrays</span><span>Conditions &amp; loops</span><span>Functions</span><span>Spread &amp; Rest</span>
+        </div>
+      </section>
+
+      <!-- 2 What is JS -->
+      <section class="scene" data-dur="12" data-title="What is JS?" data-audio="audio/p1/scene02.mp3" data-adur="24.69" data-anchors="[0, 0.8, 4, 7.5, 9]" data-tst="[0.0, 3.5, 7.87, 15.63, 21.63]">
+        <div class="kick a">01 · INTRODUCTION</div>
+        <div class="h a" style="--d:.2s">The programming language <span class="y">of the web</span></div>
+        <div class="row">
+          <div class="card grow a" style="--d:.8s">
+            <span class="tag">client-side</span>
+            <h3>In the browser</h3>
+            <p>Makes web pages interactive: buttons, forms, content that changes without reloading.</p>
+          </div>
+          <div class="card grow a" style="--d:4s">
+            <span class="tag" style="color:var(--green)">server-side · Node.js</span>
+            <h3>Everywhere else</h3>
+            <p>Servers (Node.js), mobile (React Native), desktop (Electron), machine learning (TensorFlow.js).</p>
+          </div>
+        </div>
+        <div class="tl">
+          <div class="a" style="--d:7.6s"><b>1995</b><i>Brendan Eich at Netscape</i></div>
+          <div class="a" style="--d:8.1s"><b>1997</b><i>ES1, first spec</i></div>
+          <div class="a" style="--d:8.6s"><b>2009</b><i>ES5</i></div>
+          <div class="a big" style="--d:9.1s"><b>2015</b><i>ES6: let, const, arrow functions</i></div>
+          <div class="a" style="--d:9.6s"><b>2016+</b><i>a new version every year</i></div>
+        </div>
+      </section>
+
+      <!-- 3 Three ways -->
+      <section class="scene" data-dur="11" data-title="Running JS" data-audio="audio/p1/scene03.mp3" data-adur="24.27" data-anchors="[0, 0.6, 3.6, 7.2]" data-tst="[0.0, 4.87, 12.96, 18.79]">
+        <div class="kick a">02 · GETTING STARTED</div>
+        <div class="h a" style="--d:.2s">Three ways to run your code</div>
+        <div class="row">
+          <div class="card grow a" style="--d:.6s">
+            <span class="tag">1 · Console</span>
+            <p>F12 or <span class="mono">Ctrl+Shift+I</span></p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:1.4s"><span class="p">&gt;</span> console.<span class="f">log</span>(<span class="s">"Hello"</span>)</span><span class="ln a ok" style="--d:2.4s">Hello</span></div>
+          </div>
+          <div class="card grow a" style="--d:3.6s">
+            <span class="tag">2 · Web page</span>
+            <p>Inline or an external file</p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:4.3s"><span class="k">&lt;script</span> <span class="p">src</span>=<span class="s">"app.js"</span><span class="k">&gt;</span></span><span class="ln a" style="--an:ty;--d:5s"><span class="k">&lt;/script&gt;</span></span></div>
+          </div>
+          <div class="card grow a" style="--d:7.2s">
+            <span class="tag">3 · Terminal</span>
+            <p>After installing Node.js</p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:7.9s"><span class="p">$</span> node script.js</span><span class="ln a ok" style="--d:8.8s">hello JavaScript</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Variables -->
+      <section class="scene" data-dur="12" data-title="Variables" data-audio="audio/p1/scene04.mp3" data-adur="27.25" data-anchors="[0, 4.2, 8.6]" data-tst="[0.0, 7.9, 16.91]">
+        <div class="kick a">03 · VARIABLES</div>
+        <div class="h a" style="--d:.2s"><em>var</em>, <em>let</em> and <em>const</em></div>
+        <div class="row">
+          <div class="card grow a" style="--d:.7s"><span class="tag">var</span><h3>Function scope</h3><p>Visible in the whole function. Outside any function it is added to <span class="mono">window</span>.</p></div>
+          <div class="card grow a" style="--d:1.4s"><span class="tag">let</span><h3>Block scope</h3><p>Visible only inside the <span class="mono">{ }</span> block where it is declared.</p></div>
+          <div class="card grow a" style="--d:2.1s"><span class="tag">const</span><h3>Constant</h3><p>Cannot be reassigned after it is declared.</p></div>
+        </div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:4.3s"><span class="ln"><span class="k">const</span> discount = <span class="n">0.20</span>;</span><span class="ln a" style="--an:ty;--d:5s">discount = <span class="n">0.50</span>;</span></div>
+            <div class="err a" style="--an:pop;--d:6s">Uncaught TypeError: Assignment to constant variable.</div>
+          </div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:8.6s"><span class="ln"><span class="k">const</span> course = {semester: <span class="s">"fall"</span>}</span><span class="ln a" style="--an:ty;--d:9.3s">course.semester = <span class="s">"spring"</span> <span class="ok">✓</span></span></div>
+            <div class="out a" style="--d:10.2s">{ semester: 'spring' }</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Scope -->
+      <section class="scene tight" data-dur="13" data-title="var vs let" data-audio="audio/p1/scene05.mp3" data-adur="29.88" data-anchors="[0, 3, 7, 10, 11.5]" data-tst="[0.0, 7.87, 13.42, 22.0, 26.6]">
+        <div class="kick a">04 · SCOPE</div>
+        <div class="h a" style="--d:.2s">The block changes everything</div>
+        <div class="row">
+          <div class="col grow a" style="--d:.6s">
+            <div class="lbl">var</div>
+            <div class="code sm"><span class="ln"><span class="k">var</span> x = <span class="n">10</span>;</span><span class="ln"><span class="k">if</span> (x == <span class="n">10</span>) {</span><span class="ln">  <span class="k">var</span> x = <span class="n">20</span>;</span><span class="ln">  console.<span class="f">log</span>(x);</span><span class="ln">}</span><span class="ln">console.<span class="f">log</span>(x);</span></div>
+            <div class="mem">
+              <div class="box a" style="--d:3s">x<span class="swap"><span class="gone y" style="--d:4.4s">10</span><span class="a y" style="--d:4.5s">20</span></span><em>one variable</em></div>
+            </div>
+            <div class="out"><span class="a" style="--d:10.2s">20</span>  <span class="a" style="--d:10.8s">20</span></div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow a" style="--d:.9s">
+            <div class="lbl">let</div>
+            <div class="code sm"><span class="ln"><span class="k">let</span> x = <span class="n">10</span>;</span><span class="ln"><span class="k">if</span> (x == <span class="n">10</span>) {</span><span class="ln">  <span class="k">let</span> x = <span class="n">20</span>;</span><span class="ln">  console.<span class="f">log</span>(x);</span><span class="ln">}</span><span class="ln">console.<span class="f">log</span>(x);</span></div>
+            <div class="mem">
+              <div class="box a" style="--d:7s">x <span class="y">10</span><em>outside the block</em></div>
+              <div class="box a x" style="--d:7.6s;--o:9.4s;border-color:var(--cyan)">x <span class="cy">20</span><em>inside the block</em></div>
+            </div>
+            <div class="out"><span class="a" style="--d:10.2s">20</span>  <span class="a" style="--d:10.8s;color:var(--js)">10</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 Types -->
+      <section class="scene" data-dur="13" data-title="Data types" data-audio="audio/p1/scene06.mp3" data-adur="26.51" data-anchors="[0, 5, 9, 10.6]" data-tst="[0.0, 9.74, 14.53, 19.42]">
+        <div class="kick a">05 · DATA TYPES</div>
+        <div class="h a" style="--d:.2s">Seven primitives + one object</div>
+        <div class="row" style="flex-wrap:wrap;gap:16px">
+          <div class="chip a" style="--an:pop;--d:.6s"><span class="n">37</span><b>Number</b></div>
+          <div class="chip a" style="--an:pop;--d:1s"><span class="s">"Ali"</span><b>String</b></div>
+          <div class="chip a" style="--an:pop;--d:1.4s"><span class="k">true</span><b>Boolean</b></div>
+          <div class="chip a" style="--an:pop;--d:1.8s"><span>let foo;</span><b>Undefined</b></div>
+          <div class="chip a" style="--an:pop;--d:2.2s"><span class="k">null</span><b>Null</b></div>
+          <div class="chip a" style="--an:pop;--d:2.6s"><span class="n">9007199254740991n</span><b>BigInt</b></div>
+          <div class="chip a" style="--an:pop;--d:3s"><span><span class="f">Symbol</span>(<span class="s">"id"</span>)</span><b>Symbol</b></div>
+        </div>
+        <div class="row" style="align-items:center">
+          <div class="code sm a" style="--d:5s"><span class="ln"><span class="k">let</span> person = {</span><span class="ln">  firstName: <span class="s">"Ali"</span>,</span><span class="ln">  age: <span class="n">21</span>,</span><span class="ln">  greet: <span class="k">function</span>() {…}</span><span class="ln">};</span></div>
+          <div class="grow" style="display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+            <div class="code a" style="--d:9s"><span class="k">typeof</span> <span class="k">null</span></div>
+            <div class="out a" style="--d:9.8s;font-size:40px;color:var(--orange)">"object"</div>
+            <div class="stampx" style="--d:10.6s">Historical bug!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 == vs === -->
+      <section class="scene" data-dur="10" data-title="== vs ===" data-audio="audio/p1/scene07.mp3" data-adur="21.71" data-anchors="[0, 1.2, 5, 8.5]" data-tst="[0.0, 3.39, 9.89, 15.49]">
+        <div class="kick a">06 · EQUALITY</div>
+        <div class="h a" style="--d:.2s"><em>==</em> or <em>===</em> ?</div>
+        <div class="col" style="gap:40px;margin-top:20px">
+          <div class="row a" style="--d:.6s;align-items:center;gap:30px">
+            <div class="box"><span class="n">5</span></div>
+            <div class="vs y">==</div>
+            <div class="box"><span class="s"><span class="gone" style="--d:2s">"</span><span>5</span><span class="gone" style="--d:2s">"</span></span></div>
+            <div class="lbl a" style="--d:2.4s">String → Number</div>
+            <div class="out a" style="--an:pop;--d:3.2s;font-size:44px">true</div>
+          </div>
+          <div class="row a" style="--d:5s;align-items:center;gap:30px">
+            <div class="box" style="flex-direction:column;height:auto;padding:14px 22px"><span class="n">5</span><small style="position:static;font-size:18px">Number</small></div>
+            <div class="vs y">===</div>
+            <div class="box" style="flex-direction:column;height:auto;padding:14px 22px"><span class="s">"5"</span><small style="position:static;font-size:18px">String</small></div>
+            <div class="lbl a" style="--d:6.4s">types differ</div>
+            <div class="out a bad" style="--an:pop;--d:7.2s;font-size:44px">false</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 Strings & numbers -->
+      <section class="scene" data-dur="11" data-title="Strings & numbers" data-audio="audio/p1/scene08.mp3" data-adur="29.07" data-anchors="[0, 4, 7.5]" data-tst="[0.0, 10.08, 19.41]">
+        <div class="kick a">07 · STRINGS &amp; NUMBERS</div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:.3s"><span class="ln"><span class="k">let</span> name = <span class="s">'Khalid'</span>;</span><span class="ln a" style="--an:ty;--d:1s">console.<span class="f">log</span>(<span class="s">`Hello, </span><span class="y">${name}</span><span class="s">`</span>);</span></div>
+            <div class="out a" style="--an:pop;--d:2.2s">Hello, Khalid</div>
+            <div class="code sm a" style="--d:4s"><span class="ln"><span class="k">let</span> name = <span class="s">"Sami"</span>;</span><span class="ln a" style="--an:ty;--d:4.6s">name[<span class="n">0</span>] = <span class="s">"R"</span>;</span></div>
+            <div class="out a" style="--d:5.6s">Sami <span class="mu" style="font-weight:400;font-size:22px">// unchanged</span></div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:7.5s"><span class="ln"><span class="n">10</span> / <span class="n">0</span>  <span class="c">→</span> <span class="ok">Infinity</span></span></div>
+            <div class="code sm a" style="--d:8.1s"><span class="ln"><span class="n">-3</span> / <span class="n">0</span>  <span class="c">→</span> <span class="ok">-Infinity</span></span></div>
+            <div class="code sm a" style="--d:8.7s"><span class="ln"><span class="n">0</span> / <span class="n">0</span>   <span class="c">→</span> <span class="bad">NaN</span></span></div>
+            <div class="code sm a" style="--d:9.3s"><span class="ln"><span class="f">Number</span>(<span class="s">"zero"</span>) <span class="c">→</span> <span class="bad">NaN</span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 Arrays -->
+      <section class="scene" data-dur="13" data-title="Arrays" data-audio="audio/p1/scene09.mp3" data-adur="21.16" data-anchors="[0, 3, 6.5, 9.5]" data-tst="[0.0, 5.66, 9.92, 14.73]">
+        <div class="kick a">08 · ARRAYS</div>
+        <div class="row" style="align-items:center;justify-content:space-between">
+          <div class="code sm a" style="--d:.2s;padding:12px 22px"><span class="k">let</span> fruits = [<span class="s">'Apple'</span>, <span class="s">'Banana'</span>, <span class="s">'Cherry'</span>];</div>
+          <div class="lbl a" style="--d:.6s">length: <span class="swap y"><span class="gone" style="--d:3.6s">3</span><span class="a x" style="--d:3.7s;--o:7.6s">4</span></span><span class="swap y" style="margin-left:-1.6em"><span class="a" style="--d:7.7s">3</span></span></div>
+        </div>
+        <div class="arr" style="margin-bottom:30px">
+          <div class="box a" style="--an:pop;--d:.6s">Apple<small>0</small></div>
+          <div class="box a" style="--an:pop;--d:.9s">Banana<small>1</small></div>
+          <div class="box a" style="--an:pop;--d:1.2s">Cherry<small>2</small></div>
+          <div class="box a x" style="--an:sr;--d:3.4s;--o:7.2s;border-color:var(--js);--du:.8s">Date<small>3</small></div>
+          <div class="col" style="gap:8px;margin-left:30px">
+            <div class="code sm a x" style="--d:3s;--o:6.2s;padding:8px 18px">fruits.<span class="f">push</span>(<span class="s">'Date'</span>)</div>
+          </div>
+          <div class="col" style="gap:8px">
+            <div class="code sm a" style="--d:6.5s;padding:8px 18px">fruits.<span class="f">pop</span>() <span class="c">→</span> <span class="ok">'Date'</span></div>
+          </div>
+        </div>
+        <div class="row a" style="--d:9.5s;align-items:center;gap:22px">
+          <div class="code sm" style="padding:10px 20px"><span class="k">let</span> bigArr = [<span class="y">...smallArr</span>, <span class="n">4</span>, <span class="n">5</span>, <span class="n">6</span>]</div>
+        </div>
+        <div class="arr">
+          <div class="box a" style="--an:pop;--d:10.1s;border-color:var(--js);min-width:90px">1</div>
+          <div class="box a" style="--an:pop;--d:10.3s;border-color:var(--js);min-width:90px">2</div>
+          <div class="box a" style="--an:pop;--d:10.5s;border-color:var(--js);min-width:90px">3</div>
+          <div class="box a" style="--an:pop;--d:10.9s;min-width:90px">4</div>
+          <div class="box a" style="--an:pop;--d:11.1s;min-width:90px">5</div>
+          <div class="box a" style="--an:pop;--d:11.3s;min-width:90px">6</div>
+        </div>
+      </section>
+
+      <!-- 10 Conditions & loops -->
+      <section class="scene" data-dur="13" data-title="Conditions & loops" data-audio="audio/p1/scene10.mp3" data-adur="32.44" data-anchors="[0, 4.5, 10, 10.8]" data-tst="[0.0, 8.78, 17.58, 23.1]">
+        <div class="kick a">09 · CONDITIONS &amp; LOOPS</div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:.3s"><span class="ln"><span class="k">let</span> isMember = <span class="k">false</span>;</span><span class="ln"><span class="k">let</span> fee = isMember</span><span class="ln">  ? <span class="s dim" style="--d:2.4s">'$2.00'</span></span><span class="ln">  : <span class="s hl" style="--d:2.4s;border-radius:6px;padding:0 6px">'$10.00'</span>;</span></div>
+            <div class="out a" style="--an:pop;--d:3.2s">$10.00</div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:4.5s"><span class="ln"><span class="k">for</span> (<span class="k">let</span> i=<span class="n">0</span>; i&lt;array.length; i++)</span><span class="ln">  console.<span class="f">log</span>(array[i]);</span></div>
+            <div class="arr" style="margin-bottom:34px">
+              <div class="box hl" style="--d:5.6s;min-width:80px">1<small>i=0</small></div>
+              <div class="box hl" style="--d:6.4s;min-width:80px">2<small>i=1</small></div>
+              <div class="box hl" style="--d:7.2s;min-width:80px">3<small>i=2</small></div>
+              <div class="box hl" style="--d:8s;min-width:80px">4<small>i=3</small></div>
+              <div class="box hl" style="--d:8.8s;min-width:80px">5<small>i=4</small></div>
+            </div>
+            <div class="out"><span class="a" style="--d:5.8s">1 </span><span class="a" style="--d:6.6s">2 </span><span class="a" style="--d:7.4s">3 </span><span class="a" style="--d:8.2s">4 </span><span class="a" style="--d:9s">5</span></div>
+          </div>
+        </div>
+        <div class="pill-row">
+          <span class="a" style="--d:10s">for</span><span class="a" style="--d:10.2s">forEach</span><span class="a" style="--d:10.4s">while</span><span class="a" style="--d:10.6s">do...while</span><span class="a" style="--d:10.8s">for...of <b class="mu" style="font-weight:400">→ value</b></span><span class="a" style="--d:11s">for...in <b class="mu" style="font-weight:400">→ index</b></span>
+        </div>
+      </section>
+
+      <!-- 11 Functions -->
+      <section class="scene" data-dur="14" data-title="Functions" data-audio="audio/p1/scene11.mp3" data-adur="30.59" data-anchors="[0, 2.4, 4.6, 10.2]" data-tst="[0.0, 5.91, 11.63, 23.49]">
+        <div class="kick a">10 · FUNCTIONS</div>
+        <div class="machine">
+          <div class="col" style="gap:14px">
+            <div class="ball a" style="--an:sr;--d:.6s">3</div>
+            <div class="ball a" style="--an:sr;--d:.9s">2</div>
+          </div>
+          <div class="lbl a" style="--d:1.4s">→</div>
+          <div class="body a" style="--an:pop;--d:1.6s">add(x, y)</div>
+          <div class="lbl a" style="--d:2.4s">→</div>
+          <div class="ball res a" style="--an:pop;--d:2.8s">5</div>
+          <div class="lbl a" style="--d:3.2s;margin-left:20px;font-size:22px">return x + y;</div>
+        </div>
+        <div class="forms">
+          <div class="a" style="--d:4.8s"><div class="nm"><b>1</b>Function Declaration</div><div class="code"><span class="k">function</span> <span class="f">getCourse</span>() { }</div></div>
+          <div class="a" style="--d:6.2s"><div class="nm"><b>2</b>Function Expression</div><div class="code"><span class="k">let</span> getCourse = <span class="k">function</span>() { };</div></div>
+          <div class="a" style="--d:7.6s"><div class="nm"><b>3</b>Named Expression</div><div class="code"><span class="k">let</span> getMyCourse = <span class="k">function</span> <span class="f">getCourse</span>() { };</div></div>
+          <div class="a" style="--d:9s"><div class="nm"><b>4</b>Arrow Function</div><div class="code"><span class="k">let</span> getCollege = () <span class="k">=&gt;</span> <span class="s">"FCIT"</span>;</div></div>
+          <div class="a" style="--d:10.4s"><div class="nm"><b>5</b>IIFE</div><div class="code">(<span class="k">function</span>() { … })<span class="y">()</span>;</div></div>
+        </div>
+      </section>
+
+      <!-- 12 Spread vs Rest -->
+      <section class="scene" data-dur="12" data-title="Spread & Rest" data-audio="audio/p1/scene12.mp3" data-adur="22.13" data-anchors="[0, 3, 7, 10.5]" data-tst="[0.0, 4.79, 11.63, 17.4]">
+        <div class="kick a">11 · SPREAD vs REST</div>
+        <div class="h a" style="--d:.2s">Three dots <em>...</em>, two jobs</div>
+        <div class="row">
+          <div class="col grow a" style="--d:3s">
+            <div class="lbl y">Spread · unpack</div>
+            <div class="code sm"><span class="ln"><span class="k">let</span> numbers = [<span class="n">2</span>, <span class="n">4</span>, <span class="n">6</span>];</span><span class="ln"><span class="f">add</span>(<span class="y">...numbers</span>);</span></div>
+            <div class="arr">
+              <div class="box" style="min-width:200px;font-size:26px">[2, 4, 6]</div>
+              <div class="lbl a" style="--d:4.2s">→</div>
+              <div class="box a" style="--an:pop;--d:4.6s;min-width:70px;border-color:var(--js)">2</div>
+              <div class="box a" style="--an:pop;--d:4.8s;min-width:70px;border-color:var(--js)">4</div>
+              <div class="box a" style="--an:pop;--d:5s;min-width:70px;border-color:var(--js)">6</div>
+            </div>
+            <div class="out a" style="--d:5.6s">12</div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow a" style="--d:7s">
+            <div class="lbl cy">Rest · pack</div>
+            <div class="code sm"><span class="ln"><span class="k">function</span> <span class="f">sum</span>(n, m, <span class="cy">...numbers</span>)</span><span class="ln"><span class="f">sum</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>);</span></div>
+            <div class="arr">
+              <div class="box a" style="--d:8.2s;min-width:90px;font-size:24px">n=1</div>
+              <div class="box a" style="--d:8.5s;min-width:90px;font-size:24px">m=2</div>
+              <div class="box a" style="--an:pop;--d:9.2s;min-width:180px;font-size:24px;border-color:var(--cyan)">numbers=[3,4]</div>
+            </div>
+            <div class="out a" style="--d:10s">10</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Outro -->
+      <section class="scene" data-dur="7" data-title="Your turn" data-audio="audio/p1/scene13.mp3" data-adur="19.72" data-anchors="[0, 1.4, 4]" data-tst="[0.0, 2.48, 12.7]">
+        <div class="kick a">NEXT</div>
+        <div class="h a" style="--d:.2s;font-size:96px;margin-top:40px">Your turn</div>
+        <div class="h a" style="--d:.8s;font-size:40px;font-weight:400;color:var(--mute)">Open the practice platform and start with the Part 1 tab</div>
+        <div class="topics">
+          <span class="a" style="--d:1.6s">Predict the output</span><span class="a" style="--d:1.9s">typeof machine</span><span class="a" style="--d:2.2s">Spread or Rest</span><span class="a" style="--d:2.5s">Function forms</span><span class="a" style="--d:2.8s">Code challenges</span>
+        </div>
+      </section>
+
+      <div class="scn-no" id="scnNo"></div>
+      <div class="fsbar" id="fsbar" aria-label="Player controls">
+        <button type="button" data-fsb="prev" aria-label="Previous scene">⏮</button>
+        <button type="button" data-fsb="play" class="main" aria-label="Play">▶</button>
+        <button type="button" data-fsb="next" aria-label="Next scene">⏭</button>
+        <span class="fst"></span>
+        <button type="button" data-fsb="voice" class="txt" aria-label="Arabic voice on or off">Voice</button>
+        <button type="button" data-fsb="subs" class="txt" aria-label="Subtitles">CC EN</button>
+        <button type="button" data-fsb="exit" aria-label="Exit full screen">✕</button>
+      </div>
+      <div class="cap" id="cap"><span id="capText"></span></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn primary" id="play" type="button">Play</button>
+    <button class="btn" id="prev" type="button" aria-label="Previous scene">← Prev</button>
+    <button class="btn" id="next" type="button" aria-label="Next scene">Next →</button>
+    <div class="prog" id="prog" role="slider" aria-label="Progress" tabindex="0"><i id="progFill"></i></div>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
+  <div class="bar">
+    <button class="btn toggle" id="voice" type="button" aria-pressed="true"><span class="dot"></span><span id="voiceLbl">Arabic voice: on</span></button>
+    <button class="btn" id="subs" type="button">Subtitles: <b id="subsLbl">English</b></button>
+    <button class="btn" id="fs" type="button">⤢ Full screen</button>
+    <a class="btn" style="text-decoration:none;margin-left:auto" href="index.html">← All parts</a><a class="btn primary" style="text-decoration:none" href="practice.html#part1">Practice Part 1 →</a>
+  </div>
+  <div class="chaps" id="chaps"></div>
+  <div class="hint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>Space: play / pause · ← →: scenes · M: voice on / off · C: subtitles · F: fullscreen</span><span>Developed by: <b style="color:var(--teal-d)">Fatmah Bamashmoos</b></span></div>
+</div>
+<script src="js/subtitles/part1.js"></script>
+<script src="js/motion.js"></script>
+</body>
+</html>

@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPIT-405 · Part 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/motion.css">
+</head>
+<body>
+<div class="wrap" dir="ltr">
+  <div class="frame" id="frame">
+    <div class="stage" id="stage">
+      <svg class="bgfx" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M1600 96 H1440 L1400 56 H1210"/><path class="pulse" d="M1600 96 H1440 L1400 56 H1210"/>
+        <path d="M1600 150 H1520 L1490 120"/>
+        <path d="M0 878 H260 L290 848 H520"/><path class="pulse" style="animation-delay:-3s" d="M0 878 H260 L290 848 H520"/>
+        <path d="M1080 900 V884 L1110 854 H1380"/>
+        <circle cx="1210" cy="56" r="6" class="t"/><circle cx="1490" cy="120" r="5"/><circle cx="520" cy="848" r="6" class="t"/><circle cx="1380" cy="854" r="5"/>
+      </svg>
+
+      <!-- 1 Intro -->
+      <section class="scene" data-dur="8" data-title="Intro" data-audio="audio/p5/scene01.mp3" data-adur="21.71" data-anchors="[0, 3, 5.5]" data-tst="[0.0, 6.38, 15.37]">
+        <div class="kick">CPIT-405 · WEB APPLICATIONS</div>
+        <div class="row" style="align-items:center;gap:44px;margin-top:24px">
+          <div class="logo">JS</div>
+          <div class="title-big" style="font-size:128px">Async &amp; Ajax</div>
+        </div>
+        <div class="h" style="font-size:54px">Part 5: Talking to the server</div>
+        <div class="topics">
+          <span>Sync vs async</span><span>Promises</span><span>Ajax</span><span>XMLHttpRequest</span><span>readyState</span><span>fetch</span><span>async / await</span>
+        </div>
+      </section>
+
+      <!-- 2 Sync -->
+      <section class="scene" data-dur="12" data-title="Synchronous" data-audio="audio/p5/scene02.mp3" data-adur="22.67" data-anchors="[0, 2.6, 6]" data-tst="[0.0, 6.35, 14.28]">
+        <div class="kick a">01 · SYNCHRONOUS</div>
+        <div class="h a" style="--d:.2s">One line at a time, <span class="y">in order</span></div>
+        <div class="row" style="gap:30px;align-items:center">
+          <div class="code sm grow a" style="--d:.6s"><span class="ln step1" style="--d:2.8s"><span class="k">function</span> <span class="f">syncFunction</span>(a, b) {</span><span class="ln step1" style="--d:6.4s">  <span class="k">let</span> sum = a + b;</span><span class="ln step1" style="--d:7.2s">  <span class="k">return</span> sum;</span><span class="ln">}</span><span class="ln step1" style="--d:3.6s;--d2:6s">console.<span class="f">log</span>(<span class="f">syncFunction</span>(<span class="n">5</span>, <span class="n">5</span>));</span><span class="ln step1" style="--d:8.6s">console.<span class="f">log</span>(<span class="s">"This is a synchronous function"</span>);</span></div>
+          <div class="log" style="min-width:470px">
+            <div class="ln mu">// console</div>
+            <div class="ln a" style="--d:8s"><span class="s2">10</span></div>
+            <div class="ln a" style="--d:9s"><span class="s2">This is a synchronous function</span></div>
+          </div>
+        </div>
+        <div class="note-chip a" style="--d:6.2s">Calling a function: the program <b>waits</b> for it to return, then moves on</div>
+      </section>
+
+      <!-- 3 Async -->
+      <section class="scene" data-dur="14" data-title="Asynchronous" data-audio="audio/p5/scene03.mp3" data-adur="27.87" data-anchors="[0, 3, 8.5]" data-tst="[0.0, 8.41, 18.54]">
+        <div class="kick a">02 · ASYNCHRONOUS</div>
+        <div class="h a" style="--d:.2s">It <span class="y">doesn't wait</span></div>
+        <div class="row" style="gap:30px;align-items:center">
+          <div class="code sm grow a" style="--d:.6s"><span class="ln"><span class="k">function</span> <span class="f">asyncFunction</span>() {</span><span class="ln step1" style="--d:3.4s">  <span class="f">setTimeout</span>(() =&gt; {</span><span class="ln step1" style="--d:9.6s">    console.<span class="f">log</span>(<span class="s">"This is an asynchronous function"</span>);</span><span class="ln step1" style="--d:3.4s">  }, <span class="n">2000</span>);</span><span class="ln">}</span><span class="ln step1" style="--d:3s"><span class="f">asyncFunction</span>();</span><span class="ln step1" style="--d:5s">console.<span class="f">log</span>(<span class="s">"This is called immediately"</span>);</span></div>
+          <div class="col" style="gap:16px;min-width:470px">
+            <div class="timer a" style="--d:3.6s"><span class="mono">setTimeout</span><div class="tbar"><i style="--d:3.6s"></i></div><b class="mono">2 s</b></div>
+            <div class="log">
+              <div class="ln mu">// console</div>
+              <div class="ln a" style="--d:5.4s"><span class="s2">This is called immediately</span></div>
+              <div class="ln a" style="--d:9.8s"><span class="y">This is an asynchronous function</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Why async -->
+      <section class="scene" data-dur="12" data-title="Why async?" data-audio="audio/p5/scene04.mp3" data-adur="18.76" data-anchors="[0, 2.8, 7.6]" data-tst="[0.0, 5.22, 11.52]" data-wa="[0, 3.0, 4.2, 5.4, 7.8, 8.8]" data-wt="[0, 5.22, 7.47, 9.28, 11.52, 14.15]">
+        <div class="kick a">03 · WHY ASYNC?</div>
+        <div class="h a" style="--d:.2s">The web is full of <span class="y">waiting</span></div>
+        <div class="row" style="gap:22px">
+          <div class="card grow a" style="--d:3s;align-items:flex-start"><span class="tag">waiting for</span><h3>A user event</h3><div class="mockbtn press" style="--d:3.6s;font-size:22px;padding:12px 26px">Click</div></div>
+          <div class="card grow a" style="--d:4.2s"><span class="tag">waiting for</span><h3>A server response</h3><div class="spin"></div></div>
+          <div class="card grow a" style="--d:5.4s"><span class="tag">waiting for</span><h3>Data to load</h3><div class="tbar wide"><i style="--d:5.6s;--dur:2.4s"></i></div></div>
+        </div>
+        <div class="row" style="gap:16px">
+          <div class="con a" style="--d:7.8s">✗ Waiting in line: the page freezes</div>
+          <div class="pro a" style="--d:8.8s">✓ Async: the page stays responsive</div>
+        </div>
+      </section>
+
+      <!-- 5 Promises -->
+      <section class="scene" data-dur="14" data-title="Promises" data-audio="audio/p5/scene05.mp3" data-adur="26.91" data-anchors="[0, 3.4, 9]" data-tst="[0.0, 8.19, 21.5]">
+        <div class="kick a">04 · PROMISES</div>
+        <div class="row" style="gap:30px;align-items:flex-start">
+          <div class="code sm grow a" style="--d:.4s;font-size:21px"><span class="ln"><span class="k">let</span> promise = <span class="k">new</span> <span class="f">Promise</span>(<span class="k">function</span>(resolve, reject) {</span><span class="ln">  <span class="f">setTimeout</span>(<span class="k">function</span>() {</span><span class="ln">    <span class="mark" style="--d:5s">resolve</span>(<span class="s">'Promise resolved'</span>);</span><span class="ln">  }, <span class="n">500</span>);</span><span class="ln">});</span><span class="ln"> </span><span class="ln">promise</span><span class="ln">  .<span class="f mark" style="--d:9.2s">then</span>(value =&gt; console.<span class="f">log</span>(value))</span><span class="ln">  .<span class="f mark" style="--d:10.4s">catch</span>(reason =&gt; console.<span class="f">log</span>(reason));</span></div>
+          <div class="pstates">
+            <div class="ps pend a" style="--an:pop;--d:3.6s"><b>pending</b><i>still waiting</i></div>
+            <div class="psplit">
+              <div class="ps ful a" style="--an:pop;--d:5s"><b>fulfilled</b><i>resolve(value) → then</i></div>
+              <div class="ps rej a" style="--an:pop;--d:6.4s"><b>rejected</b><i>reject(reason) → catch</i></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 Ajax -->
+      <section class="scene" data-dur="13" data-title="Ajax" data-audio="audio/p5/scene06.mp3" data-adur="22.75" data-anchors="[0, 3.4, 8]" data-tst="[0.0, 7.09, 15.98]">
+        <div class="kick a">05 · AJAX</div>
+        <div class="h a" style="--d:.2s;font-size:52px"><span class="y">A</span>synchronous <span class="y">J</span>avaScript <span class="y">a</span>nd <span class="y">X</span>ML</div>
+        <div class="row" style="gap:36px;align-items:center">
+          <div class="appm a" style="--d:3.4s">
+            <div class="sbar"><i></i><i></i><i></i><span class="tg">no reload</span></div>
+            <div class="appb"><div class="side"><b></b><b></b><b></b></div>
+              <div class="region"><div class="r0"><b></b><b style="width:70%"></b></div><div class="r1 a" style="--an:fi;--d:5.4s"><span class="ck" style="font-size:18px">new data</span><b style="width:80%"></b><b style="width:55%"></b></div></div>
+            </div>
+          </div>
+          <div class="col grow">
+            <div class="step a" style="--d:4s;font-size:24px"><b>1</b><span>Ask the server in the background</span></div>
+            <div class="step a" style="--d:5.4s;font-size:24px"><b>2</b><span>Update only one part of the page</span></div>
+            <div class="row" style="gap:12px;align-items:center">
+              <span class="con a" style="--d:8.2s;text-decoration:line-through">XML</span><span class="lbl a" style="--d:8.6s">→</span><span class="pro a" style="--d:8.8s">JSON today: lighter, JSON.parse built in</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 Three ways -->
+      <section class="scene" data-dur="12" data-title="Three ways" data-audio="audio/p5/scene07.mp3" data-adur="23.25" data-anchors="[0, 2.6, 8]" data-tst="[0.0, 4.51, 13.34]" data-wa="[0, 0.2, 2.8, 4.2, 5.6, 8.2]" data-wt="[0, 0.2, 4.51, 6.98, 9.45, 13.34]">
+        <div class="kick a">06 · AJAX IN JAVASCRIPT</div>
+        <div class="h a" style="--d:.2s">Three ways to call an API</div>
+        <div class="row" style="gap:20px">
+          <div class="card grow a" style="--d:2.8s"><span class="tag">1 · oldest</span><h3 class="mono" style="font-size:28px">XMLHttpRequest</h3><p>events and readyState</p></div>
+          <div class="card grow a" style="--d:4.2s"><span class="tag">2</span><h3 class="mono" style="font-size:28px">fetch().then()</h3><p>promises</p></div>
+          <div class="card grow a" style="--d:5.6s"><span class="tag">3 · cleanest</span><h3 class="mono" style="font-size:28px">async / await</h3><p>fetch, written like sync code</p></div>
+        </div>
+        <div class="pman a" style="--d:8.2s"><span class="tag" style="background:#fdf0e4;color:var(--orange)">Postman</span><span class="mono"><b class="y">GET</b> https://api.github.com/users/octocat</span><span class="pro" style="font-size:20px;padding:8px 14px">200 OK</span></div>
+      </section>
+
+      <!-- 8 XHR -->
+      <section class="scene" data-dur="14" data-title="XMLHttpRequest" data-audio="audio/p5/scene08.mp3" data-adur="32.37" data-anchors="[0, 3.6, 8]" data-tst="[0.0, 8.94, 19.05]">
+        <div class="kick a">07 · XMLHttpRequest</div>
+        <div class="code sm a" style="--d:.4s;font-size:24px"><span class="ln step1" style="--d:.8s"><span class="k">let</span> xhr = <span class="k">new</span> <span class="f">XMLHttpRequest</span>();</span><span class="ln step1" style="--d:8.2s">xhr.<span class="f">onreadystatechange</span> = <span class="k">function</span>() {</span><span class="ln step1" style="--d:9.2s">  <span class="k">if</span> (xhr.readyState != <span class="n">4</span>) <span class="k">return</span>;</span><span class="ln step1" style="--d:10.2s">  <span class="k">if</span> (xhr.status === <span class="n">200</span>) {</span><span class="ln step1" style="--d:11.2s">    console.<span class="f">log</span>(xhr.responseText);</span><span class="ln">  }</span><span class="ln">};</span><span class="ln step1" style="--d:3.8s">xhr.<span class="f">open</span>(<span class="s">'GET'</span>, <span class="s">'https://jsonplaceholder.typicode.com/todos/'</span>, <span class="k">true</span>);</span><span class="ln step1" style="--d:5.6s">xhr.<span class="f">send</span>();</span></div>
+        <div class="row" style="gap:14px">
+          <span class="tag a" style="--d:1s">1 · create</span><span class="tag a" style="--d:3.8s">2 · open(method, url)</span><span class="tag a" style="--d:5.6s">3 · send()</span><span class="tag a" style="--d:8.2s">4 · listen for the result</span><span class="pro a" style="--d:10.2s;font-size:20px;padding:8px 16px">status 200 = OK</span>
+        </div>
+      </section>
+
+      <!-- 9 readyState -->
+      <section class="scene" data-dur="13" data-title="readyState" data-audio="audio/p5/scene09.mp3" data-adur="29.23" data-anchors="[0, 3.4, 9]" data-tst="[0.0, 6.55, 18.61]" data-wa="[0, 0.2, 3.6, 4.8, 6.0, 7.2, 9.2]" data-wt="[0, 0.2, 6.55, 8.45, 11.65, 15.72, 18.61]">
+        <div class="kick a">08 · xhr.readyState</div>
+        <div class="h a" style="--d:.2s">Five states, from <em>0</em> to <em>4</em></div>
+        <div class="rs">
+          <div class="rsn a" style="--d:3.6s"><b>0</b><span>UNSENT</span><i>created, open() not called</i></div>
+          <div class="rsn a" style="--d:4.8s"><b>1</b><span>OPENED</span><i>open() called</i></div>
+          <div class="rsn a" style="--d:6s"><b>2</b><span>HEADERS_RECEIVED</span><i>headers and status ready</i></div>
+          <div class="rsn a" style="--d:7.2s"><b>3</b><span>LOADING</span><i>downloading, partial data</i></div>
+          <div class="rsn done a" style="--an:pop;--d:9.2s"><b>4</b><span>DONE</span><i>complete: use the data</i></div>
+        </div>
+      </section>
+
+      <!-- 10 fetch -->
+      <section class="scene" data-dur="14" data-title="fetch" data-audio="audio/p5/scene10.mp3" data-adur="32.76" data-anchors="[0, 3, 8.4]" data-tst="[0.0, 5.37, 19.94]">
+        <div class="kick a">09 · FETCH</div>
+        <div class="code sm a" style="--d:.4s;font-size:25px"><span class="ln step1" style="--d:3.2s"><span class="f">fetch</span>(url)</span><span class="ln step1" style="--d:4.6s">  .<span class="f">then</span>(response =&gt; response.<span class="f">json</span>())</span><span class="ln step1" style="--d:8.6s">  .<span class="f">then</span>(data =&gt; console.<span class="f">log</span>(data))</span><span class="ln step1" style="--d:10.8s">  .<span class="f">catch</span>(error =&gt; console.<span class="f">error</span>(error));</span></div>
+        <div class="flow">
+          <div class="strbox a" style="--d:3.4s;min-width:220px"><b>returns</b><span class="mono" style="color:var(--fg)">Promise</span></div>
+          <div class="fn a" style="--d:4.6s">then →</div>
+          <div class="strbox a" style="--d:5.2s;min-width:220px"><b>response</b><span class="mono" style="color:var(--fg)">.json()</span></div>
+          <div class="fn a" style="--d:8.6s">then →</div>
+          <div class="objbox a" style="--d:9.2s;min-width:220px"><b>data</b><span class="mono">{ … }</span></div>
+        </div>
+        <div class="con a" style="--d:10.8s;align-self:flex-start">.catch(): network error</div>
+      </section>
+
+      <!-- 11 async / await -->
+      <section class="scene" data-dur="14" data-title="async / await" data-audio="audio/p5/scene11.mp3" data-adur="33.88" data-anchors="[0, 3, 8.4]" data-tst="[0.0, 6.21, 22.85]">
+        <div class="kick a">10 · ASYNC / AWAIT</div>
+        <div class="code sm a" style="--d:.4s;font-size:25px"><span class="ln"><span class="k mark" style="--d:3.2s">async</span> <span class="k">function</span> <span class="f">getUser</span>(name) {</span><span class="ln">  <span class="k mark" style="--d:9.6s">try</span> {</span><span class="ln">    <span class="k">let</span> response = <span class="k mark" style="--d:4.4s">await</span> <span class="f">fetch</span>(<span class="s">"https://api.github.com/users/"</span> + name);</span><span class="ln">    <span class="k">let</span> data = <span class="k mark" style="--d:5.4s">await</span> response.<span class="f">json</span>();</span><span class="ln">    console.<span class="f">log</span>(data.login);</span><span class="ln">  } <span class="k mark" style="--d:9.8s">catch</span> (error) {</span><span class="ln">    console.<span class="f">error</span>(error);</span><span class="ln">  }</span><span class="ln">}</span></div>
+        <div class="row" style="gap:14px">
+          <div class="pro a" style="--d:6s">✓ no .then() chain</div>
+          <div class="pro a" style="--d:8.6s">✓ reads like synchronous code</div>
+          <div class="chip-y a" style="--d:9.8s">errors: try / catch</div>
+        </div>
+      </section>
+
+      <!-- 12 Real example -->
+      <section class="scene" data-dur="14" data-title="Real example" data-audio="audio/p5/scene12.mp3" data-adur="27.01" data-anchors="[0, 3.4, 8.6]" data-tst="[0.0, 7.61, 19.81]">
+        <div class="kick a">11 · A REAL SEARCH</div>
+        <div class="h a" style="--d:.2s">Search GitHub users</div>
+        <div class="row" style="gap:16px;align-items:center">
+          <div class="search grow a" style="--d:.6s"><span class="q">⌕</span><span class="typed a" style="--an:ty;--du:1.2s;--d:3.6s">octocat</span><span class="caret"></span></div>
+          <div class="a" style="--d:1s"><span class="mockbtn press" style="--d:5.2s;font-size:24px;padding:16px 32px">Search</span></div>
+        </div>
+        <div class="row" style="gap:14px;align-items:center">
+          <div class="pman a" style="--d:5.6s;flex:1"><span class="mono"><b class="y">GET</b> api.github.com/search/users?q=octocat</span><div class="a x" style="--d:5.8s;--o:8.6s"><div class="spin sm"></div></div><span class="pro a" style="--d:8.6s;font-size:20px;padding:8px 14px">200 OK</span></div>
+        </div>
+        <div class="row" style="gap:16px">
+          <div class="usr a" style="--an:pop;--d:9s"><i></i><b>octocat</b><span>github.com/octocat</span></div>
+          <div class="usr a" style="--an:pop;--d:9.4s"><i style="background:#9cc2ff"></i><b>octocat-dev</b><span>github.com/octocat-dev</span></div>
+          <div class="usr a" style="--an:pop;--d:9.8s"><i style="background:#fdc08a"></i><b>octocats</b><span>github.com/octocats</span></div>
+        </div>
+      </section>
+
+      <!-- 13 Outro -->
+      <section class="scene" data-dur="8" data-title="Your turn" data-audio="audio/p5/scene13.mp3" data-adur="24.27" data-anchors="[0, 1.4, 5]" data-tst="[0.0, 4.9, 19.55]">
+        <div class="kick a">NEXT</div>
+        <div class="h a" style="--d:.2s;font-size:96px;margin-top:40px">Your turn</div>
+        <div class="h a" style="--d:1.4s;font-size:40px;font-weight:500;color:var(--mute)">Open the practice platform and start the Part 5 tab</div>
+        <div class="topics">
+          <span class="a" style="--d:2s">Order the output</span><span class="a" style="--d:2.3s">readyState</span><span class="a" style="--d:2.6s">Predict the async</span><span class="a" style="--d:2.9s">fetch &amp; async challenges</span>
+        </div>
+      </section>
+      <div class="scn-no" id="scnNo"></div>
+      <div class="fsbar" id="fsbar" aria-label="Player controls">
+        <button type="button" data-fsb="prev" aria-label="Previous scene">⏮</button>
+        <button type="button" data-fsb="play" class="main" aria-label="Play">▶</button>
+        <button type="button" data-fsb="next" aria-label="Next scene">⏭</button>
+        <span class="fst"></span>
+        <button type="button" data-fsb="voice" class="txt" aria-label="Arabic voice on or off">Voice</button>
+        <button type="button" data-fsb="subs" class="txt" aria-label="Subtitles">CC EN</button>
+        <button type="button" data-fsb="exit" aria-label="Exit full screen">✕</button>
+      </div>
+      <div class="cap" id="cap"><span id="capText"></span></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn primary" id="play" type="button">Play</button>
+    <button class="btn" id="prev" type="button" aria-label="Previous scene">← Prev</button>
+    <button class="btn" id="next" type="button" aria-label="Next scene">Next →</button>
+    <div class="prog" id="prog" role="slider" aria-label="Progress" tabindex="0"><i id="progFill"></i></div>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
+  <div class="bar">
+    <button class="btn toggle" id="voice" type="button" aria-pressed="true"><span class="dot"></span><span id="voiceLbl">Arabic voice: on</span></button>
+    <button class="btn" id="subs" type="button">Subtitles: <b id="subsLbl">English</b></button>
+    <button class="btn" id="fs" type="button">⤢ Full screen</button>
+    <a class="btn" style="text-decoration:none;margin-left:auto" href="index.html">← All parts</a><a class="btn primary" style="text-decoration:none" href="practice.html#part5">Practice Part 5 →</a>
+  </div>
+  <div class="chaps" id="chaps"></div>
+  <div class="hint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>Space: play / pause · ← →: scenes · M: voice on / off · C: subtitles · F: fullscreen</span><span>Developed by: <b style="color:var(--teal-d)">Fatmah Bamashmoos</b></span></div>
+</div>
+<script src="js/subtitles/part5.js"></script>
+<script src="js/motion.js"></script>
+</body>
+</html>

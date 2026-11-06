@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPIT-405 · Part 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="css/motion.css">
+</head>
+<body>
+<div class="wrap" dir="ltr">
+  <div class="frame" id="frame">
+    <div class="stage" id="stage">
+      <svg class="bgfx" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M1600 96 H1440 L1400 56 H1210"/><path class="pulse" d="M1600 96 H1440 L1400 56 H1210"/>
+        <path d="M1600 150 H1520 L1490 120"/>
+        <path d="M0 878 H260 L290 848 H520"/><path class="pulse" style="animation-delay:-3s" d="M0 878 H260 L290 848 H520"/>
+        <path d="M1080 900 V884 L1110 854 H1380"/>
+        <circle cx="1210" cy="56" r="6" class="t"/><circle cx="1490" cy="120" r="5"/><circle cx="520" cy="848" r="6" class="t"/><circle cx="1380" cy="854" r="5"/>
+      </svg>
+
+      <!-- 1 Intro -->
+      <section class="scene" data-dur="8" data-title="Intro" data-audio="audio/p4/scene01.mp3" data-adur="21.63" data-anchors="[0, 3, 5.5]" data-tst="[0.0, 8.87, 17.34]">
+        <div class="kick">CPIT-405 · WEB APPLICATIONS</div>
+        <div class="row" style="align-items:center;gap:44px;margin-top:24px">
+          <div class="logo">{ }</div>
+          <div class="title-big">JSON</div>
+        </div>
+        <div class="h" style="font-size:54px">Part 4: The language of web data</div>
+        <div class="topics">
+          <span>What is JSON</span><span>Syntax rules</span><span>Data types</span><span>JSON vs XML</span><span>JSON.stringify</span><span>JSON.parse</span><span>Validation</span>
+        </div>
+      </section>
+
+      <!-- 2 What is JSON -->
+      <section class="scene" data-dur="12" data-title="What is JSON?" data-audio="audio/p4/scene02.mp3" data-adur="24.84" data-anchors="[0, 3, 7.5]" data-tst="[0.0, 4.76, 16.23]">
+        <div class="kick a">01 · WHAT IS JSON?</div>
+        <div class="h a" style="--d:.2s"><span class="y">J</span>ava<span class="y">S</span>cript <span class="y">O</span>bject <span class="y">N</span>otation</div>
+        <div class="row" style="align-items:center;gap:26px">
+          <div class="card a" style="--d:3.2s;align-items:center;min-width:260px"><span class="tag">browser</span><svg class="ico" viewBox="0 0 70 56"><rect x="3" y="3" width="64" height="40" rx="6" fill="#eef3f6" stroke="#1c2836" stroke-width="3"/><path d="M25 53h20M35 43v10" stroke="#1c2836" stroke-width="3" stroke-linecap="round"/></svg></div>
+          <div class="wire a grow" style="--an:fi;--d:3.6s"><span class="packet">{"name": "Ali"}</span><span class="packet back">{"ok": true}</span></div>
+          <div class="card a" style="--d:3.2s;align-items:center;min-width:260px"><span class="tag">server</span><svg class="ico" viewBox="0 0 70 56"><rect x="10" y="3" width="50" height="22" rx="5" fill="#eef3f6" stroke="#1c2836" stroke-width="3"/><rect x="10" y="31" width="50" height="22" rx="5" fill="#eef3f6" stroke="#1c2836" stroke-width="3"/><circle cx="20" cy="14" r="3" fill="#12b3a3"/><circle cx="20" cy="42" r="3" fill="#12b3a3"/></svg></div>
+        </div>
+        <div class="row" style="gap:12px;flex-wrap:wrap;align-items:center">
+          <div class="lbl a" style="--d:7.6s;font-size:24px">works with</div>
+          <span class="tag a" style="--an:pop;--d:7.9s">JavaScript</span><span class="tag a" style="--an:pop;--d:8.2s">Python</span><span class="tag a" style="--an:pop;--d:8.5s">Java</span><span class="tag a" style="--an:pop;--d:8.8s">PHP</span><span class="tag a" style="--an:pop;--d:9.1s">Go</span><span class="tag a" style="--an:pop;--d:9.4s">C#</span>
+        </div>
+      </section>
+
+      <!-- 3 Syntax -->
+      <section class="scene" data-dur="14" data-title="Syntax" data-audio="audio/p4/scene03.mp3" data-adur="28.03" data-anchors="[0, 2.8, 6.6, 10]" data-tst="[0.0, 3.25, 13.63, 21.48]">
+        <div class="kick a">02 · SYNTAX RULES</div>
+        <div class="h a" style="--d:.2s">Everything is a <span class="y">key</span> and a <span class="y">value</span></div>
+        <div class="code a" style="--d:.8s;font-size:40px;padding:26px 34px">{ <span class="s"><span class="mark" style="--d:3s">"name"</span></span>: <span class="s">"Ali"</span><span class="mark" style="--d:4.4s">,</span> <span class="s"><span class="mark" style="--d:3.4s">"age"</span></span>: <span class="n">20</span> }</div>
+        <div class="row" style="gap:18px">
+          <div class="chip a grow" style="--d:3s"><span class="y">"keys"</span><b>always strings in double quotes</b></div>
+          <div class="chip a grow" style="--d:4.4s"><span class="y">,</span><b>commas between pairs</b></div>
+          <div class="chip a grow" style="--d:6.8s"><span class="y">{ }</span><b>an object</b></div>
+          <div class="chip a grow" style="--d:7.4s"><span class="y">[ ]</span><b>an array</b></div>
+        </div>
+        <div class="row" style="gap:14px">
+          <span class="ck a" style="--an:pop;--d:10.2s">user.json</span>
+          <span class="ck a" style="--an:pop;--d:10.8s">Content-Type: application/json</span>
+        </div>
+      </section>
+
+      <!-- 4 Data types -->
+      <section class="scene" data-dur="13" data-title="Data types" data-audio="audio/p4/scene04.mp3" data-adur="29.39" data-anchors="[0, 4.4, 8]" data-tst="[0.0, 7.73, 14.39]" data-wa="[0,0.4,0.8,1.2,1.6,2.0,2.4,4.4,5.0,5.8,6.6,8.2,9.6]" data-wt="[0,2.8,3.55,4.4,5.3,6.1,6.75,7.7,8.9,10.35,11.8,14.35,17.55]">
+        <div class="kick a">03 · DATA TYPES</div>
+        <div class="row" style="gap:12px;flex-wrap:wrap">
+          <div class="chip a" style="--an:pop;--d:.4s"><span class="n">26</span><b>number</b></div>
+          <div class="chip a" style="--an:pop;--d:.8s"><span class="s">"Ali"</span><b>string</b></div>
+          <div class="chip a" style="--an:pop;--d:1.2s"><span class="k">true</span><b>boolean</b></div>
+          <div class="chip a" style="--an:pop;--d:1.6s"><span>[ … ]</span><b>array</b></div>
+          <div class="chip a" style="--an:pop;--d:2s"><span>{ … }</span><b>object</b></div>
+          <div class="chip a" style="--an:pop;--d:2.4s"><span class="k">null</span><b>null</b></div>
+        </div>
+        <div class="row" style="gap:30px;align-items:flex-start">
+          <div class="code sm a" style="--d:4.4s;font-size:23px"><span class="ln">{</span><span class="ln">  <span class="s">"name"</span>: <span class="s mark" style="--d:5s">"Ali"</span>,</span><span class="ln">  <span class="s">"age"</span>: <span class="n mark" style="--d:5.8s">26</span>,</span><span class="ln">  <span class="s">"employed"</span>: <span class="k mark" style="--d:6.6s">true</span>,</span><span class="ln">  <span class="s">"car"</span>: <span class="k">null</span>,</span><span class="ln">  <span class="s">"address"</span>: <span class="mark" style="--d:8.2s">{ <span class="s">"city"</span>: <span class="s">"Jeddah"</span>, <span class="s">"street"</span>: <span class="s">"300 Airport Rd."</span> }</span>,</span><span class="ln">  <span class="s">"languages"</span>: <span class="mark" style="--d:9.6s">[<span class="s">"JavaScript"</span>, <span class="s">"Python"</span>, <span class="s">"go"</span>]</span></span><span class="ln">}</span></div>
+          <div class="col" style="gap:12px;min-width:220px">
+            <span class="tag a" style="--d:5s">string</span><span class="tag a" style="--d:5.8s">number</span><span class="tag a" style="--d:6.6s">boolean</span><span class="tag a" style="--d:8.2s;background:#e3ecfb;color:var(--cyan)">nested object</span><span class="tag a" style="--d:9.6s;background:#fdf0e4;color:var(--orange)">array</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 JSON vs XML -->
+      <section class="scene" data-dur="14" data-title="JSON vs XML" data-audio="audio/p4/scene05.mp3" data-adur="31.63" data-anchors="[0, 2.6, 6.2, 9.6]" data-tst="[0.0, 4.73, 13.2, 25.01]">
+        <div class="kick a">04 · JSON vs XML</div>
+        <div class="row" style="gap:28px">
+          <div class="col grow a" style="--d:.5s">
+            <div class="lbl y">JSON</div>
+            <div class="code sm" style="font-size:22px"><span class="ln">{</span><span class="ln">  <span class="s">"course"</span>: {</span><span class="ln">    <span class="s">"name"</span>: <span class="s">"Web Applications"</span>,</span><span class="ln">    <span class="s">"code"</span>: <span class="s">"CPIT"</span>,</span><span class="ln">    <span class="s">"number"</span>: <span class="n">405</span></span><span class="ln">  }</span><span class="ln">}</span></div>
+          </div>
+          <div class="col grow a" style="--d:.8s">
+            <div class="lbl">XML</div>
+            <div class="code sm" style="font-size:22px"><span class="ln mark" style="--d:9.8s"><span class="c">&lt;!-- a comment in XML --&gt;</span></span><span class="ln"><span class="k">&lt;course&gt;</span></span><span class="ln">  <span class="k">&lt;name&gt;</span>Web Applications<span class="k">&lt;/name&gt;</span></span><span class="ln">  <span class="k">&lt;code&gt;</span>CPIT<span class="k">&lt;/code&gt;</span></span><span class="ln">  <span class="k">&lt;number&gt;</span>405<span class="k">&lt;/number&gt;</span></span><span class="ln"><span class="k">&lt;/course&gt;</span></span></div>
+          </div>
+        </div>
+        <div class="row" style="gap:12px;flex-wrap:wrap">
+          <div class="pro a" style="--d:2.8s">✓ shorter</div><div class="pro a" style="--d:3.4s">✓ faster</div><div class="pro a" style="--d:4s">✓ easier to read</div>
+          <div class="pro a" style="--d:6.4s">✓ JSON.parse() built in</div><div class="pro a" style="--d:7.2s">✓ GitHub, Instagram APIs</div>
+          <div class="con a" style="--d:9.8s">✗ no comments in JSON</div>
+        </div>
+      </section>
+
+      <!-- 6 Strings over HTTP -->
+      <section class="scene" data-dur="12" data-title="Strings over HTTP" data-audio="audio/p4/scene06.mp3" data-adur="32.21" data-anchors="[0, 3.4, 7]" data-tst="[0.0, 9.54, 22.37]">
+        <div class="kick a">05 · DATA TRAVELS AS TEXT</div>
+        <div class="h a" style="--d:.2s">Over HTTP, data is always a <span class="y">string</span></div>
+        <div class="flow">
+          <div class="objbox a" style="--d:3.4s"><b>object</b><span class="mono">{ name: "Ali" }</span></div>
+          <div class="fn a" style="--d:3.8s">JSON.stringify() →</div>
+          <div class="strbox a" style="--d:4.4s"><b>string</b><span class="mono">'{"name":"Ali"}'</span></div>
+        </div>
+        <div class="flow">
+          <div class="strbox a" style="--d:7s"><b>string</b><span class="mono">'{"name":"Ali"}'</span></div>
+          <div class="fn a" style="--d:7.4s;background:linear-gradient(135deg,#5b8def,#3d6fd0)">JSON.parse() →</div>
+          <div class="objbox a" style="--d:8s"><b>object</b><span class="mono">{ name: "Ali" }</span></div>
+        </div>
+      </section>
+
+      <!-- 7 stringify -->
+      <section class="scene" data-dur="12" data-title="JSON.stringify" data-audio="audio/p4/scene07.mp3" data-adur="27.72" data-anchors="[0, 3.6, 7.6]" data-tst="[0.0, 10.3, 22.22]">
+        <div class="kick a">06 · JSON.stringify(value)</div>
+        <div class="code sm a" style="--d:.4s"><span class="ln"><span class="k">let</span> user = {</span><span class="ln">  name: <span class="s">"Ali"</span>,</span><span class="ln">  languages: [<span class="s">"JavaScript"</span>, <span class="s">"Python"</span>, <span class="s">"Go"</span>]</span><span class="ln">};</span><span class="ln a" style="--an:ty;--d:3.8s"><span class="k">let</span> jsonText = JSON.<span class="f">stringify</span>(user);</span></div>
+        <div class="col a" style="--d:5s;gap:10px">
+          <div class="lbl">jsonText (a string)</div>
+          <div class="rbox" style="font:700 26px var(--mono)"><span><span class="mark" style="--d:5.8s">"name"</span>:"Ali",<span class="mark" style="--d:6.2s">"languages"</span>:["JavaScript","Python","Go"]</span></div>
+        </div>
+        <div class="row a" style="--d:7.8s;gap:16px;align-items:center"><span class="ck">ready to send</span><span class="lbl" style="font-size:30px">→</span><div class="card" style="padding:14px 24px"><span class="tag">server</span></div></div>
+      </section>
+
+      <!-- 8 parse -->
+      <section class="scene" data-dur="12" data-title="JSON.parse" data-audio="audio/p4/scene08.mp3" data-adur="27.4" data-anchors="[0, 3.6, 7.6]" data-tst="[0.0, 9.26, 19.1]">
+        <div class="kick a">07 · JSON.parse(text)</div>
+        <div class="code sm a" style="--d:.4s"><span class="ln"><span class="k">let</span> jsonText = <span class="s">'{"name": "Ali", "languages": ["JavaScript", "Python", "Go"]}'</span>;</span><span class="ln a" style="--an:ty;--d:3.8s"><span class="k">let</span> user = JSON.<span class="f">parse</span>(jsonText);</span><span class="ln a" style="--an:ty;--d:5.2s">user.name <span class="c">// "Ali"</span></span></div>
+        <div class="row" style="gap:28px;align-items:center">
+          <div class="objtree a" style="--d:4.4s"><b>user</b><span>name: <i>"Ali"</i></span><span>languages: <i>[3 items]</i></span></div>
+          <div class="page2 a" style="--d:7.8s"><div class="sbar"><i></i><i></i><i></i></div><h4>Ali</h4><p>Programming Languages: JavaScript, Python, Go</p></div>
+          <div class="code sm a" style="--d:8.6s;font-size:20px;padding:14px 20px">user.languages.<span class="f">join</span>(<span class="s">", "</span>)</div>
+        </div>
+      </section>
+
+      <!-- 9 Validation -->
+      <section class="scene" data-dur="14" data-title="Validation" data-audio="audio/p4/scene09.mp3" data-adur="29.57" data-anchors="[0, 4.6, 9.6]" data-tst="[0.0, 8.5, 18.58]">
+        <div class="kick a">08 · VALIDATION</div>
+        <div class="row a" style="--d:.4s;gap:20px;align-items:center">
+          <div class="code sm">JSON.<span class="f">parse</span>(<span class="s">"{'name': 'Ali'}"</span>)</div>
+          <div class="err a" style="--an:pop;--d:1.6s">SyntaxError: Unexpected token '</div>
+        </div>
+        <div class="col" style="gap:10px">
+          <div class="vrow a" style="--d:4.8s"><span class="bad">✗</span><code>{'name': 'Ali'}</code><i>single quotes</i></div>
+          <div class="vrow a" style="--d:5.8s"><span class="bad">✗</span><code>{"a": 1, "b": 2,}</code><i>trailing comma</i></div>
+          <div class="vrow a" style="--d:6.8s"><span class="bad">✗</span><code>{name: "Ali"}</code><i>key without quotes</i></div>
+          <div class="vrow ok a" style="--d:7.8s"><span class="ok">✓</span><code>{"name": "Ali"}</code><i>valid</i></div>
+        </div>
+        <div class="row a" style="--d:9.8s;gap:14px;align-items:center">
+          <span class="tag">VS Code: Format Document</span><span class="tag">JSONLint</span><span class="lbl" style="font-size:22px">beautifiers format · linters find errors</span>
+        </div>
+      </section>
+
+      <!-- 10 Outro -->
+      <section class="scene" data-dur="8" data-title="Your turn" data-audio="audio/p4/scene10.mp3" data-adur="28.29" data-anchors="[0, 1.4, 5]" data-tst="[0.0, 5.37, 24.71]">
+        <div class="kick a">NEXT</div>
+        <div class="h a" style="--d:.2s;font-size:96px;margin-top:40px">Your turn</div>
+        <div class="h a" style="--d:1.4s;font-size:40px;font-weight:500;color:var(--mute)">Open the practice platform and start the Part 4 tab</div>
+        <div class="topics">
+          <span class="a" style="--d:2s">Fix the JSON</span><span class="a" style="--d:2.3s">Predict the output</span><span class="a" style="--d:2.6s">stringify &amp; parse challenges</span>
+        </div>
+      </section>
+      <div class="scn-no" id="scnNo"></div>
+      <div class="fsbar" id="fsbar" aria-label="Player controls">
+        <button type="button" data-fsb="prev" aria-label="Previous scene">⏮</button>
+        <button type="button" data-fsb="play" class="main" aria-label="Play">▶</button>
+        <button type="button" data-fsb="next" aria-label="Next scene">⏭</button>
+        <span class="fst"></span>
+        <button type="button" data-fsb="voice" class="txt" aria-label="Arabic voice on or off">Voice</button>
+        <button type="button" data-fsb="subs" class="txt" aria-label="Subtitles">CC EN</button>
+        <button type="button" data-fsb="exit" aria-label="Exit full screen">✕</button>
+      </div>
+      <div class="cap" id="cap"><span id="capText"></span></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn primary" id="play" type="button">Play</button>
+    <button class="btn" id="prev" type="button" aria-label="Previous scene">← Prev</button>
+    <button class="btn" id="next" type="button" aria-label="Next scene">Next →</button>
+    <div class="prog" id="prog" role="slider" aria-label="Progress" tabindex="0"><i id="progFill"></i></div>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
+  <div class="bar">
+    <button class="btn toggle" id="voice" type="button" aria-pressed="true"><span class="dot"></span><span id="voiceLbl">Arabic voice: on</span></button>
+    <button class="btn" id="subs" type="button">Subtitles: <b id="subsLbl">English</b></button>
+    <button class="btn" id="fs" type="button">⤢ Full screen</button>
+    <a class="btn" style="text-decoration:none;margin-left:auto" href="index.html">← All parts</a><a class="btn primary" style="text-decoration:none" href="practice.html#part4">Practice Part 4 →</a>
+  </div>
+  <div class="chaps" id="chaps"></div>
+  <div class="hint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>Space: play / pause · ← →: scenes · M: voice on / off · C: subtitles · F: fullscreen</span><span>Developed by: <b style="color:var(--teal-d)">Fatmah Bamashmoos</b></span></div>
+</div>
+<script src="js/subtitles/part4.js"></script>
+<script src="js/motion.js"></script>
+</body>
+</html>
