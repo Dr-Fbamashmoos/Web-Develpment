@@ -1,0 +1,588 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPIT-405 · Part 1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+/* Layout: a bright 1600x900 product-style stage (soft white surfaces, teal accent, thin circuit lines) scaled to fit; controls beneath. Single light look by design. */
+:root{
+  --ink:#f2f6f9; --panel:#ffffff; --panel2:#eef3f6; --line:#dfe7ed;
+  --fg:#1c2836; --mute:#677487;
+  --js:#12b3a3; --teal-d:#0b8f83; --teal-l:#d9f5f1;
+  --cyan:#3d7be0; --green:#0e9a6c; --red:#e0474c; --orange:#d9772b; --pink:#c0379b;
+  --codebg:#1d2633; --codefg:#e7edf3;
+  --shadow:0 18px 40px -18px rgba(22,52,74,.22), 0 2px 6px rgba(22,52,74,.05);
+  --sans:"Plus Jakarta Sans","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --ar:"IBM Plex Sans Arabic","Plus Jakarta Sans",Tahoma,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:light;
+}
+html,body{background:#e9eff3;color:var(--fg)}
+body{font-family:var(--sans);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px}
+.wrap{max-width:min(1280px,calc((100vh - 190px)*16/9));min-width:0;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.frame{position:relative;width:100%;aspect-ratio:16/9;max-width:100%;border-radius:22px;overflow:hidden;background:var(--ink);box-shadow:0 30px 60px -30px rgba(22,52,74,.35),0 0 0 1px rgba(22,52,74,.06)}
+.frame:fullscreen{border-radius:0}
+.stage{position:absolute;top:0;left:0;width:1600px;height:900px;transform-origin:0 0;overflow:hidden;
+  background:radial-gradient(900px 520px at 88% -8%, rgba(18,179,163,.13), transparent 62%),radial-gradient(700px 500px at -5% 105%, rgba(61,123,224,.08), transparent 60%),linear-gradient(180deg,#f8fbfd,#eef3f7)}
+.stage::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(28,40,54,.09) 1.2px,transparent 1.3px);background-size:34px 34px;-webkit-mask-image:linear-gradient(180deg,#000 0,transparent 75%);mask-image:linear-gradient(180deg,#000 0,transparent 75%)}
+.bgfx{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.bgfx path{fill:none;stroke:#b9cbd6;stroke-width:1.5}
+.bgfx .pulse{stroke:var(--js);stroke-width:3;stroke-linecap:round;stroke-dasharray:60 900;animation:flow 6s linear infinite;opacity:.85}
+.bgfx circle{fill:#fff;stroke:#a9bfcc;stroke-width:1.5}
+.bgfx circle.t{stroke:var(--js);fill:var(--teal-l)}
+@keyframes flow{from{stroke-dashoffset:960}to{stroke-dashoffset:0}}
+.scene{position:absolute;inset:0;padding:60px 96px 190px;display:flex;flex-direction:column;gap:34px;visibility:hidden;z-index:1}
+.scene.on{visibility:visible}
+.scene.tight{gap:20px}.scene.tight .h{font-size:50px}.scene.tight .code.sm{font-size:21px;padding:16px 24px}.scene.tight .mem{min-height:84px}.scene.tight .col{gap:16px}
+.kick{font:700 20px/1 var(--mono);color:var(--teal-d);letter-spacing:.14em;display:flex;align-items:center;gap:14px}
+.kick::before{content:"";width:34px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--js),#4fd1c5)}
+.h{font-size:62px;font-weight:800;line-height:1.12;letter-spacing:-.02em;text-wrap:balance}
+.h em{font-style:normal;color:var(--teal-d);font-family:var(--mono);font-size:.86em;font-weight:700}
+.row{display:flex;gap:30px;align-items:stretch}
+.col{display:flex;flex-direction:column;gap:22px}
+.grow{flex:1;min-width:0}
+.card{background:var(--panel);border-radius:22px;padding:28px 30px;display:flex;flex-direction:column;gap:14px;box-shadow:var(--shadow)}
+.card h3{margin:0;font-size:31px;font-weight:700;letter-spacing:-.01em}
+.card p{margin:0;font-size:23px;color:var(--mute);line-height:1.55}
+.tag{display:inline-flex;align-items:center;font:700 17px/1 var(--mono);padding:9px 13px;border-radius:999px;background:var(--teal-l);color:var(--teal-d);align-self:flex-start}
+.code{text-align:left;font:500 27px/1.6 var(--mono);background:var(--codebg);border-radius:18px;padding:22px 28px;white-space:pre;color:var(--codefg);box-shadow:var(--shadow)}
+.code.sm{font-size:24px}
+.ln{display:block}
+.k{color:var(--pink)} .s{color:var(--green)} .n{color:var(--orange)} .f{color:var(--teal-d)} .c{color:#8a97a8} .p{color:var(--cyan)}
+.code .k{color:#f2a7e1} .code .s{color:#7ee2b8} .code .n{color:#fdc08a} .code .f{color:#5fe0d2} .code .p{color:#9cc2ff} .code .y{color:#5fe0d2} .code .cy{color:#9cc2ff} .code .ok{color:#7ee2b8}
+.out{text-align:left;font:700 28px/1.5 var(--mono);color:var(--green)}
+.err{text-align:left;font:600 20px/1.4 var(--mono);color:var(--red);background:#fdecec;border-radius:14px;padding:14px 20px;border:1px solid #f6c9ca}
+.ok{color:var(--green)} .bad{color:var(--red)} .y{color:var(--teal-d)} .cy{color:var(--cyan)} .mu{color:var(--mute)}
+.mono{font-family:var(--mono);direction:ltr;unicode-bidi:isolate}
+
+/* animation vocabulary */
+.a{opacity:0}
+.scene.on .a{animation:var(--an,fu) var(--du,.7s) cubic-bezier(.2,.8,.2,1) var(--d,0s) both}
+.scene.on .a.x{animation:var(--an,fu) var(--du,.7s) cubic-bezier(.2,.8,.2,1) var(--d,0s) both, go .4s ease var(--o) forwards}
+.scene.on .gone{animation:go .45s ease var(--d) forwards}
+.scene.on .dim{animation:dim .5s ease var(--d) forwards}
+.scene.on .hl{animation:hl 1s ease var(--d) both}
+@keyframes fu{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.6)}70%{opacity:1;transform:scale(1.05)}100%{opacity:1;transform:none}}
+@keyframes sr{from{opacity:0;transform:translateX(-80px)}to{opacity:1;transform:none}}
+@keyframes ty{from{opacity:1;clip-path:inset(0 100% 0 0)}to{opacity:1;clip-path:inset(0 0 0 0)}}
+@keyframes dim{to{opacity:.3;text-decoration:line-through}}
+@keyframes go{to{opacity:0;transform:translateY(-14px)}}
+@keyframes hl{0%,100%{box-shadow:var(--shadow);background:var(--panel)}25%,70%{box-shadow:0 0 0 4px var(--js),0 18px 40px -12px rgba(18,179,163,.45);background:var(--teal-l)}}
+.scene.on .code .hl{animation-name:hlc}
+@keyframes hlc{0%,100%{background:transparent;box-shadow:none}25%,70%{background:rgba(95,224,210,.22);box-shadow:0 0 0 3px #5fe0d2}}
+@keyframes stamp{0%{opacity:0;transform:scale(2.2) rotate(-14deg)}60%{opacity:1;transform:scale(.95) rotate(-6deg)}100%{opacity:1;transform:rotate(-6deg)}}
+@keyframes glow{0%,100%{box-shadow:0 20px 40px -16px rgba(18,179,163,.55)}50%{box-shadow:0 26px 70px -10px rgba(18,179,163,.75)}}
+.stage.paused *, .stage.paused *::before, .stage.paused *::after{animation-play-state:paused!important}
+
+/* caption */
+.cap{position:absolute;z-index:3;left:96px;right:96px;bottom:62px;min-height:92px;display:flex;align-items:center;gap:20px;font-size:29px;line-height:1.45;font-weight:500;background:rgba(255,255,255,.86);backdrop-filter:blur(8px);border-radius:20px;padding:16px 28px;box-shadow:var(--shadow)}
+.cap::before{content:"";flex:0 0 6px;align-self:stretch;background:linear-gradient(180deg,var(--js),#4fd1c5);border-radius:3px}
+.cap[hidden]{display:none!important}
+.cap span{transition:opacity .3s}
+.cap.rtl{direction:rtl;font-family:var(--ar)}
+.scn-no{position:absolute;z-index:3;top:30px;right:40px;font:600 17px var(--mono);color:var(--mute)}
+
+/* scene specifics */
+.logo{width:150px;height:150px;background:linear-gradient(135deg,#1cc7b5,#0b8f83);color:#fff;font:800 70px/1 var(--mono);display:flex;align-items:flex-end;justify-content:flex-end;padding:16px;border-radius:30px;animation:glow 4s ease-in-out infinite}
+.title-big{font:800 150px/1 var(--sans);letter-spacing:-.045em}
+.topics{display:flex;flex-wrap:wrap;gap:14px}
+.topics span{font-size:24px;font-weight:600;padding:11px 22px;border-radius:999px;color:var(--fg);background:var(--panel);box-shadow:var(--shadow)}
+.tl{display:flex;gap:0;position:relative;margin-top:10px}
+.tl::before{content:"";position:absolute;left:0;right:0;top:20px;height:3px;border-radius:2px;background:linear-gradient(90deg,var(--line),var(--js),var(--line))}
+.tl>div{flex:1;display:flex;flex-direction:column;gap:10px;align-items:flex-start;position:relative}
+.tl b{font:700 24px var(--mono);color:var(--teal-d);background:var(--panel);padding:6px 12px;border-radius:10px;position:relative;box-shadow:var(--shadow)}
+.tl i{font-style:normal;font-size:21px;color:var(--mute)}
+.tl .big b{color:#fff;background:linear-gradient(135deg,#1cc7b5,#0b8f83)}
+.box{font:700 30px var(--mono);background:var(--panel);border-radius:16px;min-width:120px;height:92px;display:flex;align-items:center;justify-content:center;padding:0 18px;position:relative;box-shadow:var(--shadow);border:2px solid transparent}
+.box small{position:absolute;bottom:-38px;left:0;right:0;text-align:center;font:600 19px var(--mono);color:var(--mute)}
+.arr{display:flex;gap:16px;align-items:center}
+.lbl{font:700 25px var(--mono);color:var(--mute)}
+.chip{font:700 25px var(--mono);padding:14px 20px;border-radius:16px;background:var(--panel);box-shadow:var(--shadow);display:flex;flex-direction:column;gap:6px}
+.chip b{font-family:var(--sans);font-size:19px;color:var(--mute);font-weight:600}
+.stampx{display:inline-block;margin-top:6px;font:800 32px var(--sans);color:var(--red);border:4px solid var(--red);border-radius:14px;padding:8px 22px;transform:rotate(-6deg);opacity:0;background:#fff}
+.scene.on .stampx{animation:stamp .6s cubic-bezier(.2,.8,.2,1) var(--d) both}
+.mem{display:flex;gap:14px;align-items:center;min-height:100px}
+.mem .box{min-width:150px;flex-direction:column;height:auto;padding:12px 18px;gap:2px}
+.mem .box em{font-style:normal;font-size:17px;color:var(--mute);font-family:var(--sans);font-weight:600}
+.swap{position:relative;display:inline-block;min-width:1.6em;text-align:center}
+.swap>span{display:inline-block}
+.swap>span+span{position:absolute;inset:0}
+.vs{font:800 32px var(--mono)}
+.machine{display:flex;align-items:center;gap:30px}
+.machine .body{background:linear-gradient(135deg,#1cc7b5,#0b8f83);color:#fff;font:800 40px var(--mono);padding:34px 42px;border-radius:24px;box-shadow:0 24px 50px -18px rgba(18,179,163,.6)}
+.ball{font:800 34px var(--mono);width:84px;height:84px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--panel);border:3px solid var(--cyan);color:var(--cyan);box-shadow:var(--shadow)}
+.ball.res{border-color:var(--js);color:var(--teal-d)}
+.forms{display:flex;flex-direction:column;gap:12px}
+.forms>div{display:grid;grid-template-columns:350px 1fr;gap:22px;align-items:center}
+.forms .nm{font-size:25px;font-weight:700}
+.forms .nm b{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:50%;background:var(--teal-l);font:800 18px var(--mono);color:var(--teal-d);margin-right:12px}
+.forms .code{padding:10px 20px;font-size:23px;border-radius:14px}
+.pill-row{display:flex;gap:12px;flex-wrap:wrap}
+.pill-row span{font:700 21px var(--mono);padding:10px 16px;border-radius:999px;background:var(--panel);box-shadow:var(--shadow)}
+.sep{width:2px;background:linear-gradient(180deg,transparent,var(--line),transparent)}
+
+/* controls (page chrome) */
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{font:600 14px var(--sans);color:var(--fg);background:#fff;border:1px solid var(--line);border-radius:999px;padding:9px 16px;cursor:pointer;display:inline-flex;gap:8px;align-items:center;box-shadow:0 1px 2px rgba(22,52,74,.06)}
+.btn:hover{border-color:#b9cbd6}
+.btn:focus-visible,.chap:focus-visible,.prog:focus-visible{outline:2px solid var(--js);outline-offset:2px}
+.btn.primary{background:linear-gradient(135deg,#1cc7b5,#0b8f83);color:#fff;border-color:transparent;min-width:100px;justify-content:center;box-shadow:0 10px 24px -10px rgba(18,179,163,.8)}
+.prog{flex:1;min-width:160px;height:8px;background:#dbe5ec;border-radius:4px;position:relative;cursor:pointer}
+.prog i{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#1cc7b5,#0b8f83);border-radius:4px;width:0}
+.time{font:600 13px var(--mono);color:var(--mute)}
+.chaps{display:flex;gap:8px;flex-wrap:wrap}
+.chap{font:500 13px var(--sans);color:var(--mute);background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
+.chap.cur{color:#fff;background:var(--teal-d);border-color:var(--teal-d)}
+.toggle .dot{width:9px;height:9px;border-radius:50%;background:#b9c4cf}
+.toggle.on .dot{background:var(--js);box-shadow:0 0 0 4px var(--teal-l)}
+.hint{font-size:13px;color:var(--mute)}
+.note{font-size:13px;color:var(--orange)}
+@media (prefers-reduced-motion:reduce){.scene.on .a,.scene.on .a.x{animation-duration:.01s}.bgfx .pulse{animation:none}}
+</style>
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+<div class="wrap" dir="ltr">
+  <div class="frame" id="frame">
+    <div class="stage" id="stage">
+      <svg class="bgfx" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M1600 96 H1440 L1400 56 H1210"/><path class="pulse" d="M1600 96 H1440 L1400 56 H1210"/>
+        <path d="M1600 150 H1520 L1490 120"/>
+        <path d="M0 878 H260 L290 848 H520"/><path class="pulse" style="animation-delay:-3s" d="M0 878 H260 L290 848 H520"/>
+        <path d="M1080 900 V884 L1110 854 H1380"/>
+        <circle cx="1210" cy="56" r="6" class="t"/><circle cx="1490" cy="120" r="5"/><circle cx="520" cy="848" r="6" class="t"/><circle cx="1380" cy="854" r="5"/>
+      </svg>
+
+      <!-- 1 Title -->
+      <section class="scene" data-dur="7" data-title="Intro" data-audio="audio/p1/scene01.mp3" data-adur="19.64" data-anchors="[0, 2.5, 5]" data-tst="[0.0, 7.53, 15.46]">
+        <div class="kick">CPIT-405 · WEB APPLICATIONS</div>
+        <div class="row" style="align-items:center;gap:48px;margin-top:30px">
+          <div class="logo">JS</div>
+          <div class="title-big">JavaScript</div>
+        </div>
+        <div class="h" style="font-size:56px">Part 1: The Fundamentals</div>
+        <div class="topics">
+          <span>Running JS</span><span>Variables</span><span>Data types</span><span>Equality</span><span>Arrays</span><span>Conditions &amp; loops</span><span>Functions</span><span>Spread &amp; Rest</span>
+        </div>
+      </section>
+
+      <!-- 2 What is JS -->
+      <section class="scene" data-dur="12" data-title="What is JS?" data-audio="audio/p1/scene02.mp3" data-adur="24.69" data-anchors="[0, 0.8, 4, 7.5, 9]" data-tst="[0.0, 3.5, 7.87, 15.63, 21.63]">
+        <div class="kick a">01 · INTRODUCTION</div>
+        <div class="h a" style="--d:.2s">The programming language <span class="y">of the web</span></div>
+        <div class="row">
+          <div class="card grow a" style="--d:.8s">
+            <span class="tag">client-side</span>
+            <h3>In the browser</h3>
+            <p>Makes web pages interactive: buttons, forms, content that changes without reloading.</p>
+          </div>
+          <div class="card grow a" style="--d:4s">
+            <span class="tag" style="color:var(--green)">server-side · Node.js</span>
+            <h3>Everywhere else</h3>
+            <p>Servers (Node.js), mobile (React Native), desktop (Electron), machine learning (TensorFlow.js).</p>
+          </div>
+        </div>
+        <div class="tl">
+          <div class="a" style="--d:7.6s"><b>1995</b><i>Brendan Eich at Netscape</i></div>
+          <div class="a" style="--d:8.1s"><b>1997</b><i>ES1, first spec</i></div>
+          <div class="a" style="--d:8.6s"><b>2009</b><i>ES5</i></div>
+          <div class="a big" style="--d:9.1s"><b>2015</b><i>ES6: let, const, arrow functions</i></div>
+          <div class="a" style="--d:9.6s"><b>2016+</b><i>a new version every year</i></div>
+        </div>
+      </section>
+
+      <!-- 3 Three ways -->
+      <section class="scene" data-dur="11" data-title="Running JS" data-audio="audio/p1/scene03.mp3" data-adur="24.27" data-anchors="[0, 0.6, 3.6, 7.2]" data-tst="[0.0, 4.87, 12.96, 18.79]">
+        <div class="kick a">02 · GETTING STARTED</div>
+        <div class="h a" style="--d:.2s">Three ways to run your code</div>
+        <div class="row">
+          <div class="card grow a" style="--d:.6s">
+            <span class="tag">1 · Console</span>
+            <p>F12 or <span class="mono">Ctrl+Shift+I</span></p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:1.4s"><span class="p">&gt;</span> console.<span class="f">log</span>(<span class="s">"Hello"</span>)</span><span class="ln a ok" style="--d:2.4s">Hello</span></div>
+          </div>
+          <div class="card grow a" style="--d:3.6s">
+            <span class="tag">2 · Web page</span>
+            <p>Inline or an external file</p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:4.3s"><span class="k">&lt;script</span> <span class="p">src</span>=<span class="s">"app.js"</span><span class="k">&gt;</span></span><span class="ln a" style="--an:ty;--d:5s"><span class="k">&lt;/script&gt;</span></span></div>
+          </div>
+          <div class="card grow a" style="--d:7.2s">
+            <span class="tag">3 · Terminal</span>
+            <p>After installing Node.js</p>
+            <div class="code sm"><span class="ln a" style="--an:ty;--d:7.9s"><span class="p">$</span> node script.js</span><span class="ln a ok" style="--d:8.8s">hello JavaScript</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4 Variables -->
+      <section class="scene" data-dur="12" data-title="Variables" data-audio="audio/p1/scene04.mp3" data-adur="27.25" data-anchors="[0, 4.2, 8.6]" data-tst="[0.0, 7.9, 16.91]">
+        <div class="kick a">03 · VARIABLES</div>
+        <div class="h a" style="--d:.2s"><em>var</em>, <em>let</em> and <em>const</em></div>
+        <div class="row">
+          <div class="card grow a" style="--d:.7s"><span class="tag">var</span><h3>Function scope</h3><p>Visible in the whole function. Outside any function it is added to <span class="mono">window</span>.</p></div>
+          <div class="card grow a" style="--d:1.4s"><span class="tag">let</span><h3>Block scope</h3><p>Visible only inside the <span class="mono">{ }</span> block where it is declared.</p></div>
+          <div class="card grow a" style="--d:2.1s"><span class="tag">const</span><h3>Constant</h3><p>Cannot be reassigned after it is declared.</p></div>
+        </div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:4.3s"><span class="ln"><span class="k">const</span> discount = <span class="n">0.20</span>;</span><span class="ln a" style="--an:ty;--d:5s">discount = <span class="n">0.50</span>;</span></div>
+            <div class="err a" style="--an:pop;--d:6s">Uncaught TypeError: Assignment to constant variable.</div>
+          </div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:8.6s"><span class="ln"><span class="k">const</span> course = {semester: <span class="s">"fall"</span>}</span><span class="ln a" style="--an:ty;--d:9.3s">course.semester = <span class="s">"spring"</span> <span class="ok">✓</span></span></div>
+            <div class="out a" style="--d:10.2s">{ semester: 'spring' }</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5 Scope -->
+      <section class="scene tight" data-dur="13" data-title="var vs let" data-audio="audio/p1/scene05.mp3" data-adur="29.88" data-anchors="[0, 3, 7, 10, 11.5]" data-tst="[0.0, 7.87, 13.42, 22.0, 26.6]">
+        <div class="kick a">04 · SCOPE</div>
+        <div class="h a" style="--d:.2s">The block changes everything</div>
+        <div class="row">
+          <div class="col grow a" style="--d:.6s">
+            <div class="lbl">var</div>
+            <div class="code sm"><span class="ln"><span class="k">var</span> x = <span class="n">10</span>;</span><span class="ln"><span class="k">if</span> (x == <span class="n">10</span>) {</span><span class="ln">  <span class="k">var</span> x = <span class="n">20</span>;</span><span class="ln">  console.<span class="f">log</span>(x);</span><span class="ln">}</span><span class="ln">console.<span class="f">log</span>(x);</span></div>
+            <div class="mem">
+              <div class="box a" style="--d:3s">x<span class="swap"><span class="gone y" style="--d:4.4s">10</span><span class="a y" style="--d:4.5s">20</span></span><em>one variable</em></div>
+            </div>
+            <div class="out"><span class="a" style="--d:10.2s">20</span>  <span class="a" style="--d:10.8s">20</span></div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow a" style="--d:.9s">
+            <div class="lbl">let</div>
+            <div class="code sm"><span class="ln"><span class="k">let</span> x = <span class="n">10</span>;</span><span class="ln"><span class="k">if</span> (x == <span class="n">10</span>) {</span><span class="ln">  <span class="k">let</span> x = <span class="n">20</span>;</span><span class="ln">  console.<span class="f">log</span>(x);</span><span class="ln">}</span><span class="ln">console.<span class="f">log</span>(x);</span></div>
+            <div class="mem">
+              <div class="box a" style="--d:7s">x <span class="y">10</span><em>outside the block</em></div>
+              <div class="box a x" style="--d:7.6s;--o:9.4s;border-color:var(--cyan)">x <span class="cy">20</span><em>inside the block</em></div>
+            </div>
+            <div class="out"><span class="a" style="--d:10.2s">20</span>  <span class="a" style="--d:10.8s;color:var(--js)">10</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6 Types -->
+      <section class="scene" data-dur="13" data-title="Data types" data-audio="audio/p1/scene06.mp3" data-adur="26.51" data-anchors="[0, 5, 9, 10.6]" data-tst="[0.0, 9.74, 14.53, 19.42]">
+        <div class="kick a">05 · DATA TYPES</div>
+        <div class="h a" style="--d:.2s">Seven primitives + one object</div>
+        <div class="row" style="flex-wrap:wrap;gap:16px">
+          <div class="chip a" style="--an:pop;--d:.6s"><span class="n">37</span><b>Number</b></div>
+          <div class="chip a" style="--an:pop;--d:1s"><span class="s">"Ali"</span><b>String</b></div>
+          <div class="chip a" style="--an:pop;--d:1.4s"><span class="k">true</span><b>Boolean</b></div>
+          <div class="chip a" style="--an:pop;--d:1.8s"><span>let foo;</span><b>Undefined</b></div>
+          <div class="chip a" style="--an:pop;--d:2.2s"><span class="k">null</span><b>Null</b></div>
+          <div class="chip a" style="--an:pop;--d:2.6s"><span class="n">9007199254740991n</span><b>BigInt</b></div>
+          <div class="chip a" style="--an:pop;--d:3s"><span><span class="f">Symbol</span>(<span class="s">"id"</span>)</span><b>Symbol</b></div>
+        </div>
+        <div class="row" style="align-items:center">
+          <div class="code sm a" style="--d:5s"><span class="ln"><span class="k">let</span> person = {</span><span class="ln">  firstName: <span class="s">"Ali"</span>,</span><span class="ln">  age: <span class="n">21</span>,</span><span class="ln">  greet: <span class="k">function</span>() {…}</span><span class="ln">};</span></div>
+          <div class="grow" style="display:flex;flex-direction:column;gap:18px;align-items:flex-start">
+            <div class="code a" style="--d:9s"><span class="k">typeof</span> <span class="k">null</span></div>
+            <div class="out a" style="--d:9.8s;font-size:40px;color:var(--orange)">"object"</div>
+            <div class="stampx" style="--d:10.6s">Historical bug!</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 7 == vs === -->
+      <section class="scene" data-dur="10" data-title="== vs ===" data-audio="audio/p1/scene07.mp3" data-adur="21.71" data-anchors="[0, 1.2, 5, 8.5]" data-tst="[0.0, 3.39, 9.89, 15.49]">
+        <div class="kick a">06 · EQUALITY</div>
+        <div class="h a" style="--d:.2s"><em>==</em> or <em>===</em> ?</div>
+        <div class="col" style="gap:40px;margin-top:20px">
+          <div class="row a" style="--d:.6s;align-items:center;gap:30px">
+            <div class="box"><span class="n">5</span></div>
+            <div class="vs y">==</div>
+            <div class="box"><span class="s"><span class="gone" style="--d:2s">"</span><span>5</span><span class="gone" style="--d:2s">"</span></span></div>
+            <div class="lbl a" style="--d:2.4s">String → Number</div>
+            <div class="out a" style="--an:pop;--d:3.2s;font-size:44px">true</div>
+          </div>
+          <div class="row a" style="--d:5s;align-items:center;gap:30px">
+            <div class="box" style="flex-direction:column;height:auto;padding:14px 22px"><span class="n">5</span><small style="position:static;font-size:18px">Number</small></div>
+            <div class="vs y">===</div>
+            <div class="box" style="flex-direction:column;height:auto;padding:14px 22px"><span class="s">"5"</span><small style="position:static;font-size:18px">String</small></div>
+            <div class="lbl a" style="--d:6.4s">types differ</div>
+            <div class="out a bad" style="--an:pop;--d:7.2s;font-size:44px">false</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 8 Strings & numbers -->
+      <section class="scene" data-dur="11" data-title="Strings & numbers" data-audio="audio/p1/scene08.mp3" data-adur="29.07" data-anchors="[0, 4, 7.5]" data-tst="[0.0, 10.08, 19.41]">
+        <div class="kick a">07 · STRINGS &amp; NUMBERS</div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:.3s"><span class="ln"><span class="k">let</span> name = <span class="s">'Khalid'</span>;</span><span class="ln a" style="--an:ty;--d:1s">console.<span class="f">log</span>(<span class="s">`Hello, </span><span class="y">${name}</span><span class="s">`</span>);</span></div>
+            <div class="out a" style="--an:pop;--d:2.2s">Hello, Khalid</div>
+            <div class="code sm a" style="--d:4s"><span class="ln"><span class="k">let</span> name = <span class="s">"Sami"</span>;</span><span class="ln a" style="--an:ty;--d:4.6s">name[<span class="n">0</span>] = <span class="s">"R"</span>;</span></div>
+            <div class="out a" style="--d:5.6s">Sami <span class="mu" style="font-weight:400;font-size:22px">// unchanged</span></div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:7.5s"><span class="ln"><span class="n">10</span> / <span class="n">0</span>  <span class="c">→</span> <span class="ok">Infinity</span></span></div>
+            <div class="code sm a" style="--d:8.1s"><span class="ln"><span class="n">-3</span> / <span class="n">0</span>  <span class="c">→</span> <span class="ok">-Infinity</span></span></div>
+            <div class="code sm a" style="--d:8.7s"><span class="ln"><span class="n">0</span> / <span class="n">0</span>   <span class="c">→</span> <span class="bad">NaN</span></span></div>
+            <div class="code sm a" style="--d:9.3s"><span class="ln"><span class="f">Number</span>(<span class="s">"zero"</span>) <span class="c">→</span> <span class="bad">NaN</span></span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 9 Arrays -->
+      <section class="scene" data-dur="13" data-title="Arrays" data-audio="audio/p1/scene09.mp3" data-adur="21.16" data-anchors="[0, 3, 6.5, 9.5]" data-tst="[0.0, 5.66, 9.92, 14.73]">
+        <div class="kick a">08 · ARRAYS</div>
+        <div class="row" style="align-items:center;justify-content:space-between">
+          <div class="code sm a" style="--d:.2s;padding:12px 22px"><span class="k">let</span> fruits = [<span class="s">'Apple'</span>, <span class="s">'Banana'</span>, <span class="s">'Cherry'</span>];</div>
+          <div class="lbl a" style="--d:.6s">length: <span class="swap y"><span class="gone" style="--d:3.6s">3</span><span class="a x" style="--d:3.7s;--o:7.6s">4</span></span><span class="swap y" style="margin-left:-1.6em"><span class="a" style="--d:7.7s">3</span></span></div>
+        </div>
+        <div class="arr" style="margin-bottom:30px">
+          <div class="box a" style="--an:pop;--d:.6s">Apple<small>0</small></div>
+          <div class="box a" style="--an:pop;--d:.9s">Banana<small>1</small></div>
+          <div class="box a" style="--an:pop;--d:1.2s">Cherry<small>2</small></div>
+          <div class="box a x" style="--an:sr;--d:3.4s;--o:7.2s;border-color:var(--js);--du:.8s">Date<small>3</small></div>
+          <div class="col" style="gap:8px;margin-left:30px">
+            <div class="code sm a x" style="--d:3s;--o:6.2s;padding:8px 18px">fruits.<span class="f">push</span>(<span class="s">'Date'</span>)</div>
+          </div>
+          <div class="col" style="gap:8px">
+            <div class="code sm a" style="--d:6.5s;padding:8px 18px">fruits.<span class="f">pop</span>() <span class="c">→</span> <span class="ok">'Date'</span></div>
+          </div>
+        </div>
+        <div class="row a" style="--d:9.5s;align-items:center;gap:22px">
+          <div class="code sm" style="padding:10px 20px"><span class="k">let</span> bigArr = [<span class="y">...smallArr</span>, <span class="n">4</span>, <span class="n">5</span>, <span class="n">6</span>]</div>
+        </div>
+        <div class="arr">
+          <div class="box a" style="--an:pop;--d:10.1s;border-color:var(--js);min-width:90px">1</div>
+          <div class="box a" style="--an:pop;--d:10.3s;border-color:var(--js);min-width:90px">2</div>
+          <div class="box a" style="--an:pop;--d:10.5s;border-color:var(--js);min-width:90px">3</div>
+          <div class="box a" style="--an:pop;--d:10.9s;min-width:90px">4</div>
+          <div class="box a" style="--an:pop;--d:11.1s;min-width:90px">5</div>
+          <div class="box a" style="--an:pop;--d:11.3s;min-width:90px">6</div>
+        </div>
+      </section>
+
+      <!-- 10 Conditions & loops -->
+      <section class="scene" data-dur="13" data-title="Conditions & loops" data-audio="audio/p1/scene10.mp3" data-adur="32.44" data-anchors="[0, 4.5, 10, 10.8]" data-tst="[0.0, 8.78, 17.58, 23.1]">
+        <div class="kick a">09 · CONDITIONS &amp; LOOPS</div>
+        <div class="row">
+          <div class="col grow">
+            <div class="code sm a" style="--d:.3s"><span class="ln"><span class="k">let</span> isMember = <span class="k">false</span>;</span><span class="ln"><span class="k">let</span> fee = isMember</span><span class="ln">  ? <span class="s dim" style="--d:2.4s">'$2.00'</span></span><span class="ln">  : <span class="s hl" style="--d:2.4s;border-radius:6px;padding:0 6px">'$10.00'</span>;</span></div>
+            <div class="out a" style="--an:pop;--d:3.2s">$10.00</div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow">
+            <div class="code sm a" style="--d:4.5s"><span class="ln"><span class="k">for</span> (<span class="k">let</span> i=<span class="n">0</span>; i&lt;array.length; i++)</span><span class="ln">  console.<span class="f">log</span>(array[i]);</span></div>
+            <div class="arr" style="margin-bottom:34px">
+              <div class="box hl" style="--d:5.6s;min-width:80px">1<small>i=0</small></div>
+              <div class="box hl" style="--d:6.4s;min-width:80px">2<small>i=1</small></div>
+              <div class="box hl" style="--d:7.2s;min-width:80px">3<small>i=2</small></div>
+              <div class="box hl" style="--d:8s;min-width:80px">4<small>i=3</small></div>
+              <div class="box hl" style="--d:8.8s;min-width:80px">5<small>i=4</small></div>
+            </div>
+            <div class="out"><span class="a" style="--d:5.8s">1 </span><span class="a" style="--d:6.6s">2 </span><span class="a" style="--d:7.4s">3 </span><span class="a" style="--d:8.2s">4 </span><span class="a" style="--d:9s">5</span></div>
+          </div>
+        </div>
+        <div class="pill-row">
+          <span class="a" style="--d:10s">for</span><span class="a" style="--d:10.2s">forEach</span><span class="a" style="--d:10.4s">while</span><span class="a" style="--d:10.6s">do...while</span><span class="a" style="--d:10.8s">for...of <b class="mu" style="font-weight:400">→ value</b></span><span class="a" style="--d:11s">for...in <b class="mu" style="font-weight:400">→ index</b></span>
+        </div>
+      </section>
+
+      <!-- 11 Functions -->
+      <section class="scene" data-dur="14" data-title="Functions" data-audio="audio/p1/scene11.mp3" data-adur="30.59" data-anchors="[0, 2.4, 4.6, 10.2]" data-tst="[0.0, 5.91, 11.63, 23.49]">
+        <div class="kick a">10 · FUNCTIONS</div>
+        <div class="machine">
+          <div class="col" style="gap:14px">
+            <div class="ball a" style="--an:sr;--d:.6s">3</div>
+            <div class="ball a" style="--an:sr;--d:.9s">2</div>
+          </div>
+          <div class="lbl a" style="--d:1.4s">→</div>
+          <div class="body a" style="--an:pop;--d:1.6s">add(x, y)</div>
+          <div class="lbl a" style="--d:2.4s">→</div>
+          <div class="ball res a" style="--an:pop;--d:2.8s">5</div>
+          <div class="lbl a" style="--d:3.2s;margin-left:20px;font-size:22px">return x + y;</div>
+        </div>
+        <div class="forms">
+          <div class="a" style="--d:4.8s"><div class="nm"><b>1</b>Function Declaration</div><div class="code"><span class="k">function</span> <span class="f">getCourse</span>() { }</div></div>
+          <div class="a" style="--d:6.2s"><div class="nm"><b>2</b>Function Expression</div><div class="code"><span class="k">let</span> getCourse = <span class="k">function</span>() { };</div></div>
+          <div class="a" style="--d:7.6s"><div class="nm"><b>3</b>Named Expression</div><div class="code"><span class="k">let</span> getMyCourse = <span class="k">function</span> <span class="f">getCourse</span>() { };</div></div>
+          <div class="a" style="--d:9s"><div class="nm"><b>4</b>Arrow Function</div><div class="code"><span class="k">let</span> getCollege = () <span class="k">=&gt;</span> <span class="s">"FCIT"</span>;</div></div>
+          <div class="a" style="--d:10.4s"><div class="nm"><b>5</b>IIFE</div><div class="code">(<span class="k">function</span>() { … })<span class="y">()</span>;</div></div>
+        </div>
+      </section>
+
+      <!-- 12 Spread vs Rest -->
+      <section class="scene" data-dur="12" data-title="Spread & Rest" data-audio="audio/p1/scene12.mp3" data-adur="22.13" data-anchors="[0, 3, 7, 10.5]" data-tst="[0.0, 4.79, 11.63, 17.4]">
+        <div class="kick a">11 · SPREAD vs REST</div>
+        <div class="h a" style="--d:.2s">Three dots <em>...</em>, two jobs</div>
+        <div class="row">
+          <div class="col grow a" style="--d:3s">
+            <div class="lbl y">Spread · unpack</div>
+            <div class="code sm"><span class="ln"><span class="k">let</span> numbers = [<span class="n">2</span>, <span class="n">4</span>, <span class="n">6</span>];</span><span class="ln"><span class="f">add</span>(<span class="y">...numbers</span>);</span></div>
+            <div class="arr">
+              <div class="box" style="min-width:200px;font-size:26px">[2, 4, 6]</div>
+              <div class="lbl a" style="--d:4.2s">→</div>
+              <div class="box a" style="--an:pop;--d:4.6s;min-width:70px;border-color:var(--js)">2</div>
+              <div class="box a" style="--an:pop;--d:4.8s;min-width:70px;border-color:var(--js)">4</div>
+              <div class="box a" style="--an:pop;--d:5s;min-width:70px;border-color:var(--js)">6</div>
+            </div>
+            <div class="out a" style="--d:5.6s">12</div>
+          </div>
+          <div class="sep"></div>
+          <div class="col grow a" style="--d:7s">
+            <div class="lbl cy">Rest · pack</div>
+            <div class="code sm"><span class="ln"><span class="k">function</span> <span class="f">sum</span>(n, m, <span class="cy">...numbers</span>)</span><span class="ln"><span class="f">sum</span>(<span class="n">1</span>, <span class="n">2</span>, <span class="n">3</span>, <span class="n">4</span>);</span></div>
+            <div class="arr">
+              <div class="box a" style="--d:8.2s;min-width:90px;font-size:24px">n=1</div>
+              <div class="box a" style="--d:8.5s;min-width:90px;font-size:24px">m=2</div>
+              <div class="box a" style="--an:pop;--d:9.2s;min-width:180px;font-size:24px;border-color:var(--cyan)">numbers=[3,4]</div>
+            </div>
+            <div class="out a" style="--d:10s">10</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 13 Outro -->
+      <section class="scene" data-dur="7" data-title="Your turn" data-audio="audio/p1/scene13.mp3" data-adur="19.72" data-anchors="[0, 1.4, 4]" data-tst="[0.0, 2.48, 12.7]">
+        <div class="kick a">NEXT</div>
+        <div class="h a" style="--d:.2s;font-size:96px;margin-top:40px">Your turn</div>
+        <div class="h a" style="--d:.8s;font-size:40px;font-weight:400;color:var(--mute)">Open the practice platform and start with the Part 1 tab</div>
+        <div class="topics">
+          <span class="a" style="--d:1.6s">Predict the output</span><span class="a" style="--d:1.9s">typeof machine</span><span class="a" style="--d:2.2s">Spread or Rest</span><span class="a" style="--d:2.5s">Function forms</span><span class="a" style="--d:2.8s">Code challenges</span>
+        </div>
+      </section>
+
+      <div class="scn-no" id="scnNo"></div>
+      <div class="cap" id="cap"><span id="capText"></span></div>
+    </div>
+  </div>
+
+  <div class="bar">
+    <button class="btn primary" id="play" type="button">Play</button>
+    <button class="btn" id="prev" type="button" aria-label="Previous scene">← Prev</button>
+    <button class="btn" id="next" type="button" aria-label="Next scene">Next →</button>
+    <div class="prog" id="prog" role="slider" aria-label="Progress" tabindex="0"><i id="progFill"></i></div>
+    <span class="time" id="time">0:00 / 0:00</span>
+  </div>
+  <div class="bar">
+    <button class="btn toggle" id="voice" type="button" aria-pressed="true"><span class="dot"></span><span id="voiceLbl">Arabic voice: on</span></button>
+    <button class="btn" id="subs" type="button">Subtitles: <b id="subsLbl">English</b></button>
+    <button class="btn" id="fs" type="button">Fullscreen</button>
+    <a class="btn" style="text-decoration:none;margin-left:auto" href="index.html">← All parts</a><a class="btn primary" style="text-decoration:none" href="practice.html#part1">Practice Part 1 →</a>
+  </div>
+  <div class="chaps" id="chaps"></div>
+  <div class="hint" style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>Space: play / pause · ← →: scenes · M: voice on / off · C: subtitles · F: fullscreen</span><span>Developed by: <b style="color:var(--teal-d)">Fatmah Bamashmoos</b></span></div>
+</div>
+
+
+<script>
+(function(){
+  const $=id=>document.getElementById(id);
+  const frame=$('frame'), stage=$('stage');
+  const LINES=[[["يا هلا! اليوم بنبدأ مع JavaScript من الصفر.", "Hi! Today we start JavaScript from scratch."], ["وش بنتعلم؟ كيف نشغّل الكود، كيف نخزّن البيانات، وكيف نكتب دوال تشتغل صح.", "What will we learn? How to run code, store data, and write functions that work."], ["جاهزين؟ يلا نبدأ.", "Ready? Let's go."]], [["JavaScript ببساطة هي لغة الويب.", "Simply put, JavaScript is the language of the web."], ["أي زر تضغطه، أي محتوى يتغير بدون ما تسوي refresh، غالبًا وراه JavaScript.", "Every button you click, any content that changes without a refresh, is usually JavaScript."], ["وبعدين جات Node.js، وصارت JavaScript تشتغل على السيرفر بعد، وحتى في تطبيقات الجوال.", "Then came Node.js, and JavaScript started running on servers, and even in mobile apps."], ["طيب وش هو ECMAScript؟ هو المواصفة، القوانين. و JavaScript هي اللي تطبّقها.", "So what is ECMAScript? It's the specification, the rules. JavaScript implements them."], ["وأهم تحديث صار سنة 2015: ES6.", "And the biggest update came in 2015: ES6."]], [["طيب، وين نكتب الكود؟ عندنا ثلاث طرق.", "So where do we write code? There are three ways."], ["الأسهل: افتح المتصفح، اضغط F12، وروح للـ Console. اكتب وشوف النتيجة فورًا.", "The easiest: open the browser, press F12 and go to the Console. Type, and see the result instantly."], ["الثانية: داخل صفحة الويب، في وسم script.", "Second: inside a web page, in a script tag."], ["والثالثة: من الـ Terminal، بأمر node.", "Third: from the terminal, with the node command."]], [["المتغيرات عندنا بثلاث كلمات: var، و let، و const.", "We declare variables with three keywords: var, let and const."], ["الـ const؟ ثابت. حاول تغيّر قيمته، بيطلع لك error على طول.", "const? It's constant. Try to change it and you get an error right away."], ["بس هنا الحركة: لو الـ const كان object، تقدر تعدّل اللي داخله عادي.", "But here's the trick: if the const is an object, you can still change what's inside."]], [["ركّزوا معي في هذا المثال. نفس الكود بالضبط، والفرق كلمة وحدة بس.", "Focus on this example. Exactly the same code, with just one word different."], ["var ما يهمها الـ block، فتروح تغيّر نفس المتغير.", "var ignores the block, so it changes the same variable."], ["let ذكية: تسوي متغير جديد داخل الـ block، وأول ما يخلص يختفي.", "let is smarter: it creates a new variable inside the block, and it disappears when the block ends."], ["النتيجة؟ var تطبع عشرين مرتين. و let تطبع عشرين، وبعدها عشرة.", "The result? var prints 20 twice. let prints 20, then 10."], ["عشان كذا، استخدموا let.", "That's why you should use let."]], [["عندنا سبعة أنواع بيانات بدائية: Number، String، Boolean، undefined، null، BigInt، و Symbol.", "There are seven primitive types: Number, String, Boolean, undefined, null, BigInt and Symbol."], ["وفوقهم الـ Object: مفاتيح وقيم.", "And on top of them, the Object: keys and values."], ["وهنا أغرب شي في اللغة: typeof null يقول لك object!", "And here's the weirdest thing in the language: typeof null says \"object\"!"], ["هو خطأ قديم من أول أيام JavaScript، وتركوه عشان ما يخربون المواقع القديمة.", "It's an old bug from JavaScript's early days, kept so old websites don't break."]], [["سؤال سريع: خمسة الرقم، تساوي خمسة النص؟", "Quick question: does the number 5 equal the string \"5\"?"], ["بعلامتين يساوي، الجواب true، لأنها تحوّل النوع قبل ما تقارن.", "With ==, the answer is true, because it converts the type before comparing."], ["بثلاث علامات؟ false. لأنها تقارن القيمة والنوع مع بعض.", "With ===? false. It compares the value and the type together."], ["نصيحة من الحين: استخدموا الثلاث دايمًا، وريّحوا راسكم.", "Tip: always use ===, and save yourself the headache."]], [["مع الـ backticks تقدر تحط المتغير داخل النص مباشرة، بالدولار والأقواس. نظيف وسهل.", "With backticks you can put a variable right inside a string, with ${ }. Clean and easy."], ["ومعلومة مهمة: النصوص ما تتغير. تحاول تغيّر حرف؟ النص يبقى زي ما هو.", "Important: strings are immutable. Try to change a character? The string stays the same."], ["والأرقام عندها مفاجآت: اقسم على صفر، يطلع لك Infinity. وصفر على صفر؟ NaN، يعني مو رقم أصلًا.", "Numbers have surprises: divide by zero and you get Infinity. Zero by zero? NaN, not a number at all."]], [["المصفوفة قائمة مرتبة، والعدّ فيها يبدأ من صفر، مو من واحد.", "An array is an ordered list, and counting starts at 0, not 1."], ["تبي تضيف عنصر في الآخر؟ push.", "Want to add an element at the end? push."], ["تبي تشيل آخر عنصر؟ pop، وترجّعه لك بعد.", "Want to remove the last one? pop, and it hands it back to you."], ["وهذي الثلاث نقاط؟ اسمها spread، تفكّ المصفوفة وتحطها داخل مصفوفة ثانية.", "And these three dots? That's spread: it unpacks one array into another."]], [["بدل ما تكتب if و else في كم سطر، الـ ternary يختصرها لك في سطر واحد.", "Instead of writing if and else over several lines, the ternary does it in one."], ["وحلقة for؟ تكرر الكود: i تبدأ من صفر، وتمشي لين آخر المصفوفة.", "And the for loop? It repeats code: i starts at 0 and walks to the end of the array."], ["وفيه غيرها: forEach، و while، و do while.", "There are others too: forEach, while and do...while."], ["وتذكّروا هذي: for of تعطيك القيمة، و for in تعطيك الرقم.", "Remember: for...of gives you the value, for...in gives you the index."]], [["الدالة زي الماكينة: تدخّل لها قيم، وتطلع لك نتيجة.", "A function is like a machine: values go in, a result comes out."], ["وما تشتغل إلا لما تناديها.", "And it only runs when you call it."], ["وفي JavaScript، عندك خمس طرق تكتب فيها الدالة: Declaration، و Expression، و Named Expression، والـ Arrow Function اللي بتشوفونها كثير،", "JavaScript gives you five ways to write a function: Declaration, Expression, Named Expression, the Arrow Function you'll see a lot,"], ["والـ IIFE، اللي تشتغل نفسها أول ما تنكتب.", "and the IIFE, which runs itself as soon as it's defined."]], [["الثلاث نقاط لها شخصيتين.", "The three dots have two personalities."], ["في الاستدعاء، اسمها Spread: تفكّ المصفوفة لعناصر.", "In a call it's Spread: it unpacks the array into elements."], ["في تعريف الدالة، اسمها Rest: تجمع الباقي في مصفوفة.", "In a function definition it's Rest: it gathers the rest into an array."], ["نفس الشكل، عكس الشغل تمامًا.", "Same look, the exact opposite job."]], [["وصلنا للنهاية!", "That's a wrap!"], ["الحين جا دوركم. افتحوا منصة التدريب، تبويب الجزء الأول، وجرّبوا كل شي شفناه.", "Now it's your turn. Open the practice platform, the Part 1 tab, and try everything we saw."], ["وإذا أخطأتوا؟ عادي. كذا نتعلم. يلا، بالتوفيق!", "Make mistakes? That's fine, it's how we learn. Good luck!"]]];
+  const scenes=[...stage.querySelectorAll('.scene')].map((el,i)=>{
+    const audio=new Audio();audio.preload='auto';audio.src=el.dataset.audio;
+    const s={el,i,anim:+el.dataset.dur,adur:+el.dataset.adur||0,title:el.dataset.title,lines:LINES[i]||[],audio,ok:true,anchors:JSON.parse(el.dataset.anchors||'[]'),tst:JSON.parse(el.dataset.tst||'[]')};
+    audio.addEventListener('error',()=>{s.ok=false;relayout()});
+    audio.addEventListener('loadedmetadata',()=>{if(isFinite(audio.duration)&&audio.duration>0){s.adur=audio.duration;relayout()}});
+    return s;
+  });
+  const store={get(k,d){try{const v=localStorage.getItem('cpit405-motion-'+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem('cpit405-motion-'+k,JSON.stringify(v))}catch(e){}}};
+  let voiceOn=store.get('voice',true), subs=store.get('subs','en');
+  const SUBS=['en','ar','off'], SUBS_LBL={en:'English',ar:'Arabic',off:'Off'};
+
+  /* timing: with the voice on, a scene lasts as long as its recording and the animation beats are spread to match */
+  const hasVoice=s=>voiceOn&&s.ok&&s.adur>0;
+  const lenOf=s=>hasVoice(s)?Math.max(s.anim,s.adur+0.8):s.anim;
+  const stretchOf=s=>lenOf(s)/s.anim;
+  /* sentence starts: measured in the recording when the voice is on, the designed beats when it is off */
+  function lineTimes(s){
+    if(hasVoice(s)&&s.tst.length===s.lines.length)return s.tst;
+    if(s.anchors.length===s.lines.length)return s.anchors;
+    const span=s.anim*0.92,w=s.lines.map(l=>l[0].length+12),tot=w.reduce((a,b)=>a+b,0)||1;let acc=0;return w.map(x=>{const t=acc/tot*span;acc+=x;return t});
+  }
+  /* map a designed animation time onto the recording, piece by piece between sentence starts */
+  function warp(s,d){
+    if(!hasVoice(s))return d;
+    const A=s.anchors.length===s.tst.length&&s.anchors.length?s.anchors.concat([s.anim]):[0,s.anim];
+    const T=s.anchors.length===s.tst.length&&s.tst.length?s.tst.concat([Math.max(s.adur,s.tst[s.tst.length-1]+0.5)]):[0,s.adur];
+    for(let k=0;k<A.length-1;k++){if(d<A[k+1]||k===A.length-2){const r=(T[k+1]-T[k])/Math.max(0.01,A[k+1]-A[k]);return T[k]+Math.max(0,d-A[k])*r}}
+    return d;
+  }
+  let starts=[],total=0;
+  function relayout(){starts=[];total=0;scenes.forEach(s=>{starts.push(total);total+=lenOf(s)});ui()}
+
+  let cur=0,t=0,playing=false,last=0,lineIdx=-1,curStretch=1;
+  const cap=$('capText'),capBox=$('cap'),playBtn=$('play'),fill=$('progFill'),timeEl=$('time'),scnNo=$('scnNo'),chaps=$('chaps');
+  scenes.forEach((s,i)=>{const b=document.createElement('button');b.type='button';b.className='chap';b.textContent=(i+1)+'. '+s.title;b.onclick=()=>{go(i);play()};chaps.appendChild(b)});
+  function fit(){const w=frame.clientWidth,h=frame.clientHeight;const k=Math.min(w/1600,h/900);stage.style.transform=`translate(${(w-1600*k)/2}px,${(h-900*k)/2}px) scale(${k})`}
+  new ResizeObserver(fit).observe(frame);fit();
+  const fmt=x=>{x=Math.max(0,Math.floor(x));return Math.floor(x/60)+':'+String(x%60).padStart(2,'0')};
+
+  function showLine(){
+    const L=scenes[cur].lines[lineIdx];capBox.hidden=subs==='off';cap.style.opacity=0;
+    clearTimeout(showLine._t);
+    showLine._t=setTimeout(()=>{cap.textContent=L?(subs==='ar'?L[0]:L[1]):'';capBox.classList.toggle('rtl',subs==='ar');cap.style.opacity=1},120);
+  }
+  function syncLine(){const T=lineTimes(scenes[cur]);let k=-1;T.forEach((x,j)=>{if(t>=x-0.01)k=j});if(k!==lineIdx){lineIdx=k;showLine()}}
+  function ui(){if(!starts.length)return;const g=starts[cur]+Math.min(t,lenOf(scenes[cur]));fill.style.width=(g/total*100)+'%';timeEl.textContent=fmt(g)+' / '+fmt(total);[...chaps.children].forEach((b,i)=>b.classList.toggle('cur',i===cur));scnNo.textContent=String(cur+1).padStart(2,'0')+' / '+scenes.length}
+
+  function anims(el){try{return el.getAnimations({subtree:true}).filter(a=>a.animationName!=='flow'&&a.animationName!=='glow')}catch(e){return[]}}
+  function stopAudio(){scenes.forEach(s=>{try{s.audio.pause()}catch(e){}})}
+  function go(i,offset){
+    stopAudio();
+    scenes[cur].el.classList.remove('on');
+    cur=Math.max(0,Math.min(scenes.length-1,i));t=offset||0;lineIdx=-2;
+    const s=scenes[cur],el=s.el;void el.offsetWidth;el.classList.add('on');
+    anims(el).forEach(a=>{try{const d=a.effect.getTiming().delay||0;a.effect.updateTiming({delay:warp(s,d/1000)*1000});if(t)a.currentTime=t*1000;if(!playing)a.pause();else a.play()}catch(e){}});
+    try{s.audio.currentTime=Math.min(t,s.adur||0)}catch(e){}
+    syncLine();ui();
+    if(playing)startAudio();
+  }
+  function startAudio(){const s=scenes[cur];if(!hasVoice(s)||t>=s.adur)return;try{s.audio.currentTime=t;const p=s.audio.play();p&&p.catch&&p.catch(()=>{})}catch(e){}}
+  function play(){
+    if(cur===scenes.length-1&&t>=lenOf(scenes[cur])-0.05){go(0)}
+    playing=true;stage.classList.remove('paused');anims(scenes[cur].el).forEach(a=>{try{a.play()}catch(e){}});
+    playBtn.textContent='Pause';last=performance.now();startAudio();
+  }
+  function pause(){playing=false;stage.classList.add('paused');anims(scenes[cur].el).forEach(a=>{try{a.pause()}catch(e){}});playBtn.textContent='Play';stopAudio()}
+  function loop(now){
+    if(playing){
+      const s=scenes[cur];
+      if(hasVoice(s)&&!s.audio.paused&&!s.audio.ended){t=s.audio.currentTime}else{t+=(now-last)/1000}
+      if(t>=lenOf(s)){if(cur<scenes.length-1)go(cur+1);else{t=lenOf(s);pause()}}
+      syncLine();ui();
+    }
+    last=now;requestAnimationFrame(loop);
+  }
+
+  function updateVoiceUI(){const vb=$('voice');vb.setAttribute('aria-pressed',String(voiceOn));vb.classList.toggle('on',voiceOn);$('voiceLbl').textContent='Arabic voice: '+(voiceOn?'on':'off')}
+  playBtn.onclick=()=>playing?pause():play();
+  $('next').onclick=()=>{go(cur+1);play()};
+  $('prev').onclick=()=>{go(cur-1);play()};
+  $('voice').onclick=()=>{
+    voiceOn=!voiceOn;store.set('voice',voiceOn);updateVoiceUI();
+    const keep=t;relayout();
+    if(!voiceOn)stopAudio();
+    go(cur,Math.min(keep,lenOf(scenes[cur])-0.1)); /* re-spread this scene for the new mode */
+  };
+  $('subs').onclick=()=>{subs=SUBS[(SUBS.indexOf(subs)+1)%3];store.set('subs',subs);$('subsLbl').textContent=SUBS_LBL[subs];showLine()};
+  $('subsLbl').textContent=SUBS_LBL[subs];
+  $('fs').onclick=()=>{try{const p=frame.requestFullscreen&&frame.requestFullscreen();p&&p.catch&&p.catch(()=>{})}catch(e){}};
+  const prog=$('prog');
+  prog.onclick=e=>{const r=prog.getBoundingClientRect();const g=(e.clientX-r.left)/r.width*total;let i=0;while(i<scenes.length-1&&starts[i+1]<=g)i++;go(i,g-starts[i])};
+  document.addEventListener('keydown',e=>{if(e.target.closest&&e.target.closest('input,textarea'))return;
+    if(e.code==='Space'){e.preventDefault();playing?pause():play()}
+    else if(e.key==='ArrowRight'){go(cur+1);play()}else if(e.key==='ArrowLeft'){go(cur-1);play()}
+    else if(e.key==='m'||e.key==='M'){$('voice').click()}
+    else if(e.key==='c'||e.key==='C'){$('subs').click()}
+    else if(e.key==='f'||e.key==='F'){$('fs').click()}});
+
+  window.__jumpEnd=i=>go(i,lenOf(scenes[i])-0.4);
+  updateVoiceUI();relayout();
+  stage.classList.add('paused');go(0);requestAnimationFrame(loop);
+})();
+</script>
+
+</body>
+</html>

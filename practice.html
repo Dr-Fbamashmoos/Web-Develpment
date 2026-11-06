@@ -1,0 +1,1376 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CPIT-405 JS Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;600&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<style>
+/* Layout: a clean product-style lab. Top bar, soft hero with circuit lines, pill tabs, then white exercise cards on a cool light ground. Teal is the single accent. */
+:root{
+  --bg:#eef3f6; --bg2:#f7fafc; --panel:#ffffff; --panel2:#f1f5f8; --line:#e1e8ee;
+  --fg:#1c2836; --mute:#667487; --acc:#12b3a3; --acc-d:#0b8f83; --acc-l:#dcf6f2; --acc-ink:#ffffff;
+  --link:#0b8f83; --good:#0e8f63; --good-bg:#e4f7ef; --bad:#cf3f43; --bad-bg:#fdecec;
+  --code-bg:#1d2633; --code-fg:#e7edf3; --ck:#f2a7e1; --cs:#7ee2b8; --cn:#fdc08a; --cc:#8a97a8;
+  --circuit:#c3d3dd; --shadow:0 14px 34px -18px rgba(22,52,74,.25),0 1px 3px rgba(22,52,74,.05);
+  --sans:"Plus Jakarta Sans","IBM Plex Sans Arabic",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f161d; --bg2:#121b23; --panel:#16212b; --panel2:#1c2934; --line:#253543;
+  --fg:#e6edf2; --mute:#93a3b3; --acc:#22c7b6; --acc-d:#3fd8c7; --acc-l:#123a39; --acc-ink:#06201d;
+  --link:#4fe0d0; --good:#5fdca7; --good-bg:#12322a; --bad:#ff8c8f; --bad-bg:#3a1e21;
+  --code-bg:#0b1117; --code-fg:#e7edf3; --circuit:#2a3d4c; --shadow:0 14px 34px -18px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.3); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161d; --bg2:#121b23; --panel:#16212b; --panel2:#1c2934; --line:#253543;
+  --fg:#e6edf2; --mute:#93a3b3; --acc:#22c7b6; --acc-d:#3fd8c7; --acc-l:#123a39; --acc-ink:#06201d;
+  --link:#4fe0d0; --good:#5fdca7; --good-bg:#12322a; --bad:#ff8c8f; --bad-bg:#3a1e21;
+  --code-bg:#0b1117; --code-fg:#e7edf3; --circuit:#2a3d4c; --shadow:0 14px 34px -18px rgba(0,0,0,.6),0 1px 2px rgba(0,0,0,.3); color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans);font-size:16px;line-height:1.65}
+.wrap{max-width:1020px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:18px 80px;display:flex;flex-direction:column;gap:24px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:var(--panel);border-radius:999px;padding:8px 8px 8px 14px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700}
+.brand i{width:34px;height:34px;border-radius:11px;background:linear-gradient(135deg,#1cc7b5,#0b8f83);color:#fff;font:800 13px var(--mono);font-style:normal;display:flex;align-items:flex-end;justify-content:flex-end;padding:5px}
+.brand small{display:block;font:600 11px var(--mono);letter-spacing:.1em;color:var(--mute)}
+.watch{display:inline-flex;align-items:center;gap:9px;font-weight:700;font-size:14px;text-decoration:none;color:#fff;background:linear-gradient(135deg,#1cc7b5,#0b8f83);padding:10px 18px;border-radius:999px;box-shadow:0 10px 22px -10px rgba(18,179,163,.85)}
+.watch::before{content:"";width:0;height:0;border-block:5px solid transparent;border-left:8px solid #fff}
+.hero{position:relative;overflow:hidden;border-radius:26px;background:radial-gradient(600px 300px at 90% 0%, var(--acc-l), transparent 70%),linear-gradient(180deg,var(--bg2),var(--bg));padding:42px clamp(20px,4vw,44px) 38px;display:flex;flex-direction:column;gap:12px}
+.hero svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero svg path{fill:none;stroke:var(--circuit);stroke-width:1.5}
+.hero svg .pulse{stroke:var(--acc);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:40 700;animation:flow 6s linear infinite}
+.hero svg circle{fill:var(--panel);stroke:var(--acc);stroke-width:1.5}
+@keyframes flow{from{stroke-dashoffset:740}to{stroke-dashoffset:0}}
+.hero>*:not(svg){position:relative}
+.course{font:700 12px var(--mono);letter-spacing:.14em;color:var(--acc-d);display:flex;align-items:center;gap:10px}
+.course::before{content:"";width:26px;height:3px;border-radius:2px;background:var(--acc)}
+h1{margin:0;font-size:clamp(30px,5vw,46px);line-height:1.1;font-weight:800;letter-spacing:-.025em;text-wrap:balance}
+h1 span{color:var(--acc-d)}
+.lead{margin:0;color:var(--mute);max-width:60ch;font-size:16.5px}
+a{color:var(--link)}
+nav.tabs{display:flex;gap:6px;overflow-x:auto;padding:6px;background:var(--panel);border-radius:999px;box-shadow:var(--shadow);scrollbar-width:none}
+nav.tabs a{flex:0 0 auto;text-decoration:none;color:var(--mute);padding:9px 16px;border-radius:999px;font-weight:600;font-size:14.5px;display:flex;gap:8px;align-items:center}
+nav.tabs a:hover{color:var(--fg);background:var(--panel2)}
+nav.tabs a b{font:700 11px var(--mono);width:22px;height:22px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;background:var(--panel2);color:var(--mute)}
+nav.tabs a[aria-current="page"]{color:#fff;background:linear-gradient(135deg,#1cc7b5,#0b8f83);box-shadow:0 8px 18px -10px rgba(18,179,163,.9)}
+nav.tabs a[aria-current="page"] b{background:rgba(255,255,255,.25);color:#fff}
+nav.tabs a .soon{font-size:10.5px;font-weight:600;color:var(--mute);border:1px solid var(--line);border-radius:99px;padding:0 7px}
+.progress{display:flex;flex-direction:column;gap:12px;background:var(--panel);border-radius:22px;padding:20px 22px;box-shadow:var(--shadow)}
+.progress .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:baseline}
+.progress strong{font-size:18px;letter-spacing:-.01em}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:700}
+.meter{height:10px;border-radius:5px;background:var(--panel2);overflow:hidden}
+.meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#1cc7b5,#0b8f83);border-radius:5px;transition:width .4s}
+.secnav{display:flex;flex-wrap:wrap;gap:8px}
+.secnav button{font:600 13.5px var(--sans);background:var(--panel2);border:1px solid transparent;color:var(--fg);border-radius:99px;padding:7px 13px;cursor:pointer;display:flex;gap:7px;align-items:center}
+.secnav button:hover{border-color:var(--acc)}
+.secnav button span{font:700 11.5px var(--mono);color:var(--acc-d)}
+section.ex{background:var(--panel);border-radius:24px;padding:26px clamp(16px,3vw,30px);display:flex;flex-direction:column;gap:18px;scroll-margin-top:16px;box-shadow:var(--shadow)}
+.ex-head{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:flex-start}
+.ex-head h2{margin:0;font-size:23px;letter-spacing:-.015em}
+.ex-head p{margin:4px 0 0;color:var(--mute);font-size:15px}
+.score{font:700 13px var(--mono);background:var(--acc-l);color:var(--acc-d);border-radius:99px;padding:5px 12px;white-space:nowrap}
+.grid{display:grid;gap:14px}
+.q{border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0;background:var(--bg2)}
+.q-top{display:flex;gap:10px;align-items:center}
+.q-no{font:700 11.5px var(--mono);color:var(--acc-d);background:var(--acc-l);border-radius:7px;padding:2px 7px}
+.q-prompt{font-weight:600}
+pre.code{margin:0;text-align:left;background:var(--code-bg);color:var(--code-fg);font:500 14px/1.65 var(--mono);padding:14px 16px;border-radius:14px;overflow-x:auto;white-space:pre}
+.k{color:var(--ck)}.s{color:var(--cs)}.n{color:var(--cn)}.c{color:var(--cc)}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{font:600 14px var(--mono);border:1px solid var(--line);background:var(--panel);color:var(--fg);border-radius:12px;padding:9px 14px;cursor:pointer;min-width:0;transition:border-color .15s,transform .15s}
+.opt:hover:not(:disabled){border-color:var(--acc);transform:translateY(-1px)}
+.opt:disabled{cursor:default}
+.opt.right{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.opt.wrong{background:var(--bad-bg);border-color:var(--bad);color:var(--bad);text-decoration:line-through}
+.opt.ar{font-family:var(--sans);font-weight:600}
+.why{font-size:15px;border-radius:14px;padding:12px 14px;background:var(--panel)}
+.why.good{border-left:4px solid var(--good)}
+.why.bad{border-left:4px solid var(--bad)}
+.why b{display:block;margin-bottom:2px}
+code,.inl{font-family:var(--mono);font-size:.9em;background:var(--panel2);padding:1px 6px;border-radius:6px}
+.btn{font:600 14px var(--sans);border:1px solid var(--line);background:var(--panel);color:var(--fg);padding:9px 16px;border-radius:999px;cursor:pointer}
+.btn:hover{border-color:var(--acc)}
+.btn.primary{background:linear-gradient(135deg,#1cc7b5,#0b8f83);color:#fff;border-color:transparent;box-shadow:0 8px 18px -10px rgba(18,179,163,.9)}
+.btn.ghost{background:transparent}
+button:focus-visible,a:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.typeof-grid{grid-template-columns:repeat(auto-fill,minmax(270px,1fr))}
+.typeof-val{font:600 17px var(--mono);text-align:left;background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:11px 14px}
+.match{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:12px;align-items:center}
+.match select{font:600 14px var(--sans);padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--fg);width:100%}
+.match select.right{border-color:var(--good);background:var(--good-bg)}
+.match select.wrong{border-color:var(--bad);background:var(--bad-bg)}
+@media (max-width:640px){.match{grid-template-columns:minmax(0,1fr)}}
+.ch{border:1px solid var(--line);border-radius:18px;padding:18px;display:flex;flex-direction:column;gap:12px;background:var(--bg2);min-width:0}
+.ch h3{margin:0;font-size:18px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ch h3 .state{font:600 12px var(--sans);padding:3px 10px;border-radius:99px;background:var(--panel2);color:var(--mute)}
+.ch h3 .state.done{background:var(--good-bg);color:var(--good)}
+.ch p{margin:0}
+textarea.editor{width:100%;min-height:180px;resize:vertical;text-align:left;background:var(--code-bg);color:var(--code-fg);caret-color:var(--acc);font:500 14px/1.65 var(--mono);border:1px solid transparent;border-radius:14px;padding:14px 16px;tab-size:2}
+textarea.editor:focus{border-color:var(--acc)}
+.results{display:flex;flex-direction:column;gap:6px}
+.res{display:flex;gap:10px;align-items:baseline;font:500 13px/1.5 var(--mono);text-align:left;padding:7px 12px;border-radius:10px;background:var(--panel);overflow-x:auto}
+.res.pass{color:var(--good)} .res.fail{color:var(--bad)}
+.res.note{font-family:var(--sans);color:var(--fg)}
+.console{text-align:left;font:500 13px/1.5 var(--mono);background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:9px 12px;white-space:pre-wrap;overflow-x:auto}
+.console::before{content:"console";display:block;font-size:11px;color:var(--cc);margin-bottom:2px}
+.hint{font-size:14px;color:var(--mute)}
+.soon-panel ul{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px}
+.foot{font-size:13px;color:var(--mute);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.toast{position:fixed;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:600;opacity:0;transition:opacity .25s;pointer-events:none}
+.toast.on{opacity:1}
+.lab{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px}
+@media (max-width:700px){.lab{grid-template-columns:minmax(0,1fr)}}
+.lab-stage{display:flex;flex-direction:column;gap:14px;align-items:flex-start;justify-content:center;background:radial-gradient(400px 200px at 80% 0%,var(--acc-l),transparent 70%),var(--bg2);border:1px solid var(--line);border-radius:18px;padding:22px}
+.lab-btn{font:700 17px var(--sans);color:#fff;background:linear-gradient(135deg,#1cc7b5,#0b8f83);border:0;border-radius:999px;padding:14px 30px;cursor:pointer;box-shadow:0 12px 24px -12px rgba(18,179,163,.9);user-select:none}
+.lab-btn:active{transform:scale(.96)}
+.lab-input{font:500 15px var(--sans);width:100%;padding:12px 16px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+.lab-input:focus{outline:2px solid var(--acc);outline-offset:1px}
+.lab-log{background:var(--code-bg);color:var(--code-fg);border-radius:18px;padding:14px 16px;font:500 13.5px/1.6 var(--mono);min-height:220px;display:flex;flex-direction:column;gap:2px;overflow:hidden}
+.lab-row b{color:#5fe0d2;font-weight:700;display:inline-block;min-width:92px}
+.lab-row span{color:#7ee2b8}
+.lab-row:first-child{animation:rowin .3s ease}
+@keyframes rowin{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.lab-empty{color:var(--cc)}
+.goals{list-style:none;margin:0;padding:0;display:grid;gap:8px}
+.goals li{display:flex;gap:10px;align-items:center;padding:10px 14px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);font-weight:500}
+.goals li.done{background:var(--good-bg);border-color:var(--good);color:var(--good)}
+.goals .tick{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+.goals li.done .tick{border-color:var(--good);background:var(--good);color:#fff}
+.hunt{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:16px;align-items:start}
+@media (max-width:760px){.hunt{grid-template-columns:minmax(0,1fr)}}
+.hunt-side{display:flex;flex-direction:column;gap:12px;min-width:0;position:sticky;top:12px}
+.sandbox{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:16px 18px;font-size:15px;display:flex;flex-direction:column;gap:6px}
+.sandbox h1{font-size:22px;margin:0}
+.sandbox ul{margin:0;padding-left:22px}
+.sandbox .box{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.sandbox .box p{margin:0;width:100%}
+.sandbox form{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.sandbox input[type=text]{font:inherit;padding:4px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg2);color:var(--fg);width:110px}
+.sandbox .lit{outline:3px solid var(--acc);outline-offset:2px;background:var(--acc-l);border-radius:6px;transition:outline-color .2s}
+.hunt-list{display:flex;flex-direction:column;gap:10px;min-width:0}
+.hunt-q{border:1px solid var(--line);border-radius:16px;padding:14px;background:var(--bg2);display:flex;flex-direction:column;gap:10px}
+.hunt-q.ok{border-color:var(--good);background:var(--good-bg)}
+.hunt-t{display:flex;gap:10px;align-items:baseline}
+.hunt-f{display:flex;gap:8px}
+.hunt-in{flex:1;min-width:0;font:500 14px var(--mono);padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--fg)}
+.hunt-in:focus{outline:2px solid var(--acc);outline-offset:1px}
+.hunt-msg{font-size:14px;min-height:1em}
+.hunt-msg:empty{display:none}
+.bad{color:var(--bad)}
+textarea.fix-ed{min-height:96px}
+.console-seq{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--code-bg);color:var(--code-fg);border-radius:12px;padding:10px 14px;font:500 14px var(--mono);min-height:44px}
+.console-seq .mu{color:var(--cc)}
+.seq{background:rgba(95,224,210,.15);color:#7ee2b8;border-radius:8px;padding:3px 10px;font-weight:700}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.hero svg .pulse{animation:none}}
+</style>
+<style>html{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}</style>
+</head>
+<body>
+
+<div class="wrap" dir="ltr">
+  <div class="topbar">
+    <a class="brand" href="index.html" style="text-decoration:none;color:inherit"><i>JS</i><div>JS Practice Lab<small>CPIT-405 · all parts</small></div></a>
+    <a class="watch" id="watch" href="part1.html">Watch Part 1</a>
+  </div>
+  <header class="hero">
+    <svg viewBox="0 0 1000 300" preserveAspectRatio="xMaxYMid slice" aria-hidden="true">
+      <path d="M1000 60 H820 L780 100 H640"/><path class="pulse" d="M1000 60 H820 L780 100 H640"/>
+      <path d="M1000 170 H900 L860 210 V260"/><path d="M1000 120 H930"/>
+      <circle cx="640" cy="100" r="5"/><circle cx="860" cy="260" r="5"/>
+    </svg>
+    <div class="course">CPIT-405 · WEB APPLICATIONS</div>
+    <h1>Practice <span>JavaScript</span>, one part at a time</h1>
+    <p class="lead">After each part of the lecture, open its tab and practice: predict what code prints, classify snippets, and write and run your own code right here. Your progress is saved in this browser only.</p>
+  </header>
+
+  <nav class="tabs" id="tabs" aria-label="Course parts"></nav>
+  <main id="main"></main>
+
+  <div class="foot"><span>Developed by: <b style="color:var(--acc-d)">Fatmah Bamashmoos</b> · <a href="index.html">All parts</a></span><button class="btn ghost" id="reset" type="button">Reset my progress in this part</button></div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function(){
+/* ---------- data ---------- */
+const PARTS=[
+ {id:'part1',no:1,title:'Fundamentals',ready:true},
+ {id:'part2',no:2,title:'Events & Cookies',ready:true},
+ {id:'part3',no:3,title:'The DOM',ready:true},
+ {id:'part4',no:4,title:'JSON',ready:true},
+ {id:'part5',no:5,title:'Async & Ajax',ready:true},
+ {id:'part6',no:6,title:'Functional JS',ready:true},
+];
+
+const MCQ=[
+ {code:'var x = 10;\nif (true) {\n  var x = 20;\n}\nconsole.log(x);',opts:['10','20','undefined','ReferenceError'],a:1,why:'<code>var</code> is function-scoped, not block-scoped, so the inner line reassigned the same variable.'},
+ {code:'let x = 10;\nif (true) {\n  let x = 20;\n}\nconsole.log(x);',opts:['10','20','undefined','SyntaxError'],a:0,why:'The <code>let</code> inside the block created a new variable that disappeared at <code>}</code>. The outer one is still 10.'},
+ {code:'console.log(typeof null);',opts:['"null"','"undefined"','"object"','"boolean"'],a:2,why:'A historical bug. <code>null</code> is a primitive, but <code>typeof</code> returns <code>"object"</code> and it was never changed for backward compatibility.'},
+ {code:'console.log(5 == "5", 5 === "5");',opts:['true true','true false','false true','false false'],a:1,why:'<code>==</code> converts the string to a number before comparing. <code>===</code> also compares types: Number is not String.'},
+ {code:'let name = "Sami";\nname[0] = "R";\nconsole.log(name);',opts:['Rami','Sami','R','TypeError'],a:1,why:'Strings are immutable. Assigning a character changes nothing and throws no error (outside strict mode).'},
+ {code:'console.log(0 / 0, 10 / 0);',opts:['0 0','NaN Infinity','Error','undefined Infinity'],a:1,why:'Dividing by zero is not an error in JavaScript: <code>0/0</code> is <code>NaN</code> and <code>10/0</code> is <code>Infinity</code>.'},
+ {code:'let arr = [1, 2, 3];\nlet r = arr.pop();\nconsole.log(r, arr.length);',opts:['3 3','1 2','3 2','[1,2] 2'],a:2,why:'<code>pop()</code> removes the last element and returns it, so the length drops to 2.'},
+ {code:'const course = { semester: "fall" };\ncourse.semester = "spring";\nconsole.log(course.semester);',opts:['fall','spring','TypeError','undefined'],a:1,why:'<code>const</code> stops you reassigning the variable itself, but the object\'s properties can still change.'},
+ {code:'function sum(x, y, z) {\n  return x + y + z;\n}\nconsole.log(sum(1, 2, 3, 4, 5, 6));',opts:['21','6','Error','NaN'],a:1,why:'Extra arguments do not cause an error. The function simply ignores them and uses the first three.'},
+ {code:'let fruits = ["Apple", "Orange"];\nfor (let i in fruits) {\n  console.log(i);\n}',opts:['Apple Orange','0 1','1 2','undefined undefined'],a:1,why:'<code>for...in</code> gives you the index (key). <code>for...of</code> gives you the value.'},
+ {code:'let d = new Date("2024-02-03");\nconsole.log(d.getMonth());',opts:['2','1','3','"Feb"'],a:1,why:'Months in <code>Date</code> start at 0: January is 0, February is 1, December is 11.'},
+ {code:'let getMyCourse = function getCourse() {\n  return "CPIT";\n};\nconsole.log(getCourse());',opts:['"CPIT"','undefined','ReferenceError','TypeError'],a:2,why:'In a named function expression, the name <code>getCourse</code> exists only inside the function. From outside, call <code>getMyCourse()</code>.'},
+ {code:'let getDepartment = () => return "IT";\nconsole.log(getDepartment());',opts:['"IT"','undefined','SyntaxError','"return IT"'],a:2,why:'A concise arrow function without <code>{ }</code> returns its expression automatically, and <code>return</code> is not allowed there. Correct: <code>() =&gt; "IT"</code>.'},
+];
+
+const TYPEOF_OPTS=['number','string','boolean','undefined','object','bigint','symbol','function'];
+const TYPEOF=[
+ {v:'37',a:'number'},{v:'"Ali"',a:'string'},{v:'true',a:'boolean'},{v:'undefined',a:'undefined'},
+ {v:'null',a:'object',why:'The famous historical bug.'},{v:'9007199254740991n',a:'bigint'},{v:'Symbol("id")',a:'symbol'},
+ {v:'{ name: "Ali" }',a:'object'},{v:'[1, 2, 3]',a:'object',why:'Arrays are objects. To check for an array, use Array.isArray().'},
+ {v:'function () {}',a:'function',why:'Functions are objects, but typeof reports them as "function".'},{v:'NaN',a:'number',why:'"Not a Number", yet its type is number.'},
+];
+
+const SR=[
+ {code:'let bigArr = [...smallArr, 4, 5, 6];',a:'spread'},
+ {code:'function sum(...numbers) { }',a:'rest'},
+ {code:'add(...numbers);',a:'spread'},
+ {code:'let orange = { ...orange1, ...orange2 };',a:'spread'},
+ {code:'function sum(n, m, ...numbers) { }',a:'rest'},
+ {code:'const count = (...args) => args.length;',a:'rest'},
+ {code:'console.log(...fruits);',a:'spread'},
+ {code:'let copy = [...arr1];',a:'spread'},
+];
+const SR_RULE='Rule of thumb: <code>...</code> in a function <b>definition</b> (the parameter list) is Rest, and it packs. Anywhere else (a call, an array, an object) it is Spread, and it unpacks.';
+
+const FORMS_NAMES=['Function Declaration','Function Expression','Named Function Expression','Arrow Function','IIFE'];
+const FORMS=[
+ {code:'let getCollege = () => "FCIT";',a:'Arrow Function'},
+ {code:'(function () {\n  console.log("CPIT-405");\n})();',a:'IIFE'},
+ {code:'function getCourse() {\n  console.log("CPIT 405");\n}',a:'Function Declaration'},
+ {code:'let getMyCourse = function getCourse() {\n  console.log("CPIT 405");\n};',a:'Named Function Expression'},
+ {code:'let getCourse = function () {\n  console.log("CPIT-405");\n};',a:'Function Expression'},
+];
+
+const CH=[
+ {id:'c1',fn:'fullName',title:'Full name',task:'Write <code>fullName(person)</code> that returns the first name, a space, then the last name, using a template literal.',
+  start:'function fullName(person) {\n  // use backticks and ${ }\n  \n}\n\nconsole.log(fullName({ firstName: "Ali", lastName: "Ahmed" }));',
+  must:[[/`/,'Use backticks (a template literal) instead of +']],
+  tests:[[[{firstName:'Ali',lastName:'Ahmed'}],'Ali Ahmed'],[[{firstName:'Sara',lastName:'Alharbi'}],'Sara Alharbi']],
+  hint:'<code>return `${person.firstName} ...`;</code>',
+  sol:'function fullName(person) {\n  return `${person.firstName} ${person.lastName}`;\n}'},
+ {id:'c2',fn:'memberFee',title:'Membership fee',task:'Write <code>memberFee(isMember)</code> that returns <code>"$2.00"</code> for members and <code>"$10.00"</code> otherwise, in one line with the ternary operator.',
+  start:'function memberFee(isMember) {\n  \n}',
+  must:[[/\?[\s\S]*:/,'Use the ternary operator: condition ? a : b']],
+  tests:[[[true],'$2.00'],[[false],'$10.00']],
+  hint:'<code>return isMember ? ... : ...;</code>',
+  sol:'function memberFee(isMember) {\n  return isMember ? "$2.00" : "$10.00";\n}'},
+ {id:'c3',fn:'dayName',title:'Day name',task:'Write <code>dayName(day)</code> with a <code>switch</code>: 1 returns <code>"Sunday"</code>, 2 <code>"Monday"</code>, … 7 <code>"Saturday"</code>. Any other number returns <code>"Unsupported day number."</code>',
+  start:'function dayName(day) {\n  switch (day) {\n    case 1:\n      return "Sunday";\n    // add the other days and a default\n  }\n}',
+  must:[[/switch/,'Use a switch statement'],[/default/,'Do not forget the default case']],
+  tests:[[[1],'Sunday'],[[2],'Monday'],[[5],'Thursday'],[[7],'Saturday'],[[9],'Unsupported day number.']],
+  hint:'With a <code>return</code> in each case you do not need <code>break</code>.',
+  sol:'function dayName(day) {\n  switch (day) {\n    case 1: return "Sunday";\n    case 2: return "Monday";\n    case 3: return "Tuesday";\n    case 4: return "Wednesday";\n    case 5: return "Thursday";\n    case 6: return "Friday";\n    case 7: return "Saturday";\n    default: return "Unsupported day number.";\n  }\n}'},
+ {id:'c4',fn:'countPositive',title:'Count the positives',task:'Write <code>countPositive(numbers)</code> that returns how many numbers in the array are greater than zero, using a loop (for, for...of or forEach).',
+  start:'function countPositive(numbers) {\n  let count = 0;\n  \n  return count;\n}',
+  must:[[/for|while|forEach/,'Use a loop']],
+  tests:[[[[1,-2,3,0,5]],3],[[[]],0],[[[-1,-5]],0],[[[7,8,9]],3]],
+  hint:'Zero is not positive: the condition is <code>n &gt; 0</code>.',
+  sol:'function countPositive(numbers) {\n  let count = 0;\n  for (let n of numbers) {\n    if (n > 0) count++;\n  }\n  return count;\n}'},
+ {id:'c5',fn:'sum',title:'Sum any number of values',task:'Write <code>sum</code> so it accepts any number of arguments and returns their total, using rest parameters. <code>sum()</code> with no arguments returns 0.',
+  start:'function sum() {\n  \n}\n\nconsole.log(sum(1, 2, 3, 4, 5, 6));',
+  must:[[/\(\s*\.\.\.\s*\w+\s*\)|,\s*\.\.\.\s*\w+\s*\)/,'Use rest parameters in the definition: function sum(...numbers)']],
+  tests:[[[1,2,3],6],[[1,2,3,4,5,6],21],[[],0],[[10],10]],
+  hint:'Inside the function, <code>numbers</code> is a normal array you can loop over.',
+  sol:'function sum(...numbers) {\n  let total = 0;\n  for (let n of numbers) total += n;\n  return total;\n}'},
+ {id:'c6',fn:'mergeObjects',title:'Merge two objects',task:'Write <code>mergeObjects(a, b)</code> that returns a new object with the properties of both, using spread. If a property appears in both, the value from <code>b</code> wins.',
+  start:'function mergeObjects(a, b) {\n  \n}\n\nconsole.log(mergeObjects({ type: "Orange" }, { citrus: true }));',
+  must:[[/\{\s*\.\.\./,'Use spread inside a new object: { ...a, ...b }']],
+  tests:[[[{type:'Orange'},{citrus:true}],{type:'Orange',citrus:true}],[[{a:1,b:2},{b:3}],{a:1,b:3}],[[{},{x:1}],{x:1}]],
+  hint:'Order matters: whatever comes last overwrites what came before.',
+  sol:'function mergeObjects(a, b) {\n  return { ...a, ...b };\n}'},
+];
+
+/* ---------- state ---------- */
+const KEY='cpit405-js-lab-v1';
+let S={mcq:{},typeof:{},sr:{},forms:{picks:{},checked:false},code:{}};
+try{const raw=localStorage.getItem(KEY);if(raw)S=Object.assign(S,JSON.parse(raw))}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+
+/* ---------- helpers ---------- */
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+function hl(src){
+  const re=/(\/\/[^\n]*)|(`(?:[^`\\]|\\.)*`|"(?:[^"\\\n]|\\.)*"|'(?:[^'\\\n]|\\.)*')|(\b\d+(?:\.\d+)?n?\b)|\b(let|const|var|function|return|if|else|for|of|in|while|do|switch|case|break|default|typeof|new|true|false|null|undefined|NaN)\b/g;
+  let out='',last=0,m;
+  while((m=re.exec(src))){out+=esc(src.slice(last,m.index));const c=m[1]?'c':m[2]?'s':m[3]?'n':'k';out+=`<span class="${c}">${esc(m[0])}</span>`;last=m.index+m[0].length}
+  return out+esc(src.slice(last));
+}
+const code=src=>`<pre class="code">${hl(src)}</pre>`;
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(()=>el.classList.remove('on'),1800)}
+function fmt(v){if(typeof v==='string')return JSON.stringify(v);if(typeof v==='undefined')return'undefined';if(typeof v==='function')return'[Function]';if(typeof v==='bigint')return v+'n';try{return JSON.stringify(v)}catch(e){return String(v)}}
+function fmtLog(v){return typeof v==='string'?v:fmt(v)}
+function norm(v){if(Array.isArray(v))return v.map(norm);if(v&&typeof v==='object'){const o={};Object.keys(v).sort().forEach(k=>o[k]=norm(v[k]));return o}return v}
+const same=(a,b)=>{try{return JSON.stringify(norm(a))===JSON.stringify(norm(b))}catch(e){return false}};
+const clone=v=>JSON.parse(JSON.stringify(v));
+
+/* ---------- code runner ---------- */
+let MODE='none';
+try{new Function('return 1')();MODE='fn'}catch(e){
+  try{const s=document.createElement('script');s.textContent='window.__cpitProbe=1';document.head.appendChild(s);s.remove();if(window.__cpitProbe===1)MODE='script'}catch(e2){}
+}
+function compile(src,name,con){
+  const body=`${src}\n;return (typeof ${name}==='function') ? ${name} : undefined;`;
+  if(MODE==='fn')return new Function('console',body)(con);
+  if(MODE==='script'){
+    window.__cpitCon=con;window.__cpitFn=undefined;window.__cpitErr=null;let syn=null;
+    const prev=window.onerror;window.onerror=m=>{syn=m;return true};
+    const s=document.createElement('script');s.textContent=`try{window.__cpitFn=(function(console){${body}})(window.__cpitCon)}catch(e){window.__cpitErr=e}`;
+    document.head.appendChild(s);s.remove();window.onerror=prev;
+    if(syn)throw new SyntaxError(String(syn).replace(/^Uncaught\s*/,''));if(window.__cpitErr)throw window.__cpitErr;return window.__cpitFn;
+  }
+  throw new Error('NO_RUNNER');
+}
+
+/* ---------- scoring ---------- */
+function scores(){
+  const mcq=MCQ.filter((q,i)=>S.mcq[i]===q.a).length;
+  const ty=TYPEOF.filter((q,i)=>S.typeof[i]===q.a).length;
+  const sr=SR.filter((q,i)=>S.sr[i]===q.a).length;
+  const fo=S.forms.checked?FORMS.filter((q,i)=>S.forms.picks[i]===q.a).length:0;
+  const co=CH.filter(c=>S.code[c.id]&&S.code[c.id].passed).length;
+  return {mcq,ty,sr,fo,co,done:mcq+ty+sr+fo+co,total:MCQ.length+TYPEOF.length+SR.length+FORMS.length+CH.length};
+}
+function refreshScores(){
+  const s=scores();
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  const L=(a,b)=>'\u2066'+a+' / '+b+'\u2069';
+  $('#sc-mcq').textContent=L(s.mcq,MCQ.length);$('#sc-ty').textContent=L(s.ty,TYPEOF.length);
+  $('#sc-sr').textContent=L(s.sr,SR.length);$('#sc-fo').textContent=L(s.fo,FORMS.length);$('#sc-co').textContent=L(s.co,CH.length);
+  document.querySelectorAll('[data-navsc]').forEach(el=>{const k=el.dataset.navsc;const map={mcq:[s.mcq,MCQ.length],ty:[s.ty,TYPEOF.length],sr:[s.sr,SR.length],fo:[s.fo,FORMS.length],co:[s.co,CH.length]};el.textContent=map[k][0]+'/'+map[k][1]});
+}
+
+/* ---------- renderers ---------- */
+function section(id,title,desc,scId,inner){
+  return `<section class="ex" id="${id}"><div class="ex-head"><div><h2>${title}</h2><p>${desc}</p></div><span class="score" id="${scId}"></span></div>${inner}</section>`;
+}
+function renderMCQ(){
+  return MCQ.map((q,i)=>{
+    const pick=S.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-mcq="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="mcq-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">What does this print?</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderTypeof(){
+  return TYPEOF.map((q,i)=>{
+    const pick=S.typeof[i];const answered=pick!==undefined;
+    const opts=TYPEOF_OPTS.map(o=>{let cls='opt';if(answered){if(o===q.a)cls+=' right';else if(o===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-ty="${i}" data-v="${o}" ${answered?'disabled':''}>${o}</button>`}).join('');
+    const why=answered&&(q.why||pick!==q.a)?`<div class="why ${pick===q.a?'good':'bad'}">${pick===q.a?'':'<b>typeof returns "'+q.a+'"</b> '}${q.why||''}</div>`:'';
+    return `<div class="q"><div class="typeof-val"><span class="k">typeof</span> ${hl(q.v)}</div><div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderSR(){
+  return SR.map((q,i)=>{
+    const pick=S.sr[i];const answered=pick!==undefined;
+    const b=(v,label)=>{let cls='opt ar';if(answered){if(v===q.a)cls+=' right';else if(v===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-sr="${i}" data-v="${v}" ${answered?'disabled':''}>${label}</button>`};
+    return `<div class="q">${code(q.code)}<div class="opts">${b('rest','Rest · packs')}${b('spread','Spread · unpacks')}</div></div>`;
+  }).join('');
+}
+function renderForms(){
+  const rows=FORMS.map((q,i)=>{
+    const pick=S.forms.picks[i]||'';let cls='';if(S.forms.checked&&pick)cls=pick===q.a?'right':'wrong';
+    const opts=['<option value="">Choose the form…</option>'].concat(FORMS_NAMES.map(n=>`<option value="${n}" ${pick===n?'selected':''}>${n}</option>`)).join('');
+    const fix=S.forms.checked&&pick!==q.a?`<div class="hint" style="grid-column:1/-1">Correct: ${q.a}</div>`:'';
+    return `<div class="match">${code(q.code)}<select id="form-${i}" class="${cls}" data-form="${i}" aria-label="Function form ${i+1}">${opts}</select>${fix}</div>`;
+  }).join('');
+  return `<div class="grid">${rows}</div><div class="actions"><button type="button" class="btn primary" id="formsCheck">Check</button><button type="button" class="btn" id="formsReset">Start over</button></div>`;
+}
+function renderCH(){
+  return CH.map((c,i)=>{
+    const st=S.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run="${i}">Run &amp; test</button><button type="button" class="btn" data-hint="${i}">Hint</button><button type="button" class="btn ghost" data-sol="${i}">Show solution</button><button type="button" class="btn ghost" data-restart="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+
+function renderPart1(){
+  const nav=[['s-mcq','Predict the output','mcq'],['s-ty','typeof machine','ty'],['s-sr','Spread or Rest','sr'],['s-fo','Function forms','fo'],['s-co','Code challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 1: JavaScript Fundamentals</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s-mcq','Predict the output','Read the code and decide what it prints before you pick. The reason appears after you answer.','sc-mcq',`<div class="grid" id="mcqGrid">${renderMCQ()}</div>`)}
+  ${section('s-ty','typeof machine','What does <code>typeof</code> return for each value? A few are traps.','sc-ty',`<div class="grid typeof-grid" id="tyGrid">${renderTypeof()}</div>`)}
+  ${section('s-sr','Spread or Rest?','The same <code>...</code> does two jobs. Classify each line.','sc-sr',`<div class="why">${SR_RULE}</div><div class="grid typeof-grid" id="srGrid">${renderSR()}</div>`)}
+  ${section('s-fo','Function forms','Match each snippet to one of the five ways to define a function, then press Check.','sc-fo',`<div id="foBox">${renderForms()}</div>`)}
+  ${section('s-co','Code challenges','Write your code and run it here. Tests check the result, and some also check that you used the required concept.','sc-co',`<div class="grid" id="chGrid">${renderCH()}</div>`)}
+  </div>`;
+}
+function renderSoon(p){
+  return `<section class="ex soon-panel"><div class="ex-head"><div><h2>Part ${p.no}: ${p.title}</h2><p>This tab opens after the part is covered in the lecture.</p></div><span class="score">Coming soon</span></div>
+    <div><b>Planned exercises:</b><ul>${p.plan.map(x=>`<li>${x}</li>`).join('')}</ul></div></section>`;
+}
+
+/* ---------- routing ---------- */
+let current='part1';
+function renderTabs(){
+  $('#tabs').innerHTML=PARTS.map(p=>`<a href="#${p.id}" ${p.id===current?'aria-current="page"':''}><b>${p.no}</b>${p.title}${p.ready?'':' <span class="soon">soon</span>'}</a>`).join('');
+}
+function show(){
+  const h=(location.hash||'').slice(1);current=PARTS.some(p=>p.id===h)?h:'part1';
+  const p=PARTS.find(x=>x.id===current);
+  renderTabs();
+  const R={part1:renderPart1,part2:renderPart2,part3:renderPart3,part4:renderPart4,part5:renderPart5,part6:renderPart6};
+  $('#main').innerHTML=p.ready?R[p.id]():renderSoon(p);
+  $('#reset').hidden=!p.ready;
+  const w=$('#watch');w.hidden=!MOTION[p.id];if(MOTION[p.id]){w.href=MOTION[p.id];w.textContent='Watch Part '+p.no}
+  if(p.id==='part1')refreshScores();
+  if(p.id==='part2'){setupLab();refreshScores2()}
+  if(p.id==='part3')refreshScores3();
+  if(p.id==='part4')refreshScores4();
+  if(p.id==='part5')refreshScores5();
+  if(p.id==='part6')refreshScores6();
+}
+window.addEventListener('hashchange',show);
+
+/* ---------- events ---------- */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.jump){document.getElementById(t.dataset.jump).scrollIntoView({behavior:'smooth',block:'start'});return}
+  if(t.dataset.mcq!=null){S.mcq[t.dataset.mcq]=+t.dataset.j;save();const i=+t.dataset.mcq;const box=$('#mcq-'+i);const tmp=document.createElement('div');tmp.innerHTML=renderMCQ();box.replaceWith(tmp.querySelector('#mcq-'+i));refreshScores();return}
+  if(t.dataset.ty!=null){S.typeof[t.dataset.ty]=t.dataset.v;save();$('#tyGrid').innerHTML=renderTypeof();refreshScores();return}
+  if(t.dataset.sr!=null){S.sr[t.dataset.sr]=t.dataset.v;save();$('#srGrid').innerHTML=renderSR();refreshScores();return}
+  if(t.id==='formsCheck'){document.querySelectorAll('[data-form]').forEach(s=>S.forms.picks[s.dataset.form]=s.value);S.forms.checked=true;save();$('#foBox').innerHTML=renderForms();refreshScores();const s=scores();toast(s.fo===FORMS.length?'All correct!':`${s.fo} of ${FORMS.length} correct`);return}
+  if(t.id==='formsReset'){S.forms={picks:{},checked:false};save();$('#foBox').innerHTML=renderForms();refreshScores();return}
+  if(t.dataset.run!=null){run(+t.dataset.run);return}
+  if(t.dataset.hint!=null){const el=$('#hint-'+CH[+t.dataset.hint].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol!=null){const c=CH[+t.dataset.sol];const ed=$('#ed-'+c.id);ed.value=c.sol;persistCode(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart!=null){const c=CH[+t.dataset.restart];$('#ed-'+c.id).value=c.start;S.code[c.id]={code:c.start,passed:false};save();$('#res-'+c.id).innerHTML='';updateState(c);refreshScores();return}
+  if(t.id==='reset'){if(current==='part2'){S2={lab:{},mcq:{},code:{}};save2()}else if(current==='part3'){S3={hunt:{},mcq:{},code:{}};save3()}else if(current==='part4'){S4={fix:{},mcq:{},code:{}};save4()}else if(current==='part5'){S5={ord:{},mcq:{},code:{}};save5()}else if(current==='part6'){S6={pick:{},mcq:{},code:{}};save6()}else{S={mcq:{},typeof:{},sr:{},forms:{picks:{},checked:false},code:{}};save()}show();toast('Progress reset');return}
+});
+document.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.form!=null){S.forms.picks[e.target.dataset.form]=e.target.value;save()}});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode(c)}});
+document.addEventListener('keydown',e=>{
+  const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;
+  if(e.key==='Tab'&&!e.shiftKey){e.preventDefault();const s=ta.selectionStart,en=ta.selectionEnd;ta.value=ta.value.slice(0,s)+'  '+ta.value.slice(en);ta.selectionStart=ta.selectionEnd=s+2;ta.dispatchEvent(new Event('input',{bubbles:true}))}
+  if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run(i)}}
+});
+function persistCode(c){const st=S.code[c.id]||{};st.code=$('#ed-'+c.id).value;S.code[c.id]=st;save()}
+function updateState(c){const el=document.querySelector('#'+c.id+' .state');const p=S.code[c.id]&&S.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+
+function run(i){
+  const c=CH[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let html='';let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`+(logs.length?`<div class="console">${esc(logs.join('\n'))}</div>`:'');return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`+(logs.length?`<div class="console">${esc(logs.join('\n'))}</div>`:'');return}
+  const consoleBefore=logs.slice();let pass=0;
+  c.tests.forEach(([args,exp])=>{
+    let got,err=null;try{got=fn(...clone(args))}catch(e2){err=e2}
+    const call=`${c.fn}(${args.map(fmt).join(', ')})`;
+    if(err)html+=`<div class="res fail">✗ ${esc(call)} → ${esc(err.name)}: ${esc(err.message)}</div>`;
+    else if(same(got,exp)){pass++;html+=`<div class="res pass">✓ ${esc(call)} → ${esc(fmt(got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(call)} → ${esc(fmt(got))}   expected ${esc(fmt(exp))}</div>`;
+  });
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(consoleBefore.length)html+=`<div class="console">${esc(consoleBefore.join('\n'))}</div>`;
+  out.innerHTML=html;
+  S.code[c.id]=Object.assign(S.code[c.id]||{},{passed:ok||!!(S.code[c.id]&&S.code[c.id].passed)});save();updateState(c);refreshScores();
+  if(ok)toast('Well done!');
+}
+
+/* ---------- part 2: events & cookies ---------- */
+const MOTION={part1:'part1.html',part2:'part2.html'};
+const KEY2='cpit405-js-lab-p2-v1';
+let S2={lab:{},mcq:{},code:{}};
+try{const r=localStorage.getItem(KEY2);if(r)S2=Object.assign(S2,JSON.parse(r))}catch(e){}
+const save2=()=>{try{localStorage.setItem(KEY2,JSON.stringify(S2))}catch(e){}};
+
+const LAB_GOALS=[
+ ['click','Click the button'],
+ ['dblclick','Double-click the button'],
+ ['downup','Press the mouse down on the button, then release it (mousedown, then mouseup)'],
+ ['enter','Press Enter in the text box (keydown with event.key "Enter")'],
+ ['keyup','Type a letter in the text box and let go of the key (keyup)'],
+];
+
+const MCQ2=[
+ {code:'<button onclick="handleClick">Click</button>\n<script>\n  function handleClick() { console.log("clicked"); }\n<\/script>',prompt:'What happens when you click the button?',opts:['"clicked" is logged','Nothing happens','An error is thrown','"clicked" is logged twice'],a:1,why:'An inline attribute is code that runs on click. <code>handleClick</code> without <code>()</code> only names the function, it never calls it. Inline needs <code>onclick="handleClick()"</code>.'},
+ {code:'button.addEventListener("click", handleClick());\n\nfunction handleClick() {\n  console.log("clicked");\n}',prompt:'What happens?',opts:['Logs on every click','Logs once when the page loads, then clicks do nothing','SyntaxError','Logs twice per click'],a:1,why:'<code>handleClick()</code> runs immediately and passes its return value (<code>undefined</code>) as the listener. Pass the function itself: <code>handleClick</code>.'},
+ {code:'button.addEventListener("onclick", handleClick);',prompt:'Does this run handleClick on click?',opts:['Yes','No, the event name is wrong','Only on double click','Only in old browsers'],a:1,why:'With <code>addEventListener</code> the event name has no "on" prefix: <code>"click"</code>. The "on" prefix belongs to HTML attributes like <code>onclick</code>.'},
+ {code:'element.addEventListener("???", handler);',prompt:'Which event name fires on a double click?',opts:['"dbclick"','"dblclick"','"doubleclick"','"click2"'],a:1,why:'The event is spelled <code>dblclick</code>. A misspelled name throws no error, the listener simply never fires.'},
+ {code:'input.addEventListener("keyup", () => console.log("keyup"));\ninput.addEventListener("keydown", () => console.log("keydown"));\n// the user presses and releases one key',prompt:'What is logged, in order?',opts:['keyup keydown','keydown keyup','keydown','keyup'],a:1,why:'The order follows what the user does, not the order of the code: the key goes down first (<code>keydown</code>), then comes up (<code>keyup</code>).'},
+ {code:'button.addEventListener("click", () => console.log("hi"));\nbutton.removeEventListener("click", () => console.log("hi"));\n// the user clicks',prompt:'What happens on click?',opts:['Nothing, the listener was removed','"hi" is logged','An error is thrown','"hi" is logged twice'],a:1,why:'Two arrow functions that look identical are still two different function objects, so nothing matches and nothing is removed. Give the function a name and pass that same name to both calls.'},
+ {code:'document.cookie = "username=Fatima";\ndocument.cookie = "lang=ar";\nconsole.log(document.cookie);',prompt:'What is logged?',opts:['"lang=ar"','"username=Fatima; lang=ar"','"username=Fatima"','"username=Fatima, lang=ar"'],a:1,why:'Each assignment adds or updates one cookie, it does not replace the rest. Reading returns all of them in one string separated by <code>; </code>.'},
+ {code:'document.cookie = "theme=dark";',prompt:'When is this cookie deleted?',opts:['Never','When the browser session ends','After one day','On the next page reload'],a:1,why:'With no <code>expires</code> and no <code>max-age</code>, it is a session cookie, removed when the browser (or tab session) is closed.'},
+ {code:'document.cookie = "lang=ar; max-age=" + 2 * 24 * 60 * 60;',prompt:'How long does this cookie live?',opts:['2 minutes','2 hours','2 days','48 days'],a:2,why:'<code>max-age</code> is in seconds: 2 × 24 hours × 60 minutes × 60 seconds = 172800 seconds, which is 2 days.'},
+ {code:'// Page A: https://example.com\n// Page B: http://example.com',prompt:'Do A and B share cookies by origin?',opts:['Yes, same domain','No, different origins','Only on port 80','Only if both use HTTPS'],a:1,why:'An origin is protocol + domain + port. <code>https</code> and <code>http</code> are different protocols, so these are different origins.'},
+ {code:'// You want to delete the "theme" cookie',prompt:'Which line deletes it?',opts:['document.cookie = "";','delete document.cookie.theme;','document.cookie = "theme=; expires=" + new Date(2000, 0, 1).toUTCString();','document.cookie.remove("theme");'],a:2,why:'There is no delete method. Setting an expiry date in the past makes the browser remove the cookie right away.'},
+ {code:'let parts = "background=dark; lang=ar".split(";");\nconsole.log(parts[1]);',prompt:'What is logged?',opts:['"lang=ar"','" lang=ar"','"ar"','"lang"'],a:1,why:'Cookies are separated by <code>"; "</code>, so splitting on <code>";"</code> leaves a leading space. Use <code>.trim()</code> or split on <code>"; "</code>.'},
+];
+
+const mk=t=>document.createElement(t);
+const CH2=[
+ {id:'d1',fn:'setupCounter',title:'Click counter',task:'Write <code>setupCounter(button, output)</code>. Every time the button is clicked, add 1 to a counter and show the new count in <code>output.textContent</code>.',
+  start:'function setupCounter(button, output) {\n  let count = 0;\n  // add a click listener that increases count\n  // and writes it to output.textContent\n}',
+  must:[[/addEventListener\s*\(\s*["'`]click["'`]/,'Use addEventListener("click", ...)']],
+  tests:[{label:'1 click',run:fn=>{const b=mk('button'),o=mk('div');fn(b,o);b.click();return{got:o.textContent,exp:'1'}}},
+         {label:'3 clicks',run:fn=>{const b=mk('button'),o=mk('div');fn(b,o);b.click();b.click();b.click();return{got:o.textContent,exp:'3'}}}],
+  hint:'Inside the listener: <code>count++; output.textContent = count;</code>',
+  sol:'function setupCounter(button, output) {\n  let count = 0;\n  button.addEventListener("click", function () {\n    count++;\n    output.textContent = count;\n  });\n}'},
+ {id:'d2',fn:'clickOnce',title:'Only once',task:'Finish <code>clickOnce(button, output)</code> so the handler runs on the first click only. Use <code>removeEventListener</code>.',
+  start:'function clickOnce(button, output) {\n  let count = 0;\n  function handleClick() {\n    count++;\n    output.textContent = count;\n    // remove this listener so it only runs once\n  }\n  button.addEventListener("click", handleClick);\n}',
+  must:[[/removeEventListener/,'Use removeEventListener']],
+  tests:[{label:'3 clicks → still 1',run:fn=>{const b=mk('button'),o=mk('div');fn(b,o);b.click();b.click();b.click();return{got:o.textContent,exp:'1'}}}],
+  hint:'Pass the same event name and the same function: <code>button.removeEventListener("click", handleClick);</code>',
+  sol:'function clickOnce(button, output) {\n  let count = 0;\n  function handleClick() {\n    count++;\n    output.textContent = count;\n    button.removeEventListener("click", handleClick);\n  }\n  button.addEventListener("click", handleClick);\n}'},
+ {id:'d3',fn:'liveEcho',title:'Live echo',task:'Write <code>liveEcho(input, output)</code>. On every <code>keyup</code> in the input, set <code>output.textContent</code> to <code>"You typed: "</code> followed by the input\'s value.',
+  start:'function liveEcho(input, output) {\n  \n}',
+  must:[[/["'`]keyup["'`]/,'Listen for the "keyup" event']],
+  tests:[{label:'value "Hello" + keyup',run:fn=>{const i=mk('input'),o=mk('div');fn(i,o);i.value='Hello';i.dispatchEvent(new KeyboardEvent('keyup',{key:'o'}));return{got:o.textContent,exp:'You typed: Hello'}}},
+         {label:'value "JS" + keyup',run:fn=>{const i=mk('input'),o=mk('div');fn(i,o);i.value='JS';i.dispatchEvent(new KeyboardEvent('keyup',{key:'S'}));return{got:o.textContent,exp:'You typed: JS'}}}],
+  hint:'Read the text with <code>input.value</code>.',
+  sol:'function liveEcho(input, output) {\n  input.addEventListener("keyup", function () {\n    output.textContent = "You typed: " + input.value;\n  });\n}'},
+ {id:'d4',fn:'showKey',title:'Which key?',task:'Write <code>showKey(input, output)</code>. On <code>keydown</code>, show the name of the pressed key (<code>event.key</code>) in <code>output.textContent</code>.',
+  start:'function showKey(input, output) {\n  input.addEventListener("keydown", function (event) {\n    \n  });\n}',
+  must:[[/\.key\b/,'Use event.key']],
+  tests:[{label:'press Enter',run:fn=>{const i=mk('input'),o=mk('div');fn(i,o);i.dispatchEvent(new KeyboardEvent('keydown',{key:'Enter'}));return{got:o.textContent,exp:'Enter'}}},
+         {label:'press a',run:fn=>{const i=mk('input'),o=mk('div');fn(i,o);i.dispatchEvent(new KeyboardEvent('keydown',{key:'a'}));return{got:o.textContent,exp:'a'}}}],
+  hint:'<code>output.textContent = event.key;</code>',
+  sol:'function showKey(input, output) {\n  input.addEventListener("keydown", function (event) {\n    output.textContent = event.key;\n  });\n}'},
+ {id:'d5',fn:'getCookie',title:'Read one cookie',task:'Write <code>getCookie(cookieString, name)</code>. It gets a string like <code>document.cookie</code> and returns the value for <code>name</code>, or <code>null</code> if it is missing. Watch out for the spaces.',
+  start:'function getCookie(cookieString, name) {\n  let parts = cookieString.split(";");\n  \n  return null;\n}\n\nconsole.log(getCookie("background=dark; lang=ar", "lang"));',
+  must:[[/split/,'Split the string']],
+  tests:[[["background=dark; lang=ar; profileId=1dsf32f39","lang"],"ar"],[["background=dark; lang=ar; profileId=1dsf32f39","background"],"dark"],[["background=dark; lang=ar; profileId=1dsf32f39","profileId"],"1dsf32f39"],[["theme=light","lang"],null]],
+  hint:'Loop over the parts, <code>trim()</code> each one, then <code>split("=")</code> into a key and a value.',
+  sol:'function getCookie(cookieString, name) {\n  let parts = cookieString.split(";");\n  for (let part of parts) {\n    let [key, value] = part.trim().split("=");\n    if (key === name) return value;\n  }\n  return null;\n}'},
+ {id:'d6',fn:'makeCookie',title:'Build a cookie string',task:'Write <code>makeCookie(name, value, days)</code> that returns the text you would assign to <code>document.cookie</code>, with a <code>max-age</code> in seconds. Example: <code>makeCookie("lang", "ar", 2)</code> returns <code>"lang=ar; max-age=172800"</code>.',
+  start:'function makeCookie(name, value, days) {\n  \n}',
+  must:[[/max-age/,'Include max-age']],
+  tests:[[["lang","ar",2],"lang=ar; max-age=172800"],[["theme","dark",1],"theme=dark; max-age=86400"],[["username","Fatima",7],"username=Fatima; max-age=604800"]],
+  hint:'One day is <code>24 * 60 * 60</code> seconds.',
+  sol:'function makeCookie(name, value, days) {\n  return `${name}=${value}; max-age=${days * 24 * 60 * 60}`;\n}'},
+ {id:'d7',fn:'expireCookie',title:'Delete a cookie',task:'Write <code>expireCookie(name)</code> that returns a cookie string which deletes the cookie: the name, an empty value, and an <code>expires</code> date in the past.',
+  start:'function expireCookie(name) {\n  \n}\n\nconsole.log(expireCookie("background"));',
+  must:[[/expires/,'Use expires']],
+  tests:[{label:'expireCookie("background")',run:fn=>{const g=fn('background');const m=/expires=([^;]+)/.exec(g||'');const ok=typeof g==='string'&&g.startsWith('background=')&&!!m&&new Date(m[1])<new Date();return{got:g,exp:'background=…; expires=<a past date>',pass:ok}}},
+         {label:'expireCookie("theme")',run:fn=>{const g=fn('theme');const m=/expires=([^;]+)/.exec(g||'');const ok=typeof g==='string'&&g.startsWith('theme=')&&!!m&&new Date(m[1])<new Date();return{got:g,exp:'theme=…; expires=<a past date>',pass:ok}}}],
+  hint:'<code>new Date(2000, 0, 1).toUTCString()</code> gives a date in the past.',
+  sol:'function expireCookie(name) {\n  return name + "=; expires=" + new Date(2000, 0, 1).toUTCString() + "; path=/";\n}'},
+];
+
+function scores2(){
+  const lab=LAB_GOALS.filter(g=>S2.lab[g[0]]).length;
+  const mcq=MCQ2.filter((q,i)=>S2.mcq[i]===q.a).length;
+  const co=CH2.filter(c=>S2.code[c.id]&&S2.code[c.id].passed).length;
+  return {lab,mcq,co,done:lab+mcq+co,total:LAB_GOALS.length+MCQ2.length+CH2.length};
+}
+function refreshScores2(){
+  const s=scores2();const L=(a,b)=>'⁦'+a+' / '+b+'⁩';
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  $('#sc2-lab').textContent=L(s.lab,LAB_GOALS.length);$('#sc2-mcq').textContent=L(s.mcq,MCQ2.length);$('#sc2-co').textContent=L(s.co,CH2.length);
+  const map={lab:[s.lab,LAB_GOALS.length],mcq:[s.mcq,MCQ2.length],co:[s.co,CH2.length]};
+  document.querySelectorAll('[data-navsc2]').forEach(el=>{const m=map[el.dataset.navsc2];el.textContent=m[0]+'/'+m[1]});
+}
+function renderGoals(){return LAB_GOALS.map(g=>`<li class="${S2.lab[g[0]]?'done':''}"><span class="tick">${S2.lab[g[0]]?'✓':''}</span>${g[1]}</li>`).join('')}
+function renderMCQ2(){
+  return MCQ2.map((q,i)=>{
+    const pick=S2.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-m2="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="m2-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${q.prompt}</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderCH2(){
+  return CH2.map((c,i)=>{
+    const st=S2.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run2="${i}">Run &amp; test</button><button type="button" class="btn" data-hint2="${i}">Hint</button><button type="button" class="btn ghost" data-sol2="${i}">Show solution</button><button type="button" class="btn ghost" data-restart2="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+function renderPart2(){
+  const nav=[['s2-lab','Event lab','lab'],['s2-mcq','Predict the behaviour','mcq'],['s2-co','Code challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 2: Events &amp; Cookies</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc2="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s2-lab','Event lab','Real listeners are attached to this button and text box. Try each goal and watch the event log.','sc2-lab',`
+    <div class="lab"><div class="lab-stage"><button type="button" id="labBtn" class="lab-btn">Click me</button><input id="labInput" class="lab-input" placeholder="Type here…" autocomplete="off" aria-label="Event lab text box"></div>
+    <div class="lab-log" id="labLog" aria-live="polite"><div class="lab-empty">Events appear here as they fire.</div></div></div>
+    <ul class="goals" id="goals">${renderGoals()}</ul>
+    ${code('// The listeners behind this lab\nbutton.addEventListener("click", log);\nbutton.addEventListener("dblclick", log);\nbutton.addEventListener("mousedown", log);\nbutton.addEventListener("mouseup", log);\ninput.addEventListener("keydown", log);\ninput.addEventListener("keyup", log);')}`)}
+  ${section('s2-mcq','Predict the behaviour','Read the code and decide what happens before you pick.','sc2-mcq',`<div class="grid" id="m2Grid">${renderMCQ2()}</div>`)}
+  ${section('s2-co','Code challenges','The tests create a real button or input, run your function, then click or type on it. Cookie challenges work on plain strings.','sc2-co',`<div class="grid" id="ch2Grid">${renderCH2()}</div>`)}
+  </div>`;
+}
+function setupLab(){
+  const b=$('#labBtn'),inp=$('#labInput'),log=$('#labLog');if(!b)return;
+  let downSeen=false;
+  const add=(name,detail)=>{const e=log.querySelector('.lab-empty');if(e)e.remove();const d=document.createElement('div');d.className='lab-row';d.innerHTML=`<b>${name}</b>${detail?` <span>${esc(detail)}</span>`:''}`;log.prepend(d);while(log.children.length>9)log.lastChild.remove()};
+  const goal=k=>{if(!S2.lab[k]){S2.lab[k]=true;save2();$('#goals').innerHTML=renderGoals();refreshScores2();toast('Goal complete')}};
+  b.addEventListener('click',()=>{add('click');goal('click')});
+  b.addEventListener('dblclick',()=>{add('dblclick');goal('dblclick')});
+  b.addEventListener('mousedown',()=>{add('mousedown');downSeen=true});
+  b.addEventListener('mouseup',()=>{add('mouseup');if(downSeen)goal('downup');downSeen=false});
+  inp.addEventListener('keydown',e=>{add('keydown',`event.key = "${e.key}"`);if(e.key==='Enter')goal('enter')});
+  inp.addEventListener('keyup',e=>{add('keyup',`event.key = "${e.key}"`);if(e.key&&e.key.length===1)goal('keyup')});
+}
+function persistCode2(c){const st=S2.code[c.id]||{};st.code=$('#ed-'+c.id).value;S2.code[c.id]=st;save2()}
+function updateState2(c){const el=document.querySelector('#'+c.id+' .state');const p=S2.code[c.id]&&S2.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+function run2(i){
+  const c=CH2[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode2(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`+(logs.length?`<div class="console">${esc(logs.join('\n'))}</div>`:'');return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`+(logs.length?`<div class="console">${esc(logs.join('\n'))}</div>`:'');return}
+  const before=logs.slice();let pass=0,html='';
+  c.tests.forEach(t=>{
+    let r,err=null,label;
+    try{
+      if(Array.isArray(t)){const [args,exp]=t;label=`${c.fn}(${args.map(fmt).join(', ')})`;const got=fn(...clone(args));r={got,exp,pass:same(got,exp)}}
+      else{label=t.label;r=t.run(fn);if(r.pass===undefined)r.pass=same(r.got,r.exp)}
+    }catch(e2){err=e2;label=label||t.label}
+    if(err)html+=`<div class="res fail">✗ ${esc(label)} → ${esc(err.name)}: ${esc(err.message)}</div>`;
+    else if(r.pass){pass++;html+=`<div class="res pass">✓ ${esc(label)} → ${esc(fmt(r.got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(label)} → ${esc(fmt(r.got))}   expected ${esc(typeof r.exp==='string'&&r.exp.includes('<')?r.exp:fmt(r.exp))}</div>`;
+  });
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(before.length)html+=`<div class="console">${esc(before.join('\n'))}</div>`;
+  out.innerHTML=html;
+  S2.code[c.id]=Object.assign(S2.code[c.id]||{},{passed:ok||!!(S2.code[c.id]&&S2.code[c.id].passed)});save2();updateState2(c);refreshScores2();
+  if(ok)toast('Well done!');
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.m2!=null){S2.mcq[t.dataset.m2]=+t.dataset.j;save2();const i=+t.dataset.m2;const tmp=document.createElement('div');tmp.innerHTML=renderMCQ2();$('#m2-'+i).replaceWith(tmp.querySelector('#m2-'+i));refreshScores2();return}
+  if(t.dataset.run2!=null){run2(+t.dataset.run2);return}
+  if(t.dataset.hint2!=null){const el=$('#hint-'+CH2[+t.dataset.hint2].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol2!=null){const c=CH2[+t.dataset.sol2];$('#ed-'+c.id).value=c.sol;persistCode2(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart2!=null){const c=CH2[+t.dataset.restart2];$('#ed-'+c.id).value=c.start;S2.code[c.id]={code:c.start,passed:false};save2();$('#res-'+c.id).innerHTML='';updateState2(c);refreshScores2();return}
+});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH2.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode2(c)}});
+document.addEventListener('keydown',e=>{const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH2.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run2(i)}}});
+
+/* ---------- part 3: the DOM ---------- */
+MOTION.part3='part3.html';
+const KEY3='cpit405-js-lab-p3-v1';
+let S3={hunt:{},mcq:{},code:{}};
+try{const r=localStorage.getItem(KEY3);if(r)S3=Object.assign(S3,JSON.parse(r))}catch(e){}
+const save3=()=>{try{localStorage.setItem(KEY3,JSON.stringify(S3))}catch(e){}};
+
+const HUNT_HTML=`<h1 id="title" class="title">CPIT-405</h1>
+<ul id="menu">
+  <li class="active">Home</li>
+  <li>About</li>
+  <li>Contact</li>
+</ul>
+<div class="box">
+  <a href="#">Link 1</a>
+  <a href="#">Link 2</a>
+  <p>A note with <a href="#">Link 3</a></p>
+</div>
+<form>
+  <label><input name="hobby" type="checkbox" value="Football"> Football</label>
+  <label><input name="hobby" type="checkbox" value="Tennis"> Tennis</label>
+  <label><input name="city" type="text" value="Jeddah"></label>
+</form>`;
+const HUNT=[
+ {task:'The element with the id <code>title</code>',ref:'#title'},
+ {task:'Every <code>li</code> inside <code>#menu</code>',ref:'#menu li'},
+ {task:'The <code>li</code> that has the class <code>active</code>',ref:'li.active'},
+ {task:'Only the links that are <b>direct children</b> of <code>.box</code> (not Link 3)',ref:'.box > a'},
+ {task:'The <b>last</b> item in the menu',ref:'#menu li:last-child'},
+ {task:'Both checkboxes whose <code>name</code> is <code>hobby</code>',ref:'input[name="hobby"]'},
+];
+
+const MCQ3=[
+ {code:'let elems = document.getElementsByTagName("h1");',prompt:'What is elems?',opts:['One element','A collection of elements','A string','null'],a:1,why:'The <b>s</b> in <code>getElements…</code> means a collection. Loop over it or take one with <code>elems[0]</code>.'},
+ {code:'// CSS: background-color: red;\nel.style.??? = "red";',prompt:'Which property name goes in JavaScript?',opts:['background-color','backgroundColor','BackgroundColor','background_color'],a:1,why:'Hyphenated CSS names become camelCase: <code>backgroundColor</code>, <code>marginTop</code>, <code>textDecoration</code>.'},
+ {code:'el.innerText = "<b>Hi</b>";',prompt:'What does the page show?',opts:['Hi in bold','The text <b>Hi</b> with the tags visible','Nothing','An error'],a:1,why:'<code>innerText</code> sets plain text, so the tags appear as characters. <code>innerHTML</code> would parse them into a bold element.'},
+ {code:'let x = document.querySelector(".missing");\nconsole.log(x);',prompt:'Nothing matches. What is logged?',opts:['undefined','[]','null','An error is thrown'],a:2,why:'<code>querySelector</code> returns <code>null</code> when nothing matches. <code>querySelectorAll</code> would return an empty NodeList.'},
+ {code:'// <h1 id="title">Hi</h1>\nlet t = document.getElementById("#title");\nconsole.log(t);',prompt:'What is logged?',opts:['The h1 element','null','"Hi"','SyntaxError'],a:1,why:'<code>getElementById</code> takes the id itself, without <code>#</code>. The <code>#</code> belongs to CSS selectors like <code>querySelector("#title")</code>.'},
+ {code:'// <ul id="list">\n//   <li>A</li>\n// </ul>\nconsole.log(list.children.length, list.childNodes.length);',prompt:'What is logged?',opts:['1 1','1 3','3 3','3 1'],a:1,why:'<code>children</code> counts element nodes only (one li). <code>childNodes</code> also counts the whitespace text nodes before and after the li.'},
+ {code:'// <ul class="menu"><li><span id="price">$5</span></li></ul>\nlet x = document.getElementById("price").closest("ul");',prompt:'What is x?',opts:['The span','The li','The ul.menu','null'],a:2,why:'<code>closest(selector)</code> walks up from the element through its ancestors and returns the first one that matches, here the <code>ul</code>.'},
+ {code:'// <p>Hello</p>\np.insertAdjacentText("afterend", "!");',prompt:'Where does the "!" go?',opts:['Before <p>','Inside, before Hello','Inside, after Hello','After </p>'],a:3,why:'<code>afterend</code> is after the element itself. Inside, after the text, would be <code>beforeend</code>.'},
+ {code:'// <ul><li>A</li><li>B</li><li>C</li></ul>\ndocument.querySelector("li:last-child").remove();\nconsole.log(document.querySelectorAll("li").length);',prompt:'What is logged?',opts:['3','2','1','0'],a:1,why:'<code>remove()</code> takes C out of the DOM, so two li elements are left.'},
+ {code:'document.body.classList.toggle("dark");\ndocument.body.classList.toggle("dark");\nconsole.log(document.body.classList.contains("dark"));',prompt:'What is logged?',opts:['true','false','"dark"','undefined'],a:1,why:'The first toggle adds the class, the second removes it again.'},
+ {code:'console.log(window.document === document);',prompt:'What is logged?',opts:['true','false','undefined','ReferenceError'],a:0,why:'<code>document</code> is a property of the global <code>window</code> object, so both names point to the same DOM.'},
+];
+
+const tree=html=>{const r=mk('div');r.innerHTML=html;return r};
+const CH3=[
+ {id:'e1',fn:'highlightTitle',title:'Highlight the title',task:'Write <code>highlightTitle(root)</code>. Find the element with id <code>title</code> inside <code>root</code> and set its background color to <code>"yellow"</code>.',
+  start:'function highlightTitle(root) {\n  let title = root.querySelector("#title");\n  \n}',
+  must:[[/backgroundColor/,'Use style.backgroundColor (camelCase)']],
+  tests:[{label:'#title background',run:fn=>{const r=tree('<h1 id="title">CPIT-405</h1><p>x</p>');fn(r);return{got:r.querySelector('#title').style.backgroundColor,exp:'yellow'}}}],
+  hint:'<code>title.style.backgroundColor = "yellow";</code>',
+  sol:'function highlightTitle(root) {\n  let title = root.querySelector("#title");\n  title.style.backgroundColor = "yellow";\n}'},
+ {id:'e2',fn:'countItems',title:'Count the items',task:'Write <code>countItems(root)</code> that returns how many <code>li</code> elements are inside <code>root</code>.',
+  start:'function countItems(root) {\n  \n}',
+  must:[[/querySelectorAll|getElementsByTagName/,'Use querySelectorAll or getElementsByTagName']],
+  tests:[{label:'3 items',run:fn=>({got:fn(tree('<ul><li>A</li><li>B</li><li>C</li></ul>')),exp:3})},{label:'no items',run:fn=>({got:fn(tree('<p>empty</p>')),exp:0})}],
+  hint:'A collection has a <code>.length</code>.',
+  sol:'function countItems(root) {\n  return root.querySelectorAll("li").length;\n}'},
+ {id:'e3',fn:'updateLink',title:'Fix the link',task:'Write <code>updateLink(root)</code>. Find <code>#myLink</code>, set its <code>href</code> to <code>"https://cpit405.gitlab.io/"</code> and its text to <code>"CPIT-405"</code>.',
+  start:'function updateLink(root) {\n  let link = root.querySelector("#myLink");\n  \n}',
+  tests:[{label:'href',run:fn=>{const r=tree('<a id="myLink" href="#"></a>');fn(r);return{got:r.querySelector('#myLink').getAttribute('href'),exp:'https://cpit405.gitlab.io/'}}},{label:'text',run:fn=>{const r=tree('<a id="myLink" href="#"></a>');fn(r);return{got:r.querySelector('#myLink').textContent,exp:'CPIT-405'}}}],
+  hint:'<code>link.href = …</code> and <code>link.innerText = …</code>',
+  sol:'function updateLink(root) {\n  let link = root.querySelector("#myLink");\n  link.href = "https://cpit405.gitlab.io/";\n  link.innerText = "CPIT-405";\n}'},
+ {id:'e4',fn:'buildList',title:'Build a list',task:'Write <code>buildList(items)</code> that returns a new <code>ul</code> element with one <code>li</code> for each string in <code>items</code>. Use <code>createElement</code> and <code>appendChild</code>.',
+  start:'function buildList(items) {\n  let ul = document.createElement("ul");\n  // for each item: create an li, put the text in it, append it\n  \n  return ul;\n}',
+  must:[[/createElement\s*\(\s*["'`]li/,'Create each li with document.createElement("li")'],[/appendChild/,'Use appendChild']],
+  tests:[{label:'buildList(["Item 1","Item 2"])',run:fn=>{const u=fn(['Item 1','Item 2']);return{got:u&&u.tagName?u.tagName+': '+[...u.children].map(c=>c.tagName+'='+c.textContent).join(', '):u,exp:'UL: LI=Item 1, LI=Item 2'}}},{label:'buildList([])',run:fn=>{const u=fn([]);return{got:u&&u.tagName?u.tagName+': '+u.children.length+' children':u,exp:'UL: 0 children'}}}],
+  hint:'<code>let li = document.createElement("li"); li.appendChild(document.createTextNode(item)); ul.appendChild(li);</code>',
+  sol:'function buildList(items) {\n  let ul = document.createElement("ul");\n  for (let item of items) {\n    let li = document.createElement("li");\n    li.appendChild(document.createTextNode(item));\n    ul.appendChild(li);\n  }\n  return ul;\n}'},
+ {id:'e5',fn:'applyDiscount',title:'20% discount',task:'Each <code>li</code> in <code>#products</code> has three spans: a label, a price, and an empty one. Write <code>applyDiscount(root)</code> that writes the price after a 20% discount, with 2 decimals, into the empty span.',
+  start:'function applyDiscount(root) {\n  let items = root.querySelectorAll("#products li");\n  for (let li of items) {\n    let price = Number(li.children[1].textContent);\n    // write (price * 0.8) with 2 decimals into li.children[2]\n  }\n}',
+  must:[[/children|nextElementSibling|lastElementChild/,'Move through the li using children or siblings']],
+  tests:[{label:'49.99 and 89.99',run:fn=>{const r=tree('<ul id="products"><li><span>HDD 1TB: $</span><span>49.99</span><span></span></li><li><span>HDD 2TB: $</span><span>89.99</span><span></span></li></ul>');fn(r);return{got:[...r.querySelectorAll('li')].map(l=>l.children[2].textContent).join(', '),exp:'39.99, 71.99'}}}],
+  hint:'<code>(price * 0.8).toFixed(2)</code> gives a string with 2 decimals.',
+  sol:'function applyDiscount(root) {\n  let items = root.querySelectorAll("#products li");\n  for (let li of items) {\n    let price = Number(li.children[1].textContent);\n    li.children[2].textContent = (price * 0.8).toFixed(2);\n  }\n}'},
+ {id:'e6',fn:'removeLast',title:'Remove the last one',task:'Write <code>removeLast(root)</code> that removes the last <code>li</code> of <code>#languages</code>.',
+  start:'function removeLast(root) {\n  \n}',
+  must:[[/remove\s*\(/,'Use .remove()']],
+  tests:[{label:'6 languages → 5',run:fn=>{const r=tree('<ul id="languages"><li>JavaScript</li><li>Node</li><li>Go</li><li>Ruby</li><li>Rust</li><li>Java</li></ul>');fn(r);const l=[...r.querySelectorAll('li')];return{got:l.length+' left, last: '+(l.length?l[l.length-1].textContent:''),exp:'5 left, last: Rust'}}}],
+  hint:'<code>root.querySelector("#languages li:last-child")</code>',
+  sol:'function removeLast(root) {\n  root.querySelector("#languages li:last-child").remove();\n}'},
+ {id:'e7',fn:'toggleDark',title:'Dark mode switch',task:'Write <code>toggleDark(el)</code> that toggles the class <code>dark-mode</code> on <code>el</code> and returns <code>true</code> if the class is now on, <code>false</code> if it is off.',
+  start:'function toggleDark(el) {\n  \n}',
+  must:[[/classList\s*\.\s*toggle/,'Use classList.toggle']],
+  tests:[{label:'first call',run:fn=>{const e=mk('div');return{got:fn(e),exp:true}}},{label:'second call',run:fn=>{const e=mk('div');fn(e);return{got:fn(e),exp:false}}},{label:'class on the element after one call',run:fn=>{const e=mk('div');fn(e);return{got:e.className,exp:'dark-mode'}}}],
+  hint:'<code>classList.toggle()</code> itself returns true or false.',
+  sol:'function toggleDark(el) {\n  return el.classList.toggle("dark-mode");\n}'},
+];
+
+function scores3(){
+  const hunt=HUNT.filter((h,i)=>S3.hunt[i]&&S3.hunt[i].ok).length;
+  const mcq=MCQ3.filter((q,i)=>S3.mcq[i]===q.a).length;
+  const co=CH3.filter(c=>S3.code[c.id]&&S3.code[c.id].passed).length;
+  return {hunt,mcq,co,done:hunt+mcq+co,total:HUNT.length+MCQ3.length+CH3.length};
+}
+function refreshScores3(){
+  const s=scores3();const L=(a,b)=>'⁦'+a+' / '+b+'⁩';
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  $('#sc3-hunt').textContent=L(s.hunt,HUNT.length);$('#sc3-mcq').textContent=L(s.mcq,MCQ3.length);$('#sc3-co').textContent=L(s.co,CH3.length);
+  const map={hunt:[s.hunt,HUNT.length],mcq:[s.mcq,MCQ3.length],co:[s.co,CH3.length]};
+  document.querySelectorAll('[data-navsc3]').forEach(el=>{const m=map[el.dataset.navsc3];el.textContent=m[0]+'/'+m[1]});
+}
+function renderHunt(){
+  return HUNT.map((h,i)=>{const st=S3.hunt[i]||{};return `<div class="hunt-q ${st.ok?'ok':''}" id="h-${i}"><div class="hunt-t"><span class="q-no">${i+1}</span><span>${h.task}</span></div>
+    <form class="hunt-f" data-hunt="${i}"><input id="hin-${i}" class="hunt-in" value="${esc(st.sel||'')}" placeholder="CSS selector, e.g. #menu" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Selector for task ${i+1}"><button type="submit" class="btn primary">Try</button></form>
+    <div class="hunt-msg" id="hmsg-${i}">${st.ok?'✓ Correct: <code>'+esc(st.sel)+'</code>':''}</div></div>`}).join('');
+}
+function renderMCQ3(){
+  return MCQ3.map((q,i)=>{
+    const pick=S3.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-m3="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="m3-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${q.prompt}</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderCH3(){
+  return CH3.map((c,i)=>{
+    const st=S3.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run3="${i}">Run &amp; test</button><button type="button" class="btn" data-hint3="${i}">Hint</button><button type="button" class="btn ghost" data-sol3="${i}">Show solution</button><button type="button" class="btn ghost" data-restart3="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+function renderPart3(){
+  const nav=[['s3-hunt','Selector hunt','hunt'],['s3-mcq','Predict the DOM','mcq'],['s3-co','DOM challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 3: The DOM</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc3="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s3-hunt','Selector hunt','Type a CSS selector for each task. The elements it matches light up in the mini page, and it counts when it matches exactly the right ones.','sc3-hunt',`
+    <div class="hunt">
+      <div class="hunt-side"><div class="sandbox" id="sandbox">${HUNT_HTML}</div>${code(HUNT_HTML)}</div>
+      <div class="hunt-list" id="huntList">${renderHunt()}</div>
+    </div>`)}
+  ${section('s3-mcq','Predict the DOM','Read the code and decide what happens before you pick.','sc3-mcq',`<div class="grid" id="m3Grid">${renderMCQ3()}</div>`)}
+  ${section('s3-co','DOM challenges','The tests build a small piece of HTML, pass it to your function, then check the result.','sc3-co',`<div class="grid" id="ch3Grid">${renderCH3()}</div>`)}
+  </div>`;
+}
+function tryHunt(i){
+  const sb=$('#sandbox'),inp=$('#hin-'+i),msg=$('#hmsg-'+i),sel=inp.value.trim();
+  sb.querySelectorAll('.lit').forEach(n=>n.classList.remove('lit'));
+  if(!sel){msg.innerHTML='Type a selector first.';return}
+  let got;try{got=[...sb.querySelectorAll(sel)]}catch(e){msg.innerHTML='<span class="bad">That is not a valid CSS selector.</span>';return}
+  const want=[...sb.querySelectorAll(HUNT[i].ref)];
+  got.forEach(n=>n.classList.add('lit'));
+  const ok=got.length===want.length&&got.every(n=>want.includes(n));
+  S3.hunt[i]={sel,ok:ok||!!(S3.hunt[i]&&S3.hunt[i].ok)};save3();
+  if(ok){msg.innerHTML='✓ Correct: <code>'+esc(sel)+'</code>';$('#h-'+i).classList.add('ok');toast('Correct selector')}
+  else msg.innerHTML=`<span class="bad">Matches ${got.length} element${got.length===1?'':'s'}; the task needs ${want.length}.</span>`;
+  refreshScores3();
+}
+function persistCode3(c){const st=S3.code[c.id]||{};st.code=$('#ed-'+c.id).value;S3.code[c.id]=st;save3()}
+function updateState3(c){const el=document.querySelector('#'+c.id+' .state');const p=S3.code[c.id]&&S3.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+function run3(i){
+  const c=CH3[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode3(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`;return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`;return}
+  let pass=0,html='';
+  c.tests.forEach(t=>{
+    let r,err=null;
+    try{r=t.run(fn);if(r.pass===undefined)r.pass=same(r.got,r.exp)}catch(e2){err=e2}
+    if(err)html+=`<div class="res fail">✗ ${esc(t.label)} → ${esc(err.name)}: ${esc(err.message)}</div>`;
+    else if(r.pass){pass++;html+=`<div class="res pass">✓ ${esc(t.label)} → ${esc(fmt(r.got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(t.label)} → ${esc(fmt(r.got))}   expected ${esc(fmt(r.exp))}</div>`;
+  });
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(logs.length)html+=`<div class="console">${esc(logs.join('\n'))}</div>`;
+  out.innerHTML=html;
+  S3.code[c.id]=Object.assign(S3.code[c.id]||{},{passed:ok||!!(S3.code[c.id]&&S3.code[c.id].passed)});save3();updateState3(c);refreshScores3();
+  if(ok)toast('Well done!');
+}
+document.addEventListener('submit',e=>{const f=e.target.closest('[data-hunt]');if(!f)return;e.preventDefault();tryHunt(+f.dataset.hunt)});
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.m3!=null){S3.mcq[t.dataset.m3]=+t.dataset.j;save3();const i=+t.dataset.m3;const tmp=document.createElement('div');tmp.innerHTML=renderMCQ3();$('#m3-'+i).replaceWith(tmp.querySelector('#m3-'+i));refreshScores3();return}
+  if(t.dataset.run3!=null){run3(+t.dataset.run3);return}
+  if(t.dataset.hint3!=null){const el=$('#hint-'+CH3[+t.dataset.hint3].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol3!=null){const c=CH3[+t.dataset.sol3];$('#ed-'+c.id).value=c.sol;persistCode3(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart3!=null){const c=CH3[+t.dataset.restart3];$('#ed-'+c.id).value=c.start;S3.code[c.id]={code:c.start,passed:false};save3();$('#res-'+c.id).innerHTML='';updateState3(c);refreshScores3();return}
+});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH3.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode3(c)}});
+document.addEventListener('keydown',e=>{const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH3.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run3(i)}}});
+
+document.addEventListener('submit',e=>{if(e.target.closest('#sandbox'))e.preventDefault()});
+document.addEventListener('click',e=>{const a=e.target.closest('#sandbox a');if(a)e.preventDefault()},true);
+
+/* ---------- part 4: JSON ---------- */
+MOTION.part4='part4.html';
+const KEY4='cpit405-js-lab-p4-v1';
+let S4={fix:{},mcq:{},code:{}};
+try{const r=localStorage.getItem(KEY4);if(r)S4=Object.assign(S4,JSON.parse(r))}catch(e){}
+const save4=()=>{try{localStorage.setItem(KEY4,JSON.stringify(S4))}catch(e){}};
+
+const FIX=[
+ {title:'Single quotes',bad:"{'name': 'Ali'}",want:{name:'Ali'},tip:'JSON only accepts double quotes, for keys and for string values.'},
+ {title:'Trailing comma',bad:'{"a": 1, "b": 2,}',want:{a:1,b:2},tip:'No comma after the last pair.'},
+ {title:'Key without quotes',bad:'{course: "CPIT-405", number: 405}',want:{course:'CPIT-405',number:405},tip:'Every key is a string in double quotes.'},
+ {title:'A comment',bad:'{\n  "lang": "ar" // Arabic\n}',want:{lang:'ar'},tip:'JSON has no comments. Remove it.'},
+ {title:'Missing comma in an array',bad:'{"languages": ["JavaScript" "Python" "Go"]}',want:{languages:['JavaScript','Python','Go']},tip:'Array items are separated by commas too.'},
+ {title:'Not a JSON value',bad:'{"name": "Ali", "car": undefined}',want:{name:'Ali',car:null},tip:'undefined is not a JSON type. An empty value is written as null.'},
+];
+
+const MCQ4=[
+ {code:'let text = JSON.stringify({ name: "Ali", age: 20 });\nconsole.log(text);',prompt:'What is logged?',opts:['{ name: "Ali", age: 20 }','{"name":"Ali","age":20}','[object Object]','name=Ali&age=20'],a:1,why:'<code>stringify</code> produces a JSON string: keys in double quotes and no spaces by default.'},
+ {code:'console.log(typeof JSON.stringify({ a: 1 }));',prompt:'What is logged?',opts:['"object"','"string"','"json"','"undefined"'],a:1,why:'The result of <code>stringify</code> is always text, ready to be sent over HTTP.'},
+ {code:'let data = JSON.parse(\'{"a": 1}\');\nconsole.log(typeof data, data.a + 1);',prompt:'What is logged?',opts:['string 11','object 2','object 11','number 2'],a:1,why:'<code>parse</code> gives back a real object, and <code>data.a</code> is the number 1.'},
+ {code:'JSON.parse("{\'name\': \'Ali\'}");',prompt:'What happens?',opts:['Returns { name: "Ali" }','SyntaxError','Returns null','Returns the same string'],a:1,why:'Single quotes are not valid JSON, so <code>JSON.parse</code> throws a <code>SyntaxError</code>.'},
+ {code:'console.log(JSON.stringify({ a: undefined, b: 1 }));',prompt:'What is logged?',opts:['{"a":undefined,"b":1}','{"a":null,"b":1}','{"b":1}','SyntaxError'],a:2,why:'Properties whose value is <code>undefined</code> (or a function) are left out of the JSON.'},
+ {code:'console.log(JSON.stringify([1, "two", true, null]));',prompt:'What is logged?',opts:['[1,"two",true,null]','["1","two","true","null"]','{1,"two",true,null}','1,two,true,'],a:0,why:'Arrays become JSON arrays, and each value keeps its JSON type.'},
+ {code:'// Which line is valid JSON?',prompt:'Pick the valid one.',opts:['{name: "Ali"}',"{'name': 'Ali'}",'{"name": "Ali",}','{"name": "Ali"}'],a:3,why:'Double-quoted keys and strings, and no trailing comma.'},
+ {code:'// A server sends JSON.\n// Content-Type: ???',prompt:'Which media type does it use?',opts:['text/json','application/json','application/javascript','text/xml'],a:1,why:'The registered media (MIME) type for JSON is <code>application/json</code>.'},
+ {code:'let user = JSON.parse(\'{"name":"Ali","languages":["JS","Go"]}\');\nconsole.log(user.languages.length);',prompt:'What is logged?',opts:['undefined','2','"JS,Go"','7'],a:1,why:'After parsing, <code>languages</code> is a real array with 2 items.'},
+ {code:'let copy = JSON.parse(JSON.stringify({ x: [1, 2] }));\ncopy.x.push(3);',prompt:'What is copy.x now?',opts:['[1, 2]','[1, 2, 3]','"[1,2]3"','An error'],a:1,why:'stringify then parse makes a brand new object (a deep copy), and its array works normally.'},
+];
+
+const CH4=[
+ {id:'f1',fn:'toJSON',title:'Object to JSON',task:'Write <code>toJSON(user)</code> that returns <code>user</code> as a JSON string.',
+  start:'function toJSON(user) {\n  \n}\n\nconsole.log(toJSON({ name: "Ali", languages: ["JavaScript", "Go"] }));',
+  must:[[/JSON\s*\.\s*stringify/,'Use JSON.stringify']],
+  tests:[[[{name:'Ali',languages:['JavaScript','Go']}],'{"name":"Ali","languages":["JavaScript","Go"]}'],[[{course:'CPIT-405',active:true}],'{"course":"CPIT-405","active":true}']],
+  hint:'One line: <code>return JSON.stringify(user);</code>',
+  sol:'function toJSON(user) {\n  return JSON.stringify(user);\n}'},
+ {id:'f2',fn:'getName',title:'Read the name',task:'Write <code>getName(jsonText)</code>. It gets a JSON string from a server and returns the <code>name</code> inside it.',
+  start:'function getName(jsonText) {\n  \n}',
+  must:[[/JSON\s*\.\s*parse/,'Use JSON.parse']],
+  tests:[[['{"name": "Ali", "age": 26}'],'Ali'],[['{"name": "Sara", "languages": []}'],'Sara']],
+  hint:'Parse first, then use <code>.name</code>.',
+  sol:'function getName(jsonText) {\n  let user = JSON.parse(jsonText);\n  return user.name;\n}'},
+ {id:'f3',fn:'languagesLine',title:'Languages line',task:'Write <code>languagesLine(jsonText)</code> that returns <code>"Programming Languages: "</code> followed by the languages joined with <code>", "</code>.',
+  start:'function languagesLine(jsonText) {\n  \n}\n\nconsole.log(languagesLine(\'{"name": "Ali", "languages": ["JavaScript", "Python", "Go"]}\'));',
+  must:[[/JSON\s*\.\s*parse/,'Use JSON.parse'],[/join/,'Use join']],
+  tests:[[['{"name": "Ali", "languages": ["JavaScript", "Python", "Go"]}'],'Programming Languages: JavaScript, Python, Go'],[['{"languages": ["Rust"]}'],'Programming Languages: Rust']],
+  hint:'<code>user.languages.join(", ")</code>',
+  sol:'function languagesLine(jsonText) {\n  let user = JSON.parse(jsonText);\n  return "Programming Languages: " + user.languages.join(", ");\n}'},
+ {id:'f4',fn:'isValidJSON',title:'Valid or not?',task:'Write <code>isValidJSON(text)</code> that returns <code>true</code> if <code>text</code> is valid JSON and <code>false</code> if <code>JSON.parse</code> would throw.',
+  start:'function isValidJSON(text) {\n  try {\n    \n  } catch (error) {\n    \n  }\n}',
+  must:[[/try[\s\S]*catch/,'Use try...catch']],
+  tests:[[['{"name": "Ali"}'],true],[["{'name': 'Ali'}"],false],[['{"a": 1,}'],false],[['[1, 2, 3]'],true]],
+  hint:'Call <code>JSON.parse(text)</code> inside <code>try</code>; if it throws, the <code>catch</code> runs.',
+  sol:'function isValidJSON(text) {\n  try {\n    JSON.parse(text);\n    return true;\n  } catch (error) {\n    return false;\n  }\n}'},
+ {id:'f5',fn:'addLanguage',title:'Update and send back',task:'Write <code>addLanguage(jsonText, lang)</code>. Parse the user, add <code>lang</code> to its <code>languages</code> array, and return the updated user as a JSON string.',
+  start:'function addLanguage(jsonText, lang) {\n  \n}',
+  must:[[/JSON\s*\.\s*parse/,'Use JSON.parse'],[/JSON\s*\.\s*stringify/,'Use JSON.stringify']],
+  tests:[[['{"name":"Ali","languages":["JavaScript"]}','Go'],'{"name":"Ali","languages":["JavaScript","Go"]}'],[['{"languages":[]}','Python'],'{"languages":["Python"]}']],
+  hint:'parse → <code>push</code> → stringify.',
+  sol:'function addLanguage(jsonText, lang) {\n  let user = JSON.parse(jsonText);\n  user.languages.push(lang);\n  return JSON.stringify(user);\n}'},
+ {id:'f6',fn:'prettyJSON',title:'Make it readable',task:'Write <code>prettyJSON(obj)</code> that returns the JSON with line breaks and 2-space indentation, like a beautifier would. Hint: <code>JSON.stringify</code> takes a third argument.',
+  start:'function prettyJSON(obj) {\n  \n}\n\nconsole.log(prettyJSON({ name: "Ali", age: 26 }));',
+  must:[[/JSON\s*\.\s*stringify/,'Use JSON.stringify']],
+  tests:[[[{name:'Ali',age:26}],'{\n  "name": "Ali",\n  "age": 26\n}'],[[{a:[1,2]}],'{\n  "a": [\n    1,\n    2\n  ]\n}']],
+  hint:'<code>JSON.stringify(obj, null, 2)</code>: the third argument is the indentation.',
+  sol:'function prettyJSON(obj) {\n  return JSON.stringify(obj, null, 2);\n}'},
+];
+
+function scores4(){
+  const fix=FIX.filter((f,i)=>S4.fix[i]&&S4.fix[i].ok).length;
+  const mcq=MCQ4.filter((q,i)=>S4.mcq[i]===q.a).length;
+  const co=CH4.filter(c=>S4.code[c.id]&&S4.code[c.id].passed).length;
+  return {fix,mcq,co,done:fix+mcq+co,total:FIX.length+MCQ4.length+CH4.length};
+}
+function refreshScores4(){
+  const s=scores4();const L=(a,b)=>'⁦'+a+' / '+b+'⁩';
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  $('#sc4-fix').textContent=L(s.fix,FIX.length);$('#sc4-mcq').textContent=L(s.mcq,MCQ4.length);$('#sc4-co').textContent=L(s.co,CH4.length);
+  const map={fix:[s.fix,FIX.length],mcq:[s.mcq,MCQ4.length],co:[s.co,CH4.length]};
+  document.querySelectorAll('[data-navsc4]').forEach(el=>{const m=map[el.dataset.navsc4];el.textContent=m[0]+'/'+m[1]});
+}
+function renderFix(){
+  return FIX.map((f,i)=>{const st=S4.fix[i]||{};return `<div class="hunt-q ${st.ok?'ok':''}" id="fx-${i}"><div class="hunt-t"><span class="q-no">${i+1}</span><b>${f.title}</b></div>
+    <textarea class="editor fix-ed" id="fxin-${i}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="JSON to fix: ${f.title}">${esc(st.text!=null?st.text:f.bad)}</textarea>
+    <div class="actions"><button type="button" class="btn primary" data-fix="${i}">Check</button><button type="button" class="btn ghost" data-fixtip="${i}">Tip</button><button type="button" class="btn ghost" data-fixreset="${i}">Reset</button></div>
+    <div class="hint" id="fxtip-${i}" hidden>${f.tip}</div>
+    <div class="hunt-msg" id="fxmsg-${i}">${st.ok?'✓ Valid, and it holds the right data':''}</div></div>`}).join('');
+}
+function renderMCQ4(){
+  return MCQ4.map((q,i)=>{
+    const pick=S4.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-m4="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="m4-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${q.prompt}</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderCH4(){
+  return CH4.map((c,i)=>{
+    const st=S4.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run4="${i}">Run &amp; test</button><button type="button" class="btn" data-hint4="${i}">Hint</button><button type="button" class="btn ghost" data-sol4="${i}">Show solution</button><button type="button" class="btn ghost" data-restart4="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+function renderPart4(){
+  const nav=[['s4-fix','Fix the JSON','fix'],['s4-mcq','Predict the output','mcq'],['s4-co','stringify & parse challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 4: JSON</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc4="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s4-fix','Fix the JSON','Each snippet breaks one JSON rule. Edit it until <code>JSON.parse</code> accepts it and it still holds the same data.','sc4-fix',`<div class="grid typeof-grid" id="fixGrid">${renderFix()}</div>`)}
+  ${section('s4-mcq','Predict the output','Read the code and decide what happens before you pick.','sc4-mcq',`<div class="grid" id="m4Grid">${renderMCQ4()}</div>`)}
+  ${section('s4-co','stringify & parse challenges','Write each function and run the tests.','sc4-co',`<div class="grid" id="ch4Grid">${renderCH4()}</div>`)}
+  </div>`;
+}
+function checkFix(i){
+  const f=FIX[i],text=$('#fxin-'+i).value,msg=$('#fxmsg-'+i);let val;
+  S4.fix[i]=Object.assign(S4.fix[i]||{},{text});
+  try{val=JSON.parse(text)}catch(e){msg.innerHTML='<span class="bad">JSON.parse says: '+esc(e.message)+'</span>';save4();return}
+  if(same(val,f.want)){S4.fix[i].ok=true;msg.innerHTML='✓ Valid, and it holds the right data';$('#fx-'+i).classList.add('ok');toast('Fixed')}
+  else msg.innerHTML='<span class="bad">It parses now, but the data changed. Expected: <code>'+esc(JSON.stringify(f.want))+'</code></span>';
+  save4();refreshScores4();
+}
+function persistCode4(c){const st=S4.code[c.id]||{};st.code=$('#ed-'+c.id).value;S4.code[c.id]=st;save4()}
+function updateState4(c){const el=document.querySelector('#'+c.id+' .state');const p=S4.code[c.id]&&S4.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+function run4(i){
+  const c=CH4[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode4(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`;return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`+(logs.length?`<div class="console">${esc(logs.join('\n'))}</div>`:'');return}
+  const before=logs.slice();let pass=0,html='';
+  c.tests.forEach(([args,exp])=>{
+    const label=`${c.fn}(${args.map(fmt).join(', ')})`;let got,err=null;
+    try{got=fn(...clone(args))}catch(e2){err=e2}
+    if(err)html+=`<div class="res fail">✗ ${esc(label)} → ${esc(err.name)}: ${esc(err.message)}</div>`;
+    else if(same(got,exp)){pass++;html+=`<div class="res pass">✓ ${esc(label)} → ${esc(fmt(got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(label)} → ${esc(fmt(got))}   expected ${esc(fmt(exp))}</div>`;
+  });
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(before.length)html+=`<div class="console">${esc(before.join('\n'))}</div>`;
+  out.innerHTML=html;
+  S4.code[c.id]=Object.assign(S4.code[c.id]||{},{passed:ok||!!(S4.code[c.id]&&S4.code[c.id].passed)});save4();updateState4(c);refreshScores4();
+  if(ok)toast('Well done!');
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.fix!=null){checkFix(+t.dataset.fix);return}
+  if(t.dataset.fixtip!=null){const el=$('#fxtip-'+t.dataset.fixtip);el.hidden=!el.hidden;return}
+  if(t.dataset.fixreset!=null){const i=+t.dataset.fixreset;$('#fxin-'+i).value=FIX[i].bad;S4.fix[i]={text:FIX[i].bad,ok:false};save4();$('#fxmsg-'+i).innerHTML='';$('#fx-'+i).classList.remove('ok');refreshScores4();return}
+  if(t.dataset.m4!=null){S4.mcq[t.dataset.m4]=+t.dataset.j;save4();const i=+t.dataset.m4;const tmp=document.createElement('div');tmp.innerHTML=renderMCQ4();$('#m4-'+i).replaceWith(tmp.querySelector('#m4-'+i));refreshScores4();return}
+  if(t.dataset.run4!=null){run4(+t.dataset.run4);return}
+  if(t.dataset.hint4!=null){const el=$('#hint-'+CH4[+t.dataset.hint4].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol4!=null){const c=CH4[+t.dataset.sol4];$('#ed-'+c.id).value=c.sol;persistCode4(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart4!=null){const c=CH4[+t.dataset.restart4];$('#ed-'+c.id).value=c.start;S4.code[c.id]={code:c.start,passed:false};save4();$('#res-'+c.id).innerHTML='';updateState4(c);refreshScores4();return}
+});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH4.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode4(c)}});
+document.addEventListener('keydown',e=>{const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH4.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run4(i)}}});
+
+/* ---------- part 5: async & ajax ---------- */
+MOTION.part5='part5.html';
+const KEY5='cpit405-js-lab-p5-v1';
+let S5={ord:{},mcq:{},code:{}};
+try{const r=localStorage.getItem(KEY5);if(r)S5=Object.assign(S5,JSON.parse(r))}catch(e){}
+const save5=()=>{try{localStorage.setItem(KEY5,JSON.stringify(S5))}catch(e){}};
+
+const ORD=[
+ {code:'console.log("A");\nsetTimeout(() => console.log("B"), 0);\nconsole.log("C");',ans:['A','C','B'],why:'Even with 0 ms, the setTimeout callback waits until the current code has finished.'},
+ {code:'setTimeout(() => console.log("B"), 1000);\nsetTimeout(() => console.log("C"), 0);\nconsole.log("A");',ans:['A','C','B'],why:'A runs right away. Then the timers fire by their delay: 0 ms before 1000 ms.'},
+ {code:'new Promise(resolve => {\n  console.log("A");\n  resolve();\n}).then(() => console.log("C"));\nconsole.log("B");',ans:['A','B','C'],why:'The function inside new Promise runs immediately. The then callback runs later, after the current code.'},
+ {code:'async function f() {\n  console.log("B");\n  await null;\n  console.log("D");\n}\nconsole.log("A");\nf();\nconsole.log("C");',ans:['A','B','C','D'],why:'An async function runs normally until its first await. The rest (D) continues after the current code (C).'},
+ {code:'function add(a, b) { return a + b; }\nconsole.log("start");\nconsole.log(add(5, 5));\nsetTimeout(() => console.log("timer"), 0);\nconsole.log("end");',ans:['start','10','end','timer'],why:'The synchronous lines run in order, including the function call. The timer callback comes last.'},
+];
+
+const MCQ5=[
+ {code:'// Synchronous code',prompt:'What happens when a synchronous function is called?',opts:['The program continues without waiting','The program waits for it to return','It runs in a separate tab','It runs after all other code'],a:1,why:'Synchronous means one instruction at a time, in order: the next line waits for the call to finish.'},
+ {code:'let p = new Promise(() => {});\n// resolve and reject are never called',prompt:'What state is p in?',opts:['fulfilled','rejected','pending','undefined'],a:2,why:'A promise stays pending until resolve or reject is called.'},
+ {code:'let result = fetch("https://api.github.com/users/octocat");\nconsole.log(result instanceof Promise);',prompt:'What is logged?',opts:['true','false','The user data','An error'],a:0,why:'fetch returns a promise immediately. The data arrives later through then or await.'},
+ {code:'fetch(url).then(response => {\n  let data = response.json();\n  console.log(data.login);\n});',prompt:'Why does this log undefined?',opts:['The URL is wrong','response.json() also returns a promise','fetch cannot read JSON','then needs two arguments'],a:1,why:'<code>response.json()</code> is asynchronous too. Return it and use another <code>.then</code>, or <code>await</code> it.'},
+ {code:'function getUser() {\n  let res = await fetch(url);\n}',prompt:'What is wrong?',opts:['Nothing','await is only allowed inside an async function','fetch needs then','url must be a number'],a:1,why:'Mark the function <code>async</code> to use <code>await</code> inside it.'},
+ {code:'if (xhr.readyState === 4) { … }',prompt:'What does readyState 4 mean?',opts:['OPENED','LOADING','HEADERS_RECEIVED','DONE'],a:3,why:'0 UNSENT, 1 OPENED, 2 HEADERS_RECEIVED, 3 LOADING, 4 DONE.'},
+ {code:'if (xhr.status === 200) { … }',prompt:'What does status 200 mean?',opts:['Not found','OK, the request succeeded','Server error','Still loading'],a:1,why:'200 is the HTTP status for a successful request. 404 is not found, 500 a server error.'},
+ {code:'// Ajax',prompt:'What does Ajax let a page do?',opts:['Reload faster','Update part of the page without a full reload','Run JavaScript on the server','Store cookies'],a:1,why:'Ajax requests data in the background and updates only what changed.'},
+ {code:'fetch(url)\n  .then(res => res.json())\n  .then(data => show(data))\n  .catch(err => console.error(err));',prompt:'When does the catch callback run?',opts:['Always, at the end','When the request or a then step fails','Only on status 200','Before the first then'],a:1,why:'<code>.catch</code> handles a rejected promise anywhere in the chain, for example a network error.'},
+ {code:'async function load() {\n  try {\n    let res = await fetch(url);\n  } catch (e) {\n    console.log("failed");\n  }\n}',prompt:'With async/await, how are errors caught?',opts:['With .error()','With try / catch','They cannot be caught','With if (error)'],a:1,why:'With async/await, a rejected promise throws at the await, so <code>try / catch</code> handles it.'},
+];
+
+function mockFetch(router){
+  const calls=[];
+  const f=url=>{calls.push(String(url));let r;try{r=router(String(url))}catch(e){return Promise.reject(e)}
+    if(r instanceof Error)return new Promise((_,rej)=>setTimeout(()=>rej(r),20));
+    return new Promise(res=>setTimeout(()=>res({ok:true,status:200,json:()=>Promise.resolve(JSON.parse(JSON.stringify(r)))}),20))};
+  f.calls=calls;return f;
+}
+async function withFetch(f,cb){const old=window.fetch;window.fetch=f;try{return await cb()}finally{window.fetch=old}}
+const timeout=(p,ms)=>Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error('Timed out: the promise never settled')),ms))]);
+const TODOS=[{id:1,title:'delectus aut autem',completed:false},{id:2,title:'quis ut nam',completed:true},{id:3,title:'fugiat veniam minus',completed:true},{id:4,title:'et porro tempora',completed:false}];
+
+const CH5=[
+ {id:'g1',fn:'wait',title:'A promise that waits',task:'Write <code>wait(ms)</code> that returns a Promise which resolves with <code>"done"</code> after <code>ms</code> milliseconds. Use <code>setTimeout</code>.',
+  start:'function wait(ms) {\n  return new Promise(function (resolve, reject) {\n    \n  });\n}',
+  must:[[/setTimeout/,'Use setTimeout']],
+  tests:[{label:'await wait(100)',run:async fn=>{const t0=performance.now();const v=await timeout(fn(100),2000);const dt=performance.now()-t0;return{got:dt>=90?v:'resolved too early ('+Math.round(dt)+' ms)',exp:'done'}}}],
+  hint:'<code>setTimeout(() => resolve("done"), ms);</code>',
+  sol:'function wait(ms) {\n  return new Promise(function (resolve, reject) {\n    setTimeout(() => resolve("done"), ms);\n  });\n}'},
+ {id:'g2',fn:'safeDivide',title:'Resolve or reject',task:'Write <code>safeDivide(a, b)</code> that returns a Promise. It rejects with <code>"Cannot divide by zero"</code> when <code>b</code> is 0, otherwise resolves with <code>a / b</code>.',
+  start:'function safeDivide(a, b) {\n  return new Promise(function (resolve, reject) {\n    \n  });\n}',
+  must:[[/reject\s*\(/,'Call reject for the error case']],
+  tests:[{label:'safeDivide(10, 2)',run:async fn=>({got:await timeout(fn(10,2),2000),exp:5})},
+         {label:'safeDivide(1, 0) rejects',run:async fn=>{try{await timeout(fn(1,0),2000);return{got:'resolved',exp:'rejected: Cannot divide by zero'}}catch(e){const m=e&&e.message?e.message:e;return{got:'rejected: '+m,exp:'rejected: Cannot divide by zero'}}}}],
+  hint:'<code>if (b === 0) reject("Cannot divide by zero"); else resolve(a / b);</code>',
+  sol:'function safeDivide(a, b) {\n  return new Promise(function (resolve, reject) {\n    if (b === 0) reject("Cannot divide by zero");\n    else resolve(a / b);\n  });\n}'},
+ {id:'g3',fn:'getTitle',title:'fetch with then',task:'Write <code>getTitle(url)</code> that fetches <code>url</code> and returns a promise of the <code>title</code> field of the JSON. Use <code>.then()</code>. (The tests use a simulated server.)',
+  start:'function getTitle(url) {\n  return fetch(url)\n    // .then(...) turn the response into JSON\n    // .then(...) return data.title\n}',
+  must:[[/\.then\s*\(/,'Use .then()'],[/\.json\s*\(/,'Call response.json()']],
+  tests:[{label:'getTitle(".../todos/1")',run:async fn=>{const f=mockFetch(u=>u.endsWith('/todos/1')?TODOS[0]:new Error('404'));return withFetch(f,async()=>({got:await timeout(fn('https://jsonplaceholder.typicode.com/todos/1'),3000),exp:'delectus aut autem'}))}}],
+  hint:'<code>.then(response => response.json()).then(data => data.title)</code>',
+  sol:'function getTitle(url) {\n  return fetch(url)\n    .then(response => response.json())\n    .then(data => data.title);\n}'},
+ {id:'g4',fn:'getLogin',title:'async / await',task:'Write <code>async function getLogin(name)</code> that fetches <code>"https://api.github.com/users/" + name</code> and returns the <code>login</code> field. Use <code>await</code>.',
+  start:'async function getLogin(name) {\n  \n}',
+  must:[[/async\s+function|async\s*\(/,'Declare the function async'],[/await/,'Use await']],
+  tests:[{label:'getLogin("octocat")',run:async fn=>{const f=mockFetch(u=>u==='https://api.github.com/users/octocat'?{login:'octocat',id:583231}:new Error('404'));return withFetch(f,async()=>{const v=await timeout(fn('octocat'),3000);return{got:v,exp:'octocat'}})}},
+         {label:'requested URL',run:async fn=>{const f=mockFetch(()=>({login:'kau'}));return withFetch(f,async()=>{await timeout(fn('kau'),3000);return{got:f.calls[0],exp:'https://api.github.com/users/kau'}})}}],
+  hint:'<code>let response = await fetch(url); let data = await response.json(); return data.login;</code>',
+  sol:'async function getLogin(name) {\n  let response = await fetch("https://api.github.com/users/" + name);\n  let data = await response.json();\n  return data.login;\n}'},
+ {id:'g5',fn:'getLoginSafe',title:'Catch the error',task:'Write <code>async function getLoginSafe(name)</code>, like getLogin, but if the request fails it returns <code>"Error"</code> instead of throwing. Use <code>try / catch</code>.',
+  start:'async function getLoginSafe(name) {\n  try {\n    \n  } catch (error) {\n    \n  }\n}',
+  must:[[/try[\s\S]*catch/,'Use try / catch'],[/await/,'Use await']],
+  tests:[{label:'request works',run:async fn=>{const f=mockFetch(()=>({login:'octocat'}));return withFetch(f,async()=>({got:await timeout(fn('octocat'),3000),exp:'octocat'}))}},
+         {label:'network error',run:async fn=>{const f=mockFetch(()=>new TypeError('Failed to fetch'));return withFetch(f,async()=>({got:await timeout(fn('octocat'),3000),exp:'Error'}))}}],
+  hint:'Put the awaits inside <code>try</code>, and <code>return "Error";</code> inside <code>catch</code>.',
+  sol:'async function getLoginSafe(name) {\n  try {\n    let response = await fetch("https://api.github.com/users/" + name);\n    let data = await response.json();\n    return data.login;\n  } catch (error) {\n    return "Error";\n  }\n}'},
+ {id:'g6',fn:'countCompleted',title:'Work with the data',task:'Write <code>async function countCompleted(url)</code>. The URL returns an array of todos, each with a <code>completed</code> true/false. Return how many are completed.',
+  start:'async function countCompleted(url) {\n  \n}',
+  must:[[/await/,'Use await']],
+  tests:[{label:'4 todos, 2 completed',run:async fn=>{const f=mockFetch(()=>TODOS);return withFetch(f,async()=>({got:await timeout(fn('https://jsonplaceholder.typicode.com/todos/'),3000),exp:2}))}},
+         {label:'empty list',run:async fn=>{const f=mockFetch(()=>[]);return withFetch(f,async()=>({got:await timeout(fn('https://example.com/todos'),3000),exp:0}))}}],
+  hint:'After <code>await response.json()</code> you have a normal array: use a loop or <code>filter(t =&gt; t.completed).length</code>.',
+  sol:'async function countCompleted(url) {\n  let response = await fetch(url);\n  let todos = await response.json();\n  return todos.filter(todo => todo.completed).length;\n}'},
+];
+
+function scores5(){
+  const ord=ORD.filter((o,i)=>S5.ord[i]&&S5.ord[i].ok).length;
+  const mcq=MCQ5.filter((q,i)=>S5.mcq[i]===q.a).length;
+  const co=CH5.filter(c=>S5.code[c.id]&&S5.code[c.id].passed).length;
+  return {ord,mcq,co,done:ord+mcq+co,total:ORD.length+MCQ5.length+CH5.length};
+}
+function refreshScores5(){
+  const s=scores5();const L=(a,b)=>'⁦'+a+' / '+b+'⁩';
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  $('#sc5-ord').textContent=L(s.ord,ORD.length);$('#sc5-mcq').textContent=L(s.mcq,MCQ5.length);$('#sc5-co').textContent=L(s.co,CH5.length);
+  const map={ord:[s.ord,ORD.length],mcq:[s.mcq,MCQ5.length],co:[s.co,CH5.length]};
+  document.querySelectorAll('[data-navsc5]').forEach(el=>{const m=map[el.dataset.navsc5];el.textContent=m[0]+'/'+m[1]});
+}
+function shuffled(a,seed){const r=a.slice();let x=seed*9301+49297;for(let i=r.length-1;i>0;i--){x=(x*9301+49297)%233280;const j=Math.floor(x/233280*(i+1));[r[i],r[j]]=[r[j],r[i]]}if(r.join()===a.join())r.push(r.shift());return r}
+function renderOrdOne(i){
+  const o=ORD[i],st=S5.ord[i]||{},pick=st.pick||[];
+  const pool=shuffled(o.ans,i+3).map((v,k)=>({v,k}));
+  const used=st.used||[];
+  const chips=pool.map(p=>`<button type="button" class="opt" data-ord="${i}" data-k="${p.k}" ${used.includes(p.k)||st.done?'disabled':''}>${esc(p.v)}</button>`).join('');
+  const seq=pick.length?pick.map(v=>`<span class="seq">${esc(v)}</span>`).join('<span class="mu">→</span>'):'<span class="mu">Click the outputs in the order they appear</span>';
+  let res='';if(st.done)res=st.ok?`<div class="why good"><b>Correct!</b>${o.why}</div>`:`<div class="why bad"><b>The order is ${o.ans.map(esc).join(' → ')}</b>${o.why}</div>`;
+  return `<div class="q" id="ord-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">In what order is this printed?</span></div>${code(o.code)}<div class="console-seq">${seq}</div><div class="opts">${chips}</div><div class="actions"><button type="button" class="btn ghost" data-ordreset="${i}">Start over</button></div>${res}</div>`;
+}
+function renderOrd(){return ORD.map((o,i)=>renderOrdOne(i)).join('')}
+function renderMCQ5(){
+  return MCQ5.map((q,i)=>{
+    const pick=S5.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-m5="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="m5-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${q.prompt}</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderCH5(){
+  return CH5.map((c,i)=>{
+    const st=S5.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run5="${i}">Run &amp; test</button><button type="button" class="btn" data-hint5="${i}">Hint</button><button type="button" class="btn ghost" data-sol5="${i}">Show solution</button><button type="button" class="btn ghost" data-restart5="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+function renderPart5(){
+  const nav=[['s5-ord','Order the output','ord'],['s5-mcq','Predict the async','mcq'],['s5-co','fetch & async challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 5: Async &amp; Ajax</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc5="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s5-ord','Order the output','Asynchronous code does not always print top to bottom. Click the outputs in the order the console shows them.','sc5-ord',`<div class="grid" id="ordGrid">${renderOrd()}</div>`)}
+  ${section('s5-mcq','Predict the async','Read the code and decide what happens before you pick.','sc5-mcq',`<div class="grid" id="m5Grid">${renderMCQ5()}</div>`)}
+  ${section('s5-co','fetch & async challenges','fetch calls in these tests go to a simulated server, so they work offline and always return the same data.','sc5-co',`<div class="grid" id="ch5Grid">${renderCH5()}</div>`)}
+  </div>`;
+}
+function persistCode5(c){const st=S5.code[c.id]||{};st.code=$('#ed-'+c.id).value;S5.code[c.id]=st;save5()}
+function updateState5(c){const el=document.querySelector('#'+c.id+' .state');const p=S5.code[c.id]&&S5.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+async function run5(i){
+  const c=CH5[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode5(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`;return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`;return}
+  out.innerHTML='<div class="res note">Running…</div>';
+  run5.tok=run5.tok||{};const tok=run5.tok[c.id]=(run5.tok[c.id]||0)+1;
+  let pass=0,html='';
+  for(const t of c.tests){
+    let r,err=null;
+    try{r=await t.run(fn);if(r.pass===undefined)r.pass=same(r.got,r.exp)}catch(e2){err=e2}
+    if(err)html+=`<div class="res fail">✗ ${esc(t.label)} → ${esc(err&&err.name||'Error')}: ${esc(err&&err.message||String(err))}</div>`;
+    else if(r.pass){pass++;html+=`<div class="res pass">✓ ${esc(t.label)} → ${esc(fmt(r.got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(t.label)} → ${esc(fmt(r.got))}   expected ${esc(fmt(r.exp))}</div>`;
+  }
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(logs.length)html+=`<div class="console">${esc(logs.join('\n'))}</div>`;
+  if(tok!==run5.tok[c.id])return;
+  out.innerHTML=html;
+  S5.code[c.id]=Object.assign(S5.code[c.id]||{},{passed:ok||!!(S5.code[c.id]&&S5.code[c.id].passed)});save5();updateState5(c);refreshScores5();
+  if(ok)toast('Well done!');
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.ord!=null){
+    const i=+t.dataset.ord,k=+t.dataset.k,o=ORD[i];const pool=shuffled(o.ans,i+3);
+    const st=S5.ord[i]||{pick:[],used:[]};st.pick=st.pick||[];st.used=st.used||[];
+    st.pick.push(pool[k]);st.used.push(k);
+    if(st.pick.length===o.ans.length){st.done=true;st.ok=st.pick.join('|')===o.ans.join('|')||!!st.okBefore;if(st.ok)st.okBefore=true;if(st.pick.join('|')===o.ans.join('|'))toast('Correct order')}
+    S5.ord[i]=st;save5();$('#ord-'+i).outerHTML=renderOrdOne(i);refreshScores5();return}
+  if(t.dataset.ordreset!=null){const i=+t.dataset.ordreset;const prev=S5.ord[i]||{};S5.ord[i]={pick:[],used:[],okBefore:prev.okBefore,ok:!!prev.okBefore};save5();$('#ord-'+i).outerHTML=renderOrdOne(i);refreshScores5();return}
+  if(t.dataset.m5!=null){S5.mcq[t.dataset.m5]=+t.dataset.j;save5();const i=+t.dataset.m5;const tmp=document.createElement('div');tmp.innerHTML=renderMCQ5();$('#m5-'+i).replaceWith(tmp.querySelector('#m5-'+i));refreshScores5();return}
+  if(t.dataset.run5!=null){run5(+t.dataset.run5);return}
+  if(t.dataset.hint5!=null){const el=$('#hint-'+CH5[+t.dataset.hint5].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol5!=null){const c=CH5[+t.dataset.sol5];$('#ed-'+c.id).value=c.sol;persistCode5(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart5!=null){const c=CH5[+t.dataset.restart5];$('#ed-'+c.id).value=c.start;S5.code[c.id]={code:c.start,passed:false};save5();$('#res-'+c.id).innerHTML='';updateState5(c);refreshScores5();return}
+});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH5.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode5(c)}});
+document.addEventListener('keydown',e=>{const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH5.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run5(i)}}});
+
+/* ---------- part 6: functional JS ---------- */
+MOTION.part6='part6.html';
+const KEY6='cpit405-js-lab-p6-v1';
+let S6={pick:{},mcq:{},code:{}};
+try{const r=localStorage.getItem(KEY6);if(r)S6=Object.assign(S6,JSON.parse(r))}catch(e){}
+const save6=()=>{try{localStorage.setItem(KEY6,JSON.stringify(S6))}catch(e){}};
+
+const METHODS=['map','filter','reduce','forEach','some','every'];
+const PICK=[
+ {task:'Add 15% VAT to every price in a list',a:'map',ex:'prices.map(p => p * 1.15)'},
+ {task:'Keep only the students who passed',a:'filter',ex:'students.filter(s => s.grade >= 60)'},
+ {task:'Get the total of all prices in the cart',a:'reduce',ex:'prices.reduce((total, p) => total + p, 0)'},
+ {task:'Print every student\'s name in the console',a:'forEach',ex:'students.forEach(s => console.log(s.name))'},
+ {task:'Is at least one item out of stock?',a:'some',ex:'items.some(item => item.stock === 0)'},
+ {task:'Did every student submit the assignment?',a:'every',ex:'students.every(s => s.submitted)'},
+ {task:'Turn a list of users into a list of their emails',a:'map',ex:'users.map(u => u.email)'},
+ {task:'Find the highest grade',a:'reduce',ex:'grades.reduce((max, g) => g > max ? g : max, grades[0])'},
+];
+
+const MCQ6=[
+ {code:'const numbers = [1, 2, 3];\nconst result = numbers.map(n => n * 10);\nconsole.log(result, numbers);',prompt:'What is logged?',opts:['[10, 20, 30] [10, 20, 30]','[10, 20, 30] [1, 2, 3]','60 [1, 2, 3]','undefined [1, 2, 3]'],a:1,why:'<code>map</code> returns a new array and leaves the original untouched.'},
+ {code:'const r = [1, 2, 3].forEach(n => n * 2);\nconsole.log(r);',prompt:'What is logged?',opts:['[2, 4, 6]','undefined','6','[1, 2, 3]'],a:1,why:'<code>forEach</code> only runs the function; it always returns <code>undefined</code>. Use <code>map</code> to get a new array.'},
+ {code:'const words = ["hi", "hello", "hey", "welcome"];\nconsole.log(words.filter(w => w.length > 3));',prompt:'What is logged?',opts:['["hello", "welcome"]','[false, true, false, true]','["hi", "hey"]','2'],a:0,why:'<code>filter</code> keeps the elements where the function returns true, here the words longer than 3 letters.'},
+ {code:'const sum = [1, 2, 3, 4].reduce((total, n) => total + n, 10);\nconsole.log(sum);',prompt:'What is logged?',opts:['10','20','24','1234'],a:1,why:'The initial value is 10, so it is 10 + 1 + 2 + 3 + 4 = 20.'},
+ {code:'console.log([].every(n => n > 100));',prompt:'What is logged for an empty array?',opts:['true','false','undefined','An error'],a:0,why:'A classic trap: <code>every</code> on an empty array is <code>true</code>, because no element fails. <code>some</code> on an empty array is <code>false</code>.'},
+ {code:'console.log([3, -1, 5].some(n => n < 0));',prompt:'What is logged?',opts:['true','false','-1','[-1]'],a:0,why:'<code>some</code> returns true as soon as one element passes: -1 is negative.'},
+ {code:'function applyTwice(f, num) { return f(f(num)); }\nconsole.log(applyTwice(n => n + 1, 5));',prompt:'What is logged?',opts:['6','7','10','11'],a:1,why:'5 + 1 = 6, then 6 + 1 = 7.'},
+ {code:'function greaterThan(n) {\n  return m => m > n;\n}\nconsole.log(greaterThan(5)(3));',prompt:'What is logged?',opts:['true','false','A function','NaN'],a:1,why:'<code>greaterThan(5)</code> returns a function; calling it with 3 checks <code>3 &gt; 5</code>.'},
+ {code:'const ops = [x => x + 1, x => x * 2];\nconsole.log(ops[1](ops[0](4)));',prompt:'What is logged?',opts:['9','10','6','16'],a:1,why:'Functions stored in an array: first add 1 (5), then double (10). That is function composition.'},
+ {code:'// Which style is declarative?',prompt:'Pick the declarative one.',opts:['for (let i = 0; i < a.length; i++) b.push(a[i] * 2);','const b = a.map(x => x * 2);'],a:1,why:'Declarative code says what you want (a doubled array). The loop spells out how, step by step.'},
+];
+
+const STUDENTS=[{name:'Ali',grade:85},{name:'Sara',grade:92},{name:'Omar',grade:55},{name:'Lina',grade:71},{name:'Fahad',grade:40}];
+const CH6=[
+ {id:'h1',fn:'doubleAll',title:'Double everything',task:'Write <code>doubleAll(numbers)</code> that returns a new array with every number doubled. Use <code>map</code>.',
+  start:'function doubleAll(numbers) {\n  \n}',must:[[/\.map\s*\(/,'Use map']],
+  tests:[[[[1,2,3,4,5]],[2,4,6,8,10]],[[[]],[]],[[[-3,0.5]],[-6,1]]],
+  hint:'<code>return numbers.map(n =&gt; n * 2);</code>',sol:'function doubleAll(numbers) {\n  return numbers.map(n => n * 2);\n}'},
+ {id:'h2',fn:'passedNames',title:'Who passed?',task:'Write <code>passedNames(students)</code> that returns the <b>names</b> of students with a grade of 60 or more. Chain <code>filter</code> and <code>map</code>.',
+  start:'function passedNames(students) {\n  return students\n    // .filter(...)\n    // .map(...)\n}',must:[[/\.filter\s*\(/,'Use filter'],[/\.map\s*\(/,'Use map']],
+  tests:[[[STUDENTS],['Ali','Sara','Lina']],[[[{name:'X',grade:59}]],[]]],
+  hint:'<code>.filter(s =&gt; s.grade &gt;= 60).map(s =&gt; s.name)</code>',sol:'function passedNames(students) {\n  return students\n    .filter(s => s.grade >= 60)\n    .map(s => s.name);\n}'},
+ {id:'h3',fn:'average',title:'Class average',task:'Write <code>average(grades)</code> that returns the average of the numbers. Use <code>reduce</code> for the sum.',
+  start:'function average(grades) {\n  \n}',must:[[/\.reduce\s*\(/,'Use reduce']],
+  tests:[[[[80,90,70]],80],[[[100]],100],[[[85,92,55,71,40]],68.6]],
+  hint:'Sum with <code>reduce((total, g) =&gt; total + g, 0)</code>, then divide by <code>grades.length</code>.',sol:'function average(grades) {\n  const sum = grades.reduce((total, g) => total + g, 0);\n  return sum / grades.length;\n}'},
+ {id:'h4',fn:'hasFailing',title:'Anyone failing?',task:'Write <code>hasFailing(grades)</code> that returns <code>true</code> if at least one grade is below 60. Use <code>some</code>.',
+  start:'function hasFailing(grades) {\n  \n}',must:[[/\.some\s*\(/,'Use some']],
+  tests:[[[[85,92,55]],true],[[[85,92,71]],false],[[[]],false]],
+  hint:'<code>grades.some(g =&gt; g &lt; 60)</code>',sol:'function hasFailing(grades) {\n  return grades.some(g => g < 60);\n}'},
+ {id:'h5',fn:'allPassed',title:'Everyone passed?',task:'Write <code>allPassed(grades)</code> that returns <code>true</code> only if every grade is 60 or more. Use <code>every</code>.',
+  start:'function allPassed(grades) {\n  \n}',must:[[/\.every\s*\(/,'Use every']],
+  tests:[[[[85,92,71]],true],[[[85,59]],false]],
+  hint:'<code>grades.every(g =&gt; g &gt;= 60)</code>',sol:'function allPassed(grades) {\n  return grades.every(g => g >= 60);\n}'},
+ {id:'h6',fn:'applyTwice',title:'Apply twice',task:'Write the higher-order function <code>applyTwice(f, num)</code> that calls <code>f</code> on <code>num</code>, then calls <code>f</code> again on that result.',
+  start:'function applyTwice(f, num) {\n  \n}',
+  tests:[{label:'applyTwice(square, 3)',run:fn=>({got:fn(n=>n*n,3),exp:81})},{label:'applyTwice(n => n + 1, 5)',run:fn=>({got:fn(n=>n+1,5),exp:7})},{label:'applyTwice(s => s + "!", "Hi")',run:fn=>({got:fn(s=>s+'!','Hi'),exp:'Hi!!'})}],
+  hint:'<code>return f(f(num));</code>',sol:'function applyTwice(f, num) {\n  return f(f(num));\n}'},
+ {id:'h7',fn:'multiplier',title:'A function factory',task:'Write <code>multiplier(n)</code> that <b>returns a function</b>. The returned function takes a number and multiplies it by <code>n</code>.',
+  start:'function multiplier(n) {\n  return function (x) {\n    \n  };\n}',
+  tests:[{label:'multiplier(3)(4)',run:fn=>({got:fn(3)(4),exp:12})},{label:'const double = multiplier(2); double(10)',run:fn=>{const d=fn(2);return{got:typeof d==='function'?d(10):d,exp:20}}},{label:'typeof multiplier(5)',run:fn=>({got:typeof fn(5),exp:'function'})}],
+  hint:'Inside the returned function: <code>return x * n;</code>',sol:'function multiplier(n) {\n  return function (x) {\n    return x * n;\n  };\n}'},
+];
+
+function scores6(){
+  const pick=PICK.filter((p,i)=>S6.pick[i]===p.a).length;
+  const mcq=MCQ6.filter((q,i)=>S6.mcq[i]===q.a).length;
+  const co=CH6.filter(c=>S6.code[c.id]&&S6.code[c.id].passed).length;
+  return {pick,mcq,co,done:pick+mcq+co,total:PICK.length+MCQ6.length+CH6.length};
+}
+function refreshScores6(){
+  const s=scores6();const L=(a,b)=>'⁦'+a+' / '+b+'⁩';
+  $('#pDone').textContent=s.done;$('#pTotal').textContent=s.total;$('#meter').style.width=(s.done/s.total*100)+'%';
+  $('#sc6-pick').textContent=L(s.pick,PICK.length);$('#sc6-mcq').textContent=L(s.mcq,MCQ6.length);$('#sc6-co').textContent=L(s.co,CH6.length);
+  const map={pick:[s.pick,PICK.length],mcq:[s.mcq,MCQ6.length],co:[s.co,CH6.length]};
+  document.querySelectorAll('[data-navsc6]').forEach(el=>{const m=map[el.dataset.navsc6];el.textContent=m[0]+'/'+m[1]});
+}
+function renderPick(){
+  return PICK.map((p,i)=>{
+    const pick=S6.pick[i];const answered=pick!==undefined;
+    const opts=METHODS.map(m=>{let cls='opt';if(answered){if(m===p.a)cls+=' right';else if(m===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-p6="${i}" data-v="${m}" ${answered?'disabled':''}>${m}()</button>`}).join('');
+    const why=answered?`<div class="why ${pick===p.a?'good':'bad'}"><b>${pick===p.a?'Correct!':'Best fit: '+p.a+'()'}</b><code>${esc(p.ex)}</code></div>`:'';
+    return `<div class="q" id="p6-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${p.task}</span></div><div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderMCQ6(){
+  return MCQ6.map((q,i)=>{
+    const pick=S6.mcq[i];const answered=pick!==undefined;
+    const opts=q.opts.map((o,j)=>{let cls='opt';if(answered){if(j===q.a)cls+=' right';else if(j===pick)cls+=' wrong'}return `<button type="button" class="${cls}" data-m6="${i}" data-j="${j}" ${answered?'disabled':''}>${esc(o)}</button>`}).join('');
+    const why=answered?`<div class="why ${pick===q.a?'good':'bad'}"><b>${pick===q.a?'Correct!':'Answer: '+esc(q.opts[q.a])}</b>${q.why}</div>`:'';
+    return `<div class="q" id="m6-${i}"><div class="q-top"><span class="q-no">${String(i+1).padStart(2,'0')}</span><span class="q-prompt">${q.prompt}</span></div>${code(q.code)}<div class="opts">${opts}</div>${why}</div>`;
+  }).join('');
+}
+function renderCH6(){
+  return CH6.map((c,i)=>{
+    const st=S6.code[c.id]||{};const val=st.code!=null?st.code:c.start;
+    return `<div class="ch" id="${c.id}"><h3><span class="num" style="color:var(--mute);font-size:13px">${i+1}</span>${c.title} <span class="state ${st.passed?'done':''}">${st.passed?'Solved':'Not solved yet'}</span></h3>
+      <p>${c.task}</p>
+      <textarea class="editor" id="ed-${c.id}" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Code editor: ${c.title}">${esc(val)}</textarea>
+      <div class="actions"><button type="button" class="btn primary" data-run6="${i}">Run &amp; test</button><button type="button" class="btn" data-hint6="${i}">Hint</button><button type="button" class="btn ghost" data-sol6="${i}">Show solution</button><button type="button" class="btn ghost" data-restart6="${i}">Reset code</button></div>
+      <div class="hint" id="hint-${c.id}" hidden>${c.hint}</div>
+      <div class="results" id="res-${c.id}"></div></div>`;
+  }).join('');
+}
+function renderPart6(){
+  const nav=[['s6-pick','Pick the method','pick'],['s6-mcq','Predict the output','mcq'],['s6-co','Functional challenges','co']];
+  return `<div style="display:flex;flex-direction:column;gap:22px">
+  <div class="progress"><div class="top"><strong>Part 6: Functional JS</strong><span><span class="num" id="pDone">0</span> of <span class="num" id="pTotal">0</span> done</span></div><div class="meter"><i id="meter"></i></div>
+    <div class="secnav">${nav.map(n=>`<button type="button" data-jump="${n[0]}">${n[1]} <span data-navsc6="${n[2]}"></span></button>`).join('')}</div></div>
+  ${section('s6-pick','Pick the method','Which array method fits each job best? After you answer, you see it written out.','sc6-pick',`<div class="grid typeof-grid" id="p6Grid">${renderPick()}</div>`)}
+  ${section('s6-mcq','Predict the output','Read the code and decide what happens before you pick.','sc6-mcq',`<div class="grid" id="m6Grid">${renderMCQ6()}</div>`)}
+  ${section('s6-co','Functional challenges','Some tests check that you used the method asked for, not just the right answer.','sc6-co',`<div class="grid" id="ch6Grid">${renderCH6()}</div>`)}
+  </div>`;
+}
+function persistCode6(c){const st=S6.code[c.id]||{};st.code=$('#ed-'+c.id).value;S6.code[c.id]=st;save6()}
+function updateState6(c){const el=document.querySelector('#'+c.id+' .state');const p=S6.code[c.id]&&S6.code[c.id].passed;el.className='state'+(p?' done':'');el.textContent=p?'Solved':'Not solved yet'}
+function run6(i){
+  const c=CH6[i];const src=$('#ed-'+c.id).value;const out=$('#res-'+c.id);persistCode6(c);
+  const logs=[];const con={log:(...a)=>logs.push(a.map(fmtLog).join(' ')),error:(...a)=>logs.push(a.map(fmtLog).join(' ')),warn:(...a)=>logs.push(a.map(fmtLog).join(' '))};
+  let fn;
+  try{fn=compile(src,c.fn,con)}catch(err){
+    if(err.message==='NO_RUNNER'){out.innerHTML=`<div class="res note">Running code is blocked in this browser. Copy your code and try it in the browser Console (F12).</div>`;return}
+    out.innerHTML=`<div class="res fail">✗ ${esc(err.name)}: ${esc(err.message)}</div>`;return}
+  if(typeof fn!=='function'){out.innerHTML=`<div class="res fail">✗ No function named ${c.fn} was found. Check the name.</div>`;return}
+  let pass=0,html='';
+  c.tests.forEach(t=>{
+    let r,err=null,label;
+    try{
+      if(Array.isArray(t)){const [args,exp]=t;label=`${c.fn}(${args.map(fmt).join(', ')})`;const got=fn(...clone(args));r={got,exp,pass:same(got,exp)}}
+      else{label=t.label;r=t.run(fn);if(r.pass===undefined)r.pass=same(r.got,r.exp)}
+    }catch(e2){err=e2;label=label||t.label}
+    if(err)html+=`<div class="res fail">✗ ${esc(label)} → ${esc(err.name)}: ${esc(err.message)}</div>`;
+    else if(r.pass){pass++;html+=`<div class="res pass">✓ ${esc(label)} → ${esc(fmt(r.got))}</div>`}
+    else html+=`<div class="res fail">✗ ${esc(label)} → ${esc(fmt(r.got))}   expected ${esc(fmt(r.exp))}</div>`;
+  });
+  const missing=(c.must||[]).filter(([re])=>!re.test(src.replace(/\/\/[^\n]*/g,'')));
+  missing.forEach(([,msg])=>html+=`<div class="res note">⚠ ${esc(msg)}</div>`);
+  const ok=pass===c.tests.length&&missing.length===0;
+  html=`<div class="res ${ok?'pass':'fail'}" style="font-family:var(--sans);font-weight:600">${ok?'All tests passed. Well done!':`${pass} of ${c.tests.length} tests passed`+(missing.length?', and the concept check is not met yet':'')}</div>`+html;
+  if(logs.length)html+=`<div class="console">${esc(logs.join('\n'))}</div>`;
+  out.innerHTML=html;
+  S6.code[c.id]=Object.assign(S6.code[c.id]||{},{passed:ok||!!(S6.code[c.id]&&S6.code[c.id].passed)});save6();updateState6(c);refreshScores6();
+  if(ok)toast('Well done!');
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.p6!=null){S6.pick[t.dataset.p6]=t.dataset.v;save6();$('#p6Grid').innerHTML=renderPick();refreshScores6();return}
+  if(t.dataset.m6!=null){S6.mcq[t.dataset.m6]=+t.dataset.j;save6();const i=+t.dataset.m6;const tmp=document.createElement('div');tmp.innerHTML=renderMCQ6();$('#m6-'+i).replaceWith(tmp.querySelector('#m6-'+i));refreshScores6();return}
+  if(t.dataset.run6!=null){run6(+t.dataset.run6);return}
+  if(t.dataset.hint6!=null){const el=$('#hint-'+CH6[+t.dataset.hint6].id);el.hidden=!el.hidden;return}
+  if(t.dataset.sol6!=null){const c=CH6[+t.dataset.sol6];$('#ed-'+c.id).value=c.sol;persistCode6(c);toast('Solution added. Read it, then run it');return}
+  if(t.dataset.restart6!=null){const c=CH6[+t.dataset.restart6];$('#ed-'+c.id).value=c.start;S6.code[c.id]={code:c.start,passed:false};save6();$('#res-'+c.id).innerHTML='';updateState6(c);refreshScores6();return}
+});
+document.addEventListener('input',e=>{if(e.target.classList&&e.target.classList.contains('editor')){const c=CH6.find(c=>'ed-'+c.id===e.target.id);if(c)persistCode6(c)}});
+document.addEventListener('keydown',e=>{const ta=e.target;if(!ta.classList||!ta.classList.contains('editor'))return;if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){const i=CH6.findIndex(c=>'ed-'+c.id===ta.id);if(i>=0){e.preventDefault();run6(i)}}});
+
+show();
+})();
+</script>
+
+</body>
+</html>
